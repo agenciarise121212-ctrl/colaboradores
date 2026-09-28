@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#07070a;color:#ededf2;font-family:'DM Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#c084fc;text-decoration:none}a:hover{color:#e9d5ff}
+button{font-family:inherit}
+input,select{font-family:inherit;color-scheme:dark}
+option{background:#111117;color:#ededf2}
+::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:#24242e;border-radius:8px}::-webkit-scrollbar-track{background:transparent}
+</style>
+</helmet>
+
+<sc-if value="{{ isLogin }}" hint-placeholder-val="{{ true }}">
+<div style="min-height:100vh;background:#060608;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:56px 20px;position:relative;overflow:hidden">
+  <div style="position:absolute;top:-340px;left:50%;transform:translateX(-50%);width:1000px;height:700px;background:radial-gradient(closest-side, rgba(168,85,247,0.20), rgba(168,85,247,0) 100%);pointer-events:none"></div>
+  <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:14px;margin-bottom:44px;text-align:center">
+    <sc-if value="{{ logoOk }}" hint-placeholder-val="{{ true }}">
+      <img src="https://i.imgur.com/YhR1iHF.png" alt="Agência Rise" onError="{{ onLogoError }}" style="height:84px;width:auto;object-fit:contain">
+    </sc-if>
+    <sc-if value="{{ logoFail }}" hint-placeholder-val="{{ false }}">
+      <div style="font-family:Sora;font-weight:700;font-size:34px;letter-spacing:0.08em;color:#c084fc">RISE</div>
+    </sc-if>
+    <div style="font-family:'JetBrains Mono';font-size:12px;letter-spacing:0.18em;color:#8b8b99;text-transform:uppercase">Agência Rise · Sistema de Gestão</div>
+    <h1 style="margin:6px 0 0;font-family:Sora;font-weight:600;font-size:clamp(28px,4vw,40px);letter-spacing:-0.02em">Quem está acessando?</h1>
+    <p style="margin:0;color:#8b8b99;font-size:15px">Selecione seu perfil para abrir sua área de trabalho.</p>
+  </div>
+  <div style="position:relative;display:flex;flex-wrap:wrap;justify-content:center;gap:clamp(20px,4vw,44px);width:100%;max-width:1100px">
+    <sc-for list="{{ profiles }}" as="p" hint-placeholder-count="3">
+      <button onClick="{{ p.enter }}" style="background:none;border:0;padding:0;cursor:pointer;color:#ededf2;display:flex;flex-direction:column;align-items:center;gap:14px;width:clamp(140px,22vw,210px);transition:transform .2s" style-hover="transform:scale(1.05)">
+        <div style="position:relative;width:100%;aspect-ratio:1;border-radius:16px;overflow:hidden;background:#15151c;border:3px solid #1f1f29;transition:border-color .2s, box-shadow .2s" style-hover="border-color:#a855f7;box-shadow:0 0 0 4px rgba(168,85,247,0.25), 0 20px 60px -15px rgba(168,85,247,0.7)">
+          <img src="{{ p.photo }}" alt="{{ p.name }}" style="width:100%;height:100%;object-fit:cover;display:block">
+          <sc-if value="{{ p.locked }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;right:10px;bottom:10px;width:30px;height:30px;border-radius:50%;background:rgba(7,7,10,0.8);display:flex;align-items:center;justify-content:center">
+              <span style="width:14px;height:14px;background:#d8b4fe;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/lock.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/lock.svg) center / contain no-repeat"></span>
+            </div>
+          </sc-if>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center">
+          <div style="font-family:Sora;font-weight:600;font-size:clamp(16px,1.6vw,19px)">{{ p.name }}</div>
+          <div style="font-size:13px;color:#8b8b99;line-height:1.35;text-wrap:pretty">{{ p.role }}</div>
+        </div>
+      </button>
+    </sc-for>
+  </div>
+  <sc-if value="{{ pwdOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closePwd }}" style="position:fixed;inset:0;z-index:90;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px">
+      <div onClick="{{ stop }}" style="width:100%;max-width:380px;background:#0e0e13;border:1px solid #26263a;border-radius:20px;padding:28px;display:flex;flex-direction:column;align-items:center;gap:18px;box-shadow:0 30px 80px -20px rgba(168,85,247,0.45)">
+        <img src="{{ pwdUser.photo }}" alt="{{ pwdUser.name }}" style="width:84px;height:84px;border-radius:50%;object-fit:cover;border:3px solid #a855f7">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center">
+          <div style="font-family:Sora;font-weight:600;font-size:19px">{{ pwdUser.name }}</div>
+          <div style="font-size:13px;color:#8b8b99">Digite sua senha para acessar</div>
+        </div>
+        <input type="password" autoFocus="{{ true }}" value="{{ pwd }}" onChange="{{ onPwd }}" onKeyDown="{{ onPwdKey }}" placeholder="Senha" style="width:100%;padding:13px 14px;border-radius:11px;background:#111117;color:#ededf2;font-size:15px;outline:none;border:1px solid {{ pwdBorder }}">
+        <sc-if value="{{ pwdErr }}" hint-placeholder-val="{{ false }}">
+          <div style="width:100%;display:flex;align-items:center;gap:8px;font-size:13px;color:oklch(0.75 0.17 25);margin-top:-8px">
+            <span style="width:14px;height:14px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/circle-alert.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/circle-alert.svg) center / contain no-repeat"></span>
+            Senha incorreta
+          </div>
+        </sc-if>
+        <div style="width:100%;display:flex;gap:10px">
+          <button onClick="{{ closePwd }}" style="flex:1;padding:12px;border-radius:11px;border:1px solid #23232d;background:transparent;color:#a1a1b0;font-size:14px;cursor:pointer">Cancelar</button>
+          <button onClick="{{ submitPwd }}" style="flex:1;padding:12px;border-radius:11px;border:0;background:#a855f7;color:#0a0a0f;font-weight:700;font-size:14px;cursor:pointer" style-hover="background:#b86bff">Entrar</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+  <div style="position:relative;margin-top:48px;font-size:12px;color:#5c5c6a">© 2026 Agência Rise · Acesso interno da equipe</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isApp }}" hint-placeholder-val="{{ false }}">
+<div style="min-height:100vh;background:#07070a;color:#ededf2">
+
+  <sc-if value="{{ showBackdrop }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeNav }}" style="position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:40"></div>
+  </sc-if>
+
+  <sc-if value="{{ showSidebar }}" hint-placeholder-val="{{ true }}">
+  <aside style="position:fixed;top:0;left:0;bottom:0;width:248px;background:#0b0b0f;border-right:1px solid #1a1a22;display:flex;flex-direction:column;padding:22px 16px;z-index:50">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:0 8px 22px;border-bottom:1px solid #17171f">
+      <div style="display:flex;align-items:center;gap:10px">
+        <sc-if value="{{ logoOk }}" hint-placeholder-val="{{ true }}">
+          <img src="https://i.imgur.com/YhR1iHF.png" alt="Agência Rise" onError="{{ onLogoError }}" style="height:38px;width:auto;object-fit:contain">
+        </sc-if>
+        <sc-if value="{{ logoFail }}" hint-placeholder-val="{{ false }}">
+          <div style="font-family:Sora;font-weight:700;font-size:20px;letter-spacing:0.08em;color:#c084fc">RISE</div>
+        </sc-if>
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <div style="font-family:Sora;font-weight:600;font-size:13.5px;letter-spacing:0.04em">AGÊNCIA RISE</div>
+          <div style="font-size:11px;color:#6f6f7d">Gestão de produção</div>
+        </div>
+      </div>
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ closeNav }}" style="background:none;border:0;color:#8b8b99;cursor:pointer;padding:4px;display:flex">
+          <span style="width:18px;height:18px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/x.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/x.svg) center / contain no-repeat"></span>
+        </button>
+      </sc-if>
+    </div>
+    <div style="font-family:'JetBrains Mono';font-size:10.5px;letter-spacing:0.16em;color:#5c5c6a;padding:22px 10px 10px;text-transform:uppercase">Módulos</div>
+    <nav style="display:flex;flex-direction:column;gap:4px">
+      <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="3">
+        <button onClick="{{ n.go }}" style="display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:10px;border:0;cursor:pointer;font-size:14px;font-weight:500;text-align:left;background:{{ n.bg }};color:{{ n.color }}" style-hover="color:#ededf2">
+          <span style="width:18px;height:18px;flex-shrink:0;background:{{ n.iconColor }};mask:{{ n.icon }} center / contain no-repeat;-webkit-mask:{{ n.icon }} center / contain no-repeat"></span>
+          <span style="flex:1">{{ n.label }}</span>
+          <sc-if value="{{ n.hasBadge }}" hint-placeholder-val="{{ false }}">
+            <span style="font-family:'JetBrains Mono';font-size:11px;padding:2px 7px;border-radius:20px;background:#a855f7;color:#0a0a0f">{{ n.badge }}</span>
+          </sc-if>
+        </button>
+      </sc-for>
+    </nav>
+    <div style="margin-top:auto;display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:center;gap:11px;padding:12px;border-radius:12px;background:#111117;border:1px solid #1c1c25">
+        <div style="width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Sora;font-weight:600;font-size:13px;color:#0a0a0f;flex-shrink:0;background:{{ me.color }}">{{ me.initials }}</div>
+        <div style="display:flex;flex-direction:column;gap:2px;min-width:0">
+          <div style="font-weight:600;font-size:13.5px">{{ me.name }}</div>
+          <div style="font-size:11.5px;color:#8b8b99;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ me.role }}</div>
+        </div>
+      </div>
+      <button onClick="{{ logout }}" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;border-radius:10px;border:1px solid #1f1f29;background:transparent;color:#a1a1b0;font-size:13px;cursor:pointer" style-hover="border-color:#a855f7;color:#e9d5ff">
+        <span style="width:15px;height:15px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/log-out.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/log-out.svg) center / contain no-repeat"></span>
+        Trocar perfil
+      </button>
+    </div>
+  </aside>
+  </sc-if>
+
+  <main style="padding-left:{{ mainPad }}px;min-height:100vh">
+    <header style="position:sticky;top:0;z-index:30;background:rgba(7,7,10,0.85);backdrop-filter:blur(12px);border-bottom:1px solid #15151c;padding:16px clamp(16px,3vw,32px);display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ openNav }}" style="width:40px;height:40px;border-radius:10px;border:1px solid #1f1f29;background:#0e0e13;color:#ededf2;display:flex;align-items:center;justify-content:center;cursor:pointer">
+          <span style="width:18px;height:18px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/menu.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/menu.svg) center / contain no-repeat"></span>
+        </button>
+      </sc-if>
+      <div style="display:flex;flex-direction:column;gap:2px;flex:1;min-width:160px">
+        <div style="font-family:Sora;font-weight:600;font-size:20px;letter-spacing:-0.01em">{{ pageTitle }}</div>
+        <div style="font-size:13px;color:#8b8b99">{{ pageSub }}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="font-family:'JetBrains Mono';font-size:12px;color:#8b8b99;padding:9px 12px;border:1px solid #1c1c25;border-radius:10px">{{ todayLabel }}</div>
+        <button onClick="{{ openModal }}" style="display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:10px;border:0;background:#a855f7;color:#0a0a0f;font-weight:700;font-size:13.5px;cursor:pointer;box-shadow:0 0 0 1px rgba(192,132,252,0.4), 0 8px 28px -8px rgba(168,85,247,0.8)" style-hover="background:#b86bff">
+          <span style="width:16px;height:16px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/plus.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/plus.svg) center / contain no-repeat"></span>
+          Nova demanda
+        </button>
+      </div>
+    </header>
+
+    <div style="padding:clamp(16px,3vw,32px);display:flex;flex-direction:column;gap:22px;max-width:1480px">
+
+      <sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:22px">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="font-family:Sora;font-weight:600;font-size:clamp(22px,2.6vw,28px);letter-spacing:-0.02em">{{ greeting }}</div>
+            <div style="color:#8b8b99;font-size:14.5px">{{ roleLine }}</div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px">
+            <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+              <div style="background:#0e0e13;border:1px solid #1a1a23;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:14px">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div style="font-size:13px;color:#a1a1b0">{{ k.label }}</div>
+                  <div style="width:32px;height:32px;border-radius:9px;background:rgba(168,85,247,0.12);display:flex;align-items:center;justify-content:center">
+                    <span style="width:16px;height:16px;background:#c084fc;mask:{{ k.icon }} center / contain no-repeat;-webkit-mask:{{ k.icon }} center / contain no-repeat"></span>
+                  </div>
+                </div>
+                <div style="font-family:Sora;font-weight:600;font-size:32px;letter-spacing:-0.02em;line-height:1">{{ k.value }}</div>
+                <div style="font-size:12.5px;color:#6f6f7d">{{ k.sub }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="background:#0e0e13;border:1px solid #1a1a23;border-radius:16px;padding:22px;display:flex;flex-wrap:wrap;gap:28px;align-items:stretch">
+            <div style="display:flex;flex-direction:column;gap:16px;flex:0 0 auto">
+              <div style="font-family:Sora;font-weight:600;font-size:15px">{{ progressTitle }}</div>
+              <div style="display:flex;align-items:center;gap:20px">
+                <div style="width:136px;height:136px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:conic-gradient(#a855f7 0 {{ monthPct }}%, #1c1c26 {{ monthPct }}% 100%);box-shadow:0 0 40px -10px rgba(168,85,247,0.6)">
+                  <div style="width:108px;height:108px;border-radius:50%;background:#0e0e13;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px">
+                    <div style="font-family:Sora;font-weight:600;font-size:28px">{{ monthPct }}%</div>
+                    <div style="font-size:11px;color:#8b8b99">publicado</div>
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <sc-for list="{{ breakdown }}" as="b" hint-placeholder-count="3">
+                    <div style="display:flex;align-items:center;gap:10px;font-size:13px">
+                      <span style="width:9px;height:9px;border-radius:3px;background:{{ b.color }}"></span>
+                      <span style="color:#a1a1b0;min-width:130px">{{ b.label }}</span>
+                      <span style="font-family:'JetBrains Mono';color:#ededf2">{{ b.count }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+            <div style="flex:1 1 380px;display:flex;flex-direction:column;gap:12px;min-width:0">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+                <div style="font-size:13px;color:#a1a1b0">Entregas programadas por dia · {{ monthName }}</div>
+                <div style="display:flex;gap:14px;font-size:12px;color:#8b8b99">
+                  <div style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:2px;background:#a855f7"></span>Publicado</div>
+                  <div style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:2px;background:#2a2a36"></span>A publicar</div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:flex-end;gap:3px;height:140px;border-bottom:1px solid #1c1c25">
+                <sc-for list="{{ bars }}" as="bar" hint-placeholder-count="30">
+                  <div title="{{ bar.tip }}" style="flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;min-width:0">
+                    <div style="height:{{ bar.h }}%;border-radius:4px 4px 0 0;background:#2a2a36;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;outline:{{ bar.outline }}">
+                      <div style="height:{{ bar.pubH }}%;background:#a855f7"></div>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex;gap:3px">
+                <sc-for list="{{ bars }}" as="bar" hint-placeholder-count="30">
+                  <div style="flex:1;min-width:0;text-align:center;font-family:'JetBrains Mono';font-size:10px;color:{{ bar.labelColor }}">{{ bar.label }}</div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px">
+            <sc-for list="{{ panels }}" as="panel" hint-placeholder-count="3">
+              <div style="background:#0e0e13;border:1px solid #1a1a23;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:12px">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <span style="width:16px;height:16px;background:#c084fc;mask:{{ panel.icon }} center / contain no-repeat;-webkit-mask:{{ panel.icon }} center / contain no-repeat"></span>
+                  <div style="font-family:Sora;font-weight:600;font-size:15px;flex:1">{{ panel.title }}</div>
+                  <div style="font-family:'JetBrains Mono';font-size:12px;color:#8b8b99">{{ panel.count }}</div>
+                </div>
+                <sc-if value="{{ panel.isEmpty }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding:22px 12px;text-align:center;font-size:13px;color:#6f6f7d;border:1px dashed #22222c;border-radius:12px">{{ panel.empty }}</div>
+                </sc-if>
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <sc-for list="{{ panel.items }}" as="it" hint-placeholder-count="3">
+                    <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:11px;background:#121218">
+                      <div style="width:34px;height:34px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:{{ it.clientTint }}">
+                        <span style="width:16px;height:16px;background:{{ it.clientColor }};mask:{{ it.typeIcon }} center / contain no-repeat;-webkit-mask:{{ it.typeIcon }} center / contain no-repeat"></span>
+                      </div>
+                      <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+                        <div style="font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ it.title }}</div>
+                        <div style="font-size:12px;color:#8b8b99;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ it.clientName }} · {{ it.type }} · {{ it.when }}</div>
+                      </div>
+                      <sc-if value="{{ it.hasAction }}" hint-placeholder-val="{{ false }}">
+                        <button onClick="{{ it.action }}" style="flex-shrink:0;padding:7px 12px;border-radius:8px;border:1px solid rgba(168,85,247,0.5);background:rgba(168,85,247,0.14);color:#e9d5ff;font-size:12px;font-weight:600;cursor:pointer" style-hover="background:#a855f7;color:#0a0a0f">{{ it.actionLabel }}</button>
+                      </sc-if>
+                      <sc-if value="{{ it.noAction }}" hint-placeholder-val="{{ true }}">
+                        <span style="flex-shrink:0;font-size:11.5px;font-weight:600;padding:4px 9px;border-radius:20px;color:{{ it.statusColor }};background:{{ it.statusTint }}">{{ it.statusShort }}</span>
+                      </sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+          <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}">
+            <div style="background:#0e0e13;border:1px solid #1a1a23;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:16px">
+              <div style="display:flex;align-items:center;gap:10px">
+                <span style="width:16px;height:16px;background:#c084fc;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/users.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/users.svg) center / contain no-repeat"></span>
+                <div style="font-family:Sora;font-weight:600;font-size:15px">Clientes ativos · progresso do mês</div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px 28px">
+                <sc-for list="{{ clientProgress }}" as="c" hint-placeholder-count="6">
+                  <div style="display:flex;flex-direction:column;gap:8px;padding:6px 0">
+                    <div style="display:flex;align-items:center;gap:10px;font-size:13.5px">
+                      <span style="width:9px;height:9px;border-radius:50%;background:{{ c.color }}"></span>
+                      <span style="flex:1;font-weight:500">{{ c.name }}</span>
+                      <span style="font-family:'JetBrains Mono';font-size:12px;color:#8b8b99">{{ c.pub }}/{{ c.total }}</span>
+                    </div>
+                    <div style="height:6px;border-radius:6px;background:#1c1c26;overflow:hidden">
+                      <div style="height:100%;width:{{ c.pct }}%;background:#a855f7;border-radius:6px"></div>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isBoard }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:18px">
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+            <div style="display:flex;gap:8px;flex-wrap:wrap;flex:1">
+              <sc-for list="{{ clientChips }}" as="ch" hint-placeholder-count="7">
+                <button onClick="{{ ch.pick }}" style="display:flex;align-items:center;gap:8px;padding:8px 13px;border-radius:30px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid {{ ch.border }};background:{{ ch.bg }};color:{{ ch.color }}">
+                  <span style="width:8px;height:8px;border-radius:50%;background:{{ ch.dot }}"></span>{{ ch.name }}
+                </button>
+              </sc-for>
+            </div>
+            <sc-if value="{{ showMineToggle }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ toggleMine }}" style="display:flex;align-items:center;gap:10px;padding:8px 13px;border-radius:10px;border:1px solid #1f1f29;background:#0e0e13;color:#ededf2;font-size:13px;cursor:pointer">
+                <span style="width:32px;height:18px;border-radius:20px;position:relative;background:{{ mineTrack }}">
+                  <span style="position:absolute;top:2px;left:{{ mineKnob }}px;width:14px;height:14px;border-radius:50%;background:#ededf2;transition:left .15s"></span>
+                </span>
+                Só minhas tarefas
+              </button>
+            </sc-if>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px;align-items:start">
+            <sc-for list="{{ columns }}" as="col" hint-placeholder-count="3">
+              <div onDragOver="{{ col.onDragOver }}" onDrop="{{ col.onDrop }}" style="border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px;min-height:260px;background:{{ col.bg }};border:1px solid {{ col.border }};transition:background .15s, border-color .15s">
+                <div style="display:flex;align-items:center;gap:10px;padding:4px 4px 8px">
+                  <span style="width:16px;height:16px;background:{{ col.color }};mask:{{ col.icon }} center / contain no-repeat;-webkit-mask:{{ col.icon }} center / contain no-repeat"></span>
+                  <div style="font-family:Sora;font-weight:600;font-size:14.5px;flex:1">{{ col.label }}</div>
+                  <div style="font-family:'JetBrains Mono';font-size:12px;padding:3px 9px;border-radius:20px;background:#17171f;color:#a1a1b0">{{ col.count }}</div>
+                </div>
+                <sc-if value="{{ col.isEmpty }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding:28px 12px;text-align:center;font-size:13px;color:#5c5c6a;border:1px dashed #22222c;border-radius:12px">Arraste cards para cá</div>
+                </sc-if>
+                <sc-for list="{{ col.cards }}" as="card" hint-placeholder-count="3">
+                  <div draggable="true" onDragStart="{{ card.onDragStart }}" onDragEnd="{{ card.onDragEnd }}" style="background:#111117;border:1px solid #1f1f29;border-radius:13px;padding:14px;display:flex;flex-direction:column;gap:11px;cursor:grab;opacity:{{ card.opacity }}" style-hover="border-color:#3a2a55">
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+                      <div style="display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;padding:4px 9px;border-radius:7px;color:{{ card.clientColor }};background:{{ card.clientTint }}">
+                        <span style="width:13px;height:13px;background:currentColor;mask:{{ card.typeIcon }} center / contain no-repeat;-webkit-mask:{{ card.typeIcon }} center / contain no-repeat"></span>{{ card.type }}
+                      </div>
+                      <div style="font-family:'JetBrains Mono';font-size:11.5px;color:#8b8b99">{{ card.when }}</div>
+                    </div>
+                    <div style="font-size:14px;font-weight:600;line-height:1.35;text-wrap:pretty">{{ card.title }}</div>
+                    <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:#a1a1b0">
+                      <span style="width:8px;height:8px;border-radius:50%;background:{{ card.clientColor }}"></span>{{ card.clientName }}
+                    </div>
+                    <sc-if value="{{ card.needsApproval }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:oklch(0.82 0.13 80);padding:7px 10px;border-radius:8px;background:oklch(0.82 0.13 80 / 0.1)">
+                        <span style="width:13px;height:13px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/hourglass.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/hourglass.svg) center / contain no-repeat"></span>
+                        <span style="flex:1">Aguardando aprovação</span>
+                        <sc-if value="{{ card.canApprove }}" hint-placeholder-val="{{ false }}">
+                          <button onClick="{{ card.approve }}" style="padding:4px 10px;border-radius:6px;border:0;background:#a855f7;color:#0a0a0f;font-size:11.5px;font-weight:700;cursor:pointer">Aprovar</button>
+                        </sc-if>
+                      </div>
+                    </sc-if>
+                    <div style="display:flex;align-items:center;gap:8px;border-top:1px solid #1c1c25;padding-top:10px">
+                      <div title="{{ card.ownerName }}" style="width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;color:#0a0a0f;background:{{ card.ownerColor }}">{{ card.ownerInitials }}</div>
+                      <div style="font-size:12px;color:#8b8b99;flex:1">{{ card.ownerName }}</div>
+                      <sc-if value="{{ card.canPrev }}" hint-placeholder-val="{{ false }}">
+                        <button onClick="{{ card.prev }}" title="Voltar etapa" style="width:28px;height:28px;border-radius:8px;border:1px solid #23232d;background:transparent;color:#a1a1b0;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="border-color:#a855f7;color:#e9d5ff">
+                          <span style="width:14px;height:14px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/arrow-left.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/arrow-left.svg) center / contain no-repeat"></span>
+                        </button>
+                      </sc-if>
+                      <sc-if value="{{ card.canNext }}" hint-placeholder-val="{{ false }}">
+                        <button onClick="{{ card.next }}" title="Avançar etapa" style="width:28px;height:28px;border-radius:8px;border:1px solid #23232d;background:transparent;color:#a1a1b0;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="border-color:#a855f7;color:#e9d5ff">
+                          <span style="width:14px;height:14px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/arrow-right.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/arrow-right.svg) center / contain no-repeat"></span>
+                        </button>
+                      </sc-if>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isCalendar }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start">
+          <div style="flex:3 1 620px;min-width:0;background:#0e0e13;border:1px solid #1a1a23;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <div style="font-family:Sora;font-weight:600;font-size:18px;flex:1">{{ calTitle }}</div>
+              <button onClick="{{ calToday }}" style="padding:8px 12px;border-radius:9px;border:1px solid #1f1f29;background:transparent;color:#ededf2;font-size:13px;cursor:pointer" style-hover="border-color:#a855f7">Hoje</button>
+              <button onClick="{{ calPrev }}" style="width:36px;height:36px;border-radius:9px;border:1px solid #1f1f29;background:transparent;color:#ededf2;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="border-color:#a855f7">
+                <span style="width:16px;height:16px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/chevron-left.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/chevron-left.svg) center / contain no-repeat"></span>
+              </button>
+              <button onClick="{{ calNext }}" style="width:36px;height:36px;border-radius:9px;border:1px solid #1f1f29;background:transparent;color:#ededf2;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="border-color:#a855f7">
+                <span style="width:16px;height:16px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/chevron-right.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/chevron-right.svg) center / contain no-repeat"></span>
+              </button>
+            </div>
+            <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:#8b8b99">
+              <sc-for list="{{ statusLegend }}" as="lg" hint-placeholder-count="3">
+                <div style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:{{ lg.color }}"></span>{{ lg.label }}</div>
+              </sc-for>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px">
+              <sc-for list="{{ weekDays }}" as="wd" hint-placeholder-count="7">
+                <div style="font-family:'JetBrains Mono';font-size:11px;letter-spacing:0.08em;color:#6f6f7d;text-transform:uppercase;padding:4px 6px">{{ wd }}</div>
+              </sc-for>
+              <sc-for list="{{ calCells }}" as="cell" hint-placeholder-count="35">
+                <div onClick="{{ cell.select }}" style="min-height:{{ cellH }}px;border-radius:10px;padding:7px;display:flex;flex-direction:column;gap:4px;cursor:pointer;min-width:0;overflow:hidden;background:{{ cell.bg }};border:1px solid {{ cell.border }};opacity:{{ cell.opacity }}" style-hover="border-color:#4a3470">
+                  <div style="display:flex;align-items:center;justify-content:space-between">
+                    <span style="font-family:'JetBrains Mono';font-size:12px;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:{{ cell.numBg }};color:{{ cell.numColor }}">{{ cell.day }}</span>
+                  </div>
+                  <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+                    <sc-for list="{{ cell.chips }}" as="chip" hint-placeholder-count="0">
+                      <div style="display:flex;align-items:center;gap:5px;font-size:11px;padding:3px 6px;border-radius:5px;min-width:0;background:{{ chip.clientTint }};color:#dcdce4">
+                        <span style="width:6px;height:6px;border-radius:50%;flex-shrink:0;background:{{ chip.statusColor }}"></span>
+                        <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ chip.clientShort }} · {{ chip.type }}</span>
+                      </div>
+                    </sc-for>
+                    <sc-if value="{{ cell.hasMore }}" hint-placeholder-val="{{ false }}">
+                      <div style="font-size:11px;color:#8b8b99;padding-left:4px">+{{ cell.more }} mais</div>
+                    </sc-if>
+                  </sc-if>
+                  <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex;gap:3px;flex-wrap:wrap">
+                      <sc-for list="{{ cell.all }}" as="d" hint-placeholder-count="0">
+                        <span style="width:6px;height:6px;border-radius:50%;background:{{ d.statusColor }}"></span>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="flex:1 1 280px;min-width:0;background:#0e0e13;border:1px solid #1a1a23;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;flex-direction:column;gap:3px">
+              <div style="font-family:'JetBrains Mono';font-size:11px;letter-spacing:0.12em;color:#6f6f7d;text-transform:uppercase">Vai ao ar</div>
+              <div style="font-family:Sora;font-weight:600;font-size:17px">{{ selLabel }}</div>
+            </div>
+            <sc-if value="{{ selEmpty }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:26px 12px;text-align:center;font-size:13px;color:#6f6f7d;border:1px dashed #22222c;border-radius:12px">Nada programado para este dia.</div>
+            </sc-if>
+            <sc-for list="{{ selItems }}" as="it" hint-placeholder-count="2">
+              <div style="display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:12px;background:#121218;border:1px solid #1c1c25">
+                <div style="display:flex;align-items:center;gap:8px">
+                  <span style="font-family:'JetBrains Mono';font-size:12px;color:#c084fc">{{ it.time }}</span>
+                  <span style="flex:1"></span>
+                  <span style="font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px;color:{{ it.statusColor }};background:{{ it.statusTint }}">{{ it.statusShort }}</span>
+                </div>
+                <div style="font-size:13.5px;font-weight:600;line-height:1.35">{{ it.title }}</div>
+                <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#8b8b99">
+                  <span style="width:8px;height:8px;border-radius:50%;background:{{ it.clientColor }}"></span>{{ it.clientName }} · {{ it.type }} · {{ it.ownerName }}
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+    </div>
+  </main>
+
+  <sc-if value="{{ modalOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:80;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;padding:20px">
+      <div style="width:100%;max-width:520px;background:#0e0e13;border:1px solid #26263a;border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:16px;box-shadow:0 30px 80px -20px rgba(168,85,247,0.35)">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="font-family:Sora;font-weight:600;font-size:18px">Nova demanda</div>
+          <button onClick="{{ closeModal }}" style="background:none;border:0;color:#8b8b99;cursor:pointer;display:flex;padding:4px">
+            <span style="width:18px;height:18px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/x.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/x.svg) center / contain no-repeat"></span>
+          </button>
+        </div>
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;color:#a1a1b0">Título
+          <input value="{{ form.title }}" onChange="{{ fTitle }}" placeholder="Ex.: Reels bastidores da sessão de fotos" style="padding:11px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px;outline:none">
+        </label>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+          <label style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;color:#a1a1b0">Cliente
+            <select value="{{ form.client }}" onChange="{{ fClient }}" style="padding:11px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px">
+              <sc-for list="{{ clientOptions }}" as="o" hint-placeholder-count="6"><option value="{{ o.id }}">{{ o.name }}</option></sc-for>
+            </select>
+          </label>
+          <label style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;color:#a1a1b0">Formato
+            <select value="{{ form.type }}" onChange="{{ fType }}" style="padding:11px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px">
+              <sc-for list="{{ typeOptions }}" as="o" hint-placeholder-count="5"><option value="{{ o }}">{{ o }}</option></sc-for>
+            </select>
+          </label>
+          <label style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;color:#a1a1b0">Data de publicação
+            <input type="date" value="{{ form.date }}" onChange="{{ fDate }}" style="padding:10px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;color:#a1a1b0">Horário
+            <input type="time" value="{{ form.time }}" onChange="{{ fTime }}" style="padding:10px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;color:#a1a1b0">Responsável
+            <select value="{{ form.owner }}" onChange="{{ fOwner }}" style="padding:11px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px">
+              <option value="victoria">Victoria</option>
+              <option value="joao">João Victor</option>
+            </select>
+          </label>
+          <label style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;color:#a1a1b0">Status
+            <select value="{{ form.status }}" onChange="{{ fStatus }}" style="padding:11px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px">
+              <sc-for list="{{ statusLegend }}" as="o" hint-placeholder-count="3"><option value="{{ o.id }}">{{ o.label }}</option></sc-for>
+            </select>
+          </label>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:4px">
+          <button onClick="{{ closeModal }}" style="padding:10px 16px;border-radius:10px;border:1px solid #23232d;background:transparent;color:#a1a1b0;font-size:13.5px;cursor:pointer">Cancelar</button>
+          <button onClick="{{ saveModal }}" style="padding:10px 18px;border-radius:10px;border:0;background:#a855f7;color:#0a0a0f;font-weight:700;font-size:13.5px;cursor:pointer;opacity:{{ saveOpacity }}">Adicionar ao board</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const ICON = n => `url(https://unpkg.com/lucide-static@0.460.0/icons/${n}.svg)`;
+const pad = n => String(n).padStart(2, '0');
+const keyOf = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const parseKey = k => { const [y, m, d] = k.split('-').map(Number); return new Date(y, m - 1, d); };
+const MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const WEEK = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+const TODAY = new Date(); TODAY.setHours(0,0,0,0);
+const addDays = n => new Date(TODAY.getFullYear(), TODAY.getMonth(), TODAY.getDate() + n);
+const diffDays = k => Math.round((parseKey(k) - TODAY) / 864e5);
+
+const CLIENTS = [
+  { id:'bella', name:'Bella Estética', short:'Bella', color:'oklch(0.74 0.16 340)' },
+  { id:'aurora', name:'Café Aurora', short:'Aurora', color:'oklch(0.78 0.14 65)' },
+  { id:'fitpro', name:'FitPro Academia', short:'FitPro', color:'oklch(0.78 0.15 150)' },
+  { id:'nomade', name:'Nômade Viagens', short:'Nômade', color:'oklch(0.75 0.13 225)' },
+  { id:'casaverde', name:'Casa Verde Imóveis', short:'Casa Verde', color:'oklch(0.78 0.12 185)' },
+  { id:'lumi', name:'Lumi Joias', short:'Lumi', color:'oklch(0.76 0.14 300)' },
+];
+const USERS = {
+  admin: { id:'admin', name:'Cleverton', first:'Cleverton', role:'Administrador Geral', initials:'CL', color:'#c084fc', photo:'https://i.imgur.com/3zrRURm.jpeg', password:'c120384c',
+    focus:['Visão global das entregas','Métricas e clientes ativos','Aprovação de conteúdos'] },
+  victoria: { id:'victoria', name:'Victoria', first:'Victoria', role:'Social Media & Gestão de Redes', initials:'VI', color:'oklch(0.78 0.14 340)', photo:'https://i.imgur.com/WLttcVO.jpeg', password:'vic1234@',
+    focus:['Posts do dia e agendamentos','Roteiros e demandas de stories','Prazos de publicação'] },
+  joao: { id:'joao', name:'João Victor', first:'João', role:'Editor de Vídeos e Artes', initials:'JV', color:'oklch(0.78 0.13 220)', photo:'https://i.imgur.com/t0nDnU5.jpeg', password:'victor1234@',
+    focus:['Reels em edição','Artes prontas para revisão','Status das produções'] },
+};
+const STATUS = [
+  { id:'roteiro', label:'Em Roteiro/Edição', short:'Em produção', color:'oklch(0.82 0.13 80)', icon:'pen-line' },
+  { id:'pronto', label:'Pronto para Publicar', short:'Pronto', color:'#c084fc', icon:'circle-check' },
+  { id:'publicado', label:'Publicado', short:'Publicado', color:'oklch(0.8 0.15 155)', icon:'send' },
+];
+const TYPES = ['Reels','Post','Carrossel','Stories','Arte'];
+const TYPE_ICON = { Reels:'clapperboard', Post:'image', Carrossel:'gallery-horizontal', Stories:'smartphone', Arte:'palette' };
+const tint = (c, a) => `color-mix(in oklch, ${c} ${a}%, transparent)`;
+
+const SEED = [
+  [-24,'bella','Reels','Antes e depois: limpeza de pele','joao','10:00'],
+  [-22,'aurora','Carrossel','5 formas de preparar o café coado','victoria','08:30'],
+  [-20,'fitpro','Reels','Treino de pernas em 15 minutos','joao','18:00'],
+  [-18,'nomade','Post','Roteiro de 7 dias no Chile','victoria','12:00'],
+  [-16,'lumi','Arte','Lançamento coleção Primavera','joao','19:00'],
+  [-14,'casaverde','Carrossel','Checklist para comprar o 1º imóvel','victoria','11:00'],
+  [-12,'bella','Stories','Enquete: tratamento favorito','victoria','15:00'],
+  [-10,'fitpro','Post','Depoimento aluna Carla','victoria','07:00'],
+  [-8,'aurora','Reels','Bastidores da torra','joao','09:00'],
+  [-6,'nomade','Reels','Pôr do sol no Atacama','joao','18:30'],
+  [-4,'lumi','Carrossel','Como combinar colares','victoria','20:00'],
+  [-2,'casaverde','Reels','Tour apartamento Jardins','joao','17:00'],
+  [-1,'bella','Post','Promoção semana do cliente','victoria','10:00'],
+  [0,'aurora','Stories','Cardápio do dia','victoria','08:00'],
+  [0,'fitpro','Reels','Desafio 30 dias – dia 1','joao','18:00'],
+  [0,'lumi','Post','Anel solitário em destaque','victoria','19:30'],
+  [1,'nomade','Carrossel','Checklist de mala para neve','victoria','12:00'],
+  [1,'bella','Arte','Tabela de preços outubro','joao','09:00'],
+  [2,'casaverde','Stories','Caixinha de perguntas: financiamento','victoria','16:00'],
+  [3,'fitpro','Arte','Horários especiais feriado','joao','08:00'],
+  [4,'aurora','Reels','Latte art passo a passo','joao','10:00'],
+  [5,'lumi','Stories','Contagem regressiva Black Friday','victoria','20:00'],
+  [6,'bella','Reels','Rotina de skincare noturna','joao','21:00'],
+  [8,'nomade','Post','Pacote Réveillon Nordeste','victoria','12:00'],
+  [9,'casaverde','Carrossel','Mitos sobre o ITBI','victoria','11:00'],
+  [11,'fitpro','Reels','Alongamento para iniciantes','joao','07:00'],
+  [13,'aurora','Arte','Novo blend de outono','joao','09:30'],
+  [15,'lumi','Reels','Unboxing da nova embalagem','joao','19:00'],
+  [18,'bella','Carrossel','Cuidados pós-procedimento','victoria','14:00'],
+  [22,'nomade','Stories','Quiz: qual destino combina com você','victoria','18:00'],
+];
+
+function seedPosts() {
+  return SEED.map((r, i) => {
+    const [off, client, type, title, owner, time] = r;
+    let status = off < 0 ? 'publicado' : off === 0 ? (i % 2 ? 'pronto' : 'roteiro') : off <= 4 ? (i % 3 === 0 ? 'roteiro' : 'pronto') : 'roteiro';
+    if (off === 0 && client === 'aurora') status = 'pronto';
+    const approved = status === 'publicado' || (status === 'pronto' && i % 2 === 0);
+    return { id: 'p' + i, date: keyOf(addDays(off)), client, type, title, owner, time, status, approved };
+  });
+}
+
+function dateLabel(k) {
+  const d = diffDays(k), dt = parseKey(k);
+  if (d === 0) return 'Hoje';
+  if (d === 1) return 'Amanhã';
+  if (d === -1) return 'Ontem';
+  return `${WEEK[dt.getDay()]} ${pad(dt.getDate())}/${pad(dt.getMonth() + 1)}`;
+}
+
+class Component extends DCLogic {
+  state = {
+    user: null, tab: 'dashboard', posts: seedPosts(), clientFilter: 'all', onlyMine: false,
+    dragId: null, dragOver: null, w: typeof window !== 'undefined' ? window.innerWidth : 1280, navOpen: false,
+    calY: TODAY.getFullYear(), calM: TODAY.getMonth(), selKey: keyOf(TODAY), logoFail: false,
+    modal: false, form: null,
+  };
+  componentDidMount() {
+    this._r = () => this.setState({ w: window.innerWidth });
+    window.addEventListener('resize', this._r);
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this._r); }
+
+  update(id, patch) { this.setState(s => ({ posts: s.posts.map(p => p.id === id ? { ...p, ...patch } : p) })); }
+  setStatus(id, status) { this.update(id, status === 'pronto' ? { status, approved: this.state.user === 'admin' } : { status }); }
+
+  renderVals() {
+    const s = this.state;
+    const isMobile = s.w < 900;
+    const clientOf = id => CLIENTS.find(c => c.id === id);
+    const stOf = id => STATUS.find(x => x.id === id);
+    const dec = p => {
+      const c = clientOf(p.client), st = stOf(p.status), o = USERS[p.owner];
+      return { ...p, clientName: c.name, clientShort: c.short, clientColor: c.color, clientTint: tint(c.color, 16),
+        typeIcon: ICON(TYPE_ICON[p.type]), statusLabel: st.label, statusShort: st.short, statusColor: st.color, statusTint: tint(st.color, 14),
+        when: `${dateLabel(p.date)} · ${p.time}`, ownerName: o.name, ownerInitials: o.initials, ownerColor: o.color };
+    };
+    const sorted = [...s.posts].sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
+
+    const login = id => this.setState({ user: id, tab: 'dashboard', onlyMine: id !== 'admin', clientFilter: 'all', pwdFor: null, pwd: '', pwdErr: false });
+    const profiles = Object.values(USERS).map(u => ({ ...u, locked: !!u.password,
+      enter: () => u.password ? this.setState({ pwdFor: u.id, pwd: '', pwdErr: false }) : login(u.id) }));
+    const pwdUser = s.pwdFor ? USERS[s.pwdFor] : {};
+    const submitPwd = () => {
+      if (!s.pwdFor) return;
+      if ((s.pwd || '') === pwdUser.password) login(s.pwdFor);
+      else this.setState({ pwdErr: true });
+    };
+    const base = { profiles, isLogin: !s.user, isApp: !!s.user, logoOk: !s.logoFail, logoFail: s.logoFail,
+      onLogoError: () => this.setState({ logoFail: true }),
+      pwdOpen: !!s.pwdFor, pwdUser, pwd: s.pwd || '', pwdErr: !!s.pwdErr,
+      pwdBorder: s.pwdErr ? 'oklch(0.65 0.2 25)' : '#2a2a3a',
+      onPwd: e => this.setState({ pwd: e.target.value, pwdErr: false }),
+      onPwdKey: e => { if (e.key === 'Enter') submitPwd(); if (e.key === 'Escape') this.setState({ pwdFor: null }); },
+      submitPwd, closePwd: () => this.setState({ pwdFor: null, pwd: '', pwdErr: false }),
+      stop: e => e.stopPropagation() };
+    if (!s.user) return base;
+
+    const me = USERS[s.user];
+    const isAdmin = s.user === 'admin';
+    const mine = isAdmin ? sorted : sorted.filter(p => p.owner === s.user);
+    const monthKey = keyOf(TODAY).slice(0, 7);
+    const pending = sorted.filter(p => p.status === 'pronto' && !p.approved);
+
+    const go = tab => () => this.setState({ tab, navOpen: false });
+    const navItems = [
+      { id:'dashboard', label: isAdmin ? 'Dashboard Geral' : 'Minha Área', icon: ICON('layout-dashboard') },
+      { id:'board', label:'Produção por Cliente', icon: ICON('kanban'), badge: isAdmin ? pending.length : mine.filter(p => p.status === 'roteiro').length },
+      { id:'calendar', label:'Calendário Geral', icon: ICON('calendar-days') },
+    ].map(n => { const a = s.tab === n.id; return { ...n, go: go(n.id), hasBadge: !!n.badge, bg: a ? 'rgba(168,85,247,0.14)' : 'transparent', color: a ? '#f3e8ff' : '#9a9aa8', iconColor: a ? '#c084fc' : '#6f6f7d' }; });
+
+    const titles = { dashboard: isAdmin ? 'Dashboard Geral' : 'Minha Área de Trabalho', board: 'Produção por Cliente', calendar: 'Calendário Geral' };
+    const subs = { dashboard: isAdmin ? 'Visão global da agência' : me.role, board: 'Arraste os cards entre as etapas ou use as setas', calendar: 'O que vai ao ar em cada data' };
+    const h = new Date().getHours();
+    const hello = h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite';
+
+    // Dashboard
+    const scopeMonth = mine.filter(p => p.date.startsWith(monthKey));
+    const pubMonth = scopeMonth.filter(p => p.status === 'publicado').length;
+    const monthPct = scopeMonth.length ? Math.round(pubMonth / scopeMonth.length * 100) : 0;
+    const breakdown = STATUS.map(st => ({ label: st.label, color: st.color, count: mine.filter(p => p.status === st.id).length }));
+    const dim = new Date(TODAY.getFullYear(), TODAY.getMonth() + 1, 0).getDate();
+    const counts = Array.from({ length: dim }, (_, i) => {
+      const k = `${monthKey}-${pad(i + 1)}`;
+      const list = mine.filter(p => p.date === k);
+      return { total: list.length, pub: list.filter(p => p.status === 'publicado').length, day: i + 1 };
+    });
+    const maxC = Math.max(1, ...counts.map(c => c.total));
+    const bars = counts.map(c => {
+      const isT = c.day === TODAY.getDate();
+      return { h: c.total ? Math.max(8, c.total / maxC * 100) : 2, pubH: c.total ? c.pub / c.total * 100 : 0,
+        outline: isT ? '1px solid #c084fc' : 'none', tip: `${c.day}: ${c.total} entrega(s)`,
+        label: (c.day === 1 || c.day % 5 === 0 || isT) ? String(c.day) : '', labelColor: isT ? '#c084fc' : '#5c5c6a' };
+    });
+
+    const inDays = (p, a, b) => { const d = diffDays(p.date); return d >= a && d <= b; };
+    const todayAll = sorted.filter(p => diffDays(p.date) === 0);
+    const item = (p, actionLabel, fn) => ({ ...dec(p), hasAction: !!actionLabel, noAction: !actionLabel, actionLabel, action: fn });
+    const panel = (title, icon, list, empty, map) => ({ title, icon: ICON(icon), count: list.length, isEmpty: !list.length, empty, items: list.slice(0, 5).map(map || (p => item(p))) });
+
+    let kpis, panels, roleLine;
+    if (isAdmin) {
+      const all = sorted.filter(p => p.date.startsWith(monthKey));
+      roleLine = `${pending.length} conteúdo(s) aguardando sua aprovação e ${todayAll.length} publicação(ões) programada(s) para hoje.`;
+      kpis = [
+        { label:'Entregas do mês', value:`${pubMonth}/${all.length}`, sub:`${monthPct}% publicado`, icon: ICON('trending-up') },
+        { label:'Clientes ativos', value: CLIENTS.length, sub:'contratos vigentes', icon: ICON('users') },
+        { label:'Aguardando aprovação', value: pending.length, sub:'prontos para revisão', icon: ICON('shield-check') },
+        { label:'Tarefas do dia', value: todayAll.filter(p => p.status !== 'publicado').length, sub:'pendentes para hoje', icon: ICON('calendar-clock') },
+      ];
+      panels = [
+        panel('Aprovações pendentes', 'shield-check', pending, 'Nenhum conteúdo aguardando aprovação.', p => item(p, 'Aprovar', () => this.update(p.id, { approved: true }))),
+        panel('No ar hoje', 'send', todayAll, 'Nada programado para hoje.'),
+        panel('Próximos prazos', 'clock', sorted.filter(p => p.status !== 'publicado' && inDays(p, 1, 7)), 'Sem prazos nos próximos 7 dias.'),
+      ];
+    } else if (s.user === 'victoria') {
+      const roteiros = mine.filter(p => p.status === 'roteiro');
+      const stories = sorted.filter(p => p.type === 'Stories' && p.status !== 'publicado');
+      const toPublish = sorted.filter(p => p.status === 'pronto' && p.approved && diffDays(p.date) <= 2);
+      roleLine = `Você tem ${todayAll.length} post(s) programado(s) para hoje e ${roteiros.length} roteiro(s) em aberto.`;
+      kpis = [
+        { label:'Posts de hoje', value: todayAll.length, sub:'todas as contas', icon: ICON('send') },
+        { label:'Roteiros em aberto', value: roteiros.length, sub:'sob sua responsabilidade', icon: ICON('pen-line') },
+        { label:'Stories pendentes', value: stories.length, sub:'demandas de stories', icon: ICON('smartphone') },
+        { label:'Prazos em 48h', value: mine.filter(p => p.status !== 'publicado' && inDays(p, 0, 2)).length, sub:'hoje até depois de amanhã', icon: ICON('clock') },
+      ];
+      panels = [
+        panel('Posts do dia', 'calendar-clock', todayAll, 'Nenhum post programado para hoje.', p => p.status === 'pronto' && p.approved ? item(p, 'Publicar', () => this.update(p.id, { status: 'publicado' })) : item(p)),
+        panel('Roteiros', 'pen-line', roteiros, 'Nenhum roteiro em aberto.'),
+        panel('Demandas de stories', 'smartphone', stories, 'Sem stories pendentes.'),
+        panel('Aprovados para publicar', 'circle-check', toPublish, 'Nada aprovado aguardando publicação.', p => item(p, 'Publicar', () => this.update(p.id, { status: 'publicado' }))),
+      ];
+    } else {
+      const reelsEd = mine.filter(p => p.type === 'Reels' && p.status === 'roteiro');
+      const artesOk = mine.filter(p => p.type === 'Arte' && p.status === 'pronto');
+      roleLine = `${reelsEd.length} Reels em edição e ${mine.filter(p => p.status !== 'publicado' && inDays(p, 0, 2)).length} entrega(s) nas próximas 48h.`;
+      kpis = [
+        { label:'Reels em edição', value: reelsEd.length, sub:'na sua fila', icon: ICON('clapperboard') },
+        { label:'Artes prontas', value: artesOk.length, sub:'aguardando publicação', icon: ICON('palette') },
+        { label:'Publicados no mês', value: pubMonth, sub:`${monthPct}% das suas entregas`, icon: ICON('trending-up') },
+        { label:'Prazos em 48h', value: mine.filter(p => p.status !== 'publicado' && inDays(p, 0, 2)).length, sub:'hoje até depois de amanhã', icon: ICON('clock') },
+      ];
+      panels = [
+        panel('Reels em edição', 'clapperboard', reelsEd, 'Nenhum Reels em edição.', p => item(p, 'Finalizar', () => this.setStatus(p.id, 'pronto'))),
+        panel('Artes prontas', 'palette', artesOk, 'Nenhuma arte pronta no momento.'),
+        panel('Próximas entregas', 'clock', mine.filter(p => p.status !== 'publicado' && diffDays(p.date) >= 0), 'Sem entregas pendentes.'),
+      ];
+    }
+    const clientProgress = CLIENTS.map(c => {
+      const l = sorted.filter(p => p.client === c.id && p.date.startsWith(monthKey));
+      const pub = l.filter(p => p.status === 'publicado').length;
+      return { name: c.name, color: c.color, total: l.length, pub, pct: l.length ? Math.round(pub / l.length * 100) : 0 };
+    });
+
+    // Board
+    const clientChips = [{ id:'all', name:'Todos os clientes', color:'#a855f7' }, ...CLIENTS].map(c => {
+      const a = s.clientFilter === c.id;
+      return { name: c.name, dot: c.color, pick: () => this.setState({ clientFilter: c.id }),
+        bg: a ? 'rgba(168,85,247,0.16)' : '#0e0e13', border: a ? '#a855f7' : '#1f1f29', color: a ? '#f3e8ff' : '#a1a1b0' };
+    });
+    const boardList = sorted.filter(p => (s.clientFilter === 'all' || p.client === s.clientFilter) && (!s.onlyMine || isAdmin || p.owner === s.user));
+    const columns = STATUS.map((st, si) => {
+      const cards = boardList.filter(p => p.status === st.id).map(p => ({
+        ...dec(p),
+        opacity: s.dragId === p.id ? 0.4 : 1,
+        canPrev: si > 0, canNext: si < STATUS.length - 1,
+        prev: () => this.setStatus(p.id, STATUS[si - 1].id),
+        next: () => this.setStatus(p.id, STATUS[si + 1].id),
+        needsApproval: p.status === 'pronto' && !p.approved,
+        canApprove: isAdmin && p.status === 'pronto' && !p.approved,
+        approve: () => this.update(p.id, { approved: true }),
+        onDragStart: e => { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', p.id); this.setState({ dragId: p.id }); },
+        onDragEnd: () => this.setState({ dragId: null, dragOver: null }),
+      }));
+      const over = s.dragOver === st.id;
+      return { ...st, icon: ICON(st.icon), cards, count: cards.length, isEmpty: !cards.length,
+        bg: over ? 'rgba(168,85,247,0.08)' : '#0b0b0f', border: over ? '#a855f7' : '#1a1a23',
+        onDragOver: e => { e.preventDefault(); if (s.dragOver !== st.id) this.setState({ dragOver: st.id }); },
+        onDrop: e => { e.preventDefault(); const id = e.dataTransfer.getData('text/plain') || s.dragId; if (id) this.setStatus(id, st.id); this.setState({ dragId: null, dragOver: null }); } };
+    });
+
+    // Calendar
+    const first = new Date(s.calY, s.calM, 1);
+    const days = new Date(s.calY, s.calM + 1, 0).getDate();
+    const lead = first.getDay();
+    const total = Math.ceil((lead + days) / 7) * 7;
+    const todayKey = keyOf(TODAY);
+    const calCells = Array.from({ length: total }, (_, i) => {
+      const d = new Date(s.calY, s.calM, i - lead + 1);
+      const k = keyOf(d), inM = d.getMonth() === s.calM;
+      const list = sorted.filter(p => p.date === k).map(dec);
+      const isT = k === todayKey, sel = k === s.selKey;
+      return { day: d.getDate(), chips: list.slice(0, 3), all: list, hasMore: list.length > 3, more: list.length - 3,
+        opacity: inM ? 1 : 0.35, bg: sel ? 'rgba(168,85,247,0.10)' : '#111117', border: sel ? '#a855f7' : '#1a1a23',
+        numBg: isT ? '#a855f7' : 'transparent', numColor: isT ? '#0a0a0f' : '#b9b9c6',
+        select: () => this.setState({ selKey: k }) };
+    });
+    const selD = parseKey(s.selKey);
+    const selItems = sorted.filter(p => p.date === s.selKey).map(dec);
+    const shift = n => () => this.setState(st => { const d = new Date(st.calY, st.calM + n, 1); return { calY: d.getFullYear(), calM: d.getMonth() }; });
+
+    // Modal
+    const f = s.form || {};
+    const setF = k => e => { const v = e.target.value; this.setState(st => ({ form: { ...st.form, [k]: v } })); };
+
+    return {
+      ...base, me, isAdmin, isMobile, isDesktop: !isMobile,
+      showSidebar: !isMobile || s.navOpen, showBackdrop: isMobile && s.navOpen, mainPad: isMobile ? 0 : 248,
+      openNav: () => this.setState({ navOpen: true }), closeNav: () => this.setState({ navOpen: false }),
+      logout: () => this.setState({ user: null, navOpen: false }),
+      navItems, pageTitle: titles[s.tab], pageSub: subs[s.tab],
+      todayLabel: `${WEEK[TODAY.getDay()]}, ${pad(TODAY.getDate())} ${MONTHS[TODAY.getMonth()].slice(0,3).toLowerCase()} ${TODAY.getFullYear()}`,
+      isDashboard: s.tab === 'dashboard', isBoard: s.tab === 'board', isCalendar: s.tab === 'calendar',
+      greeting: `${hello}, ${me.first}`, roleLine, kpis, panels, clientProgress,
+      progressTitle: isAdmin ? 'Progresso de entregas do mês' : 'Suas entregas do mês',
+      monthPct, breakdown, bars, monthName: `${MONTHS[TODAY.getMonth()]} ${TODAY.getFullYear()}`,
+      clientChips, columns, showMineToggle: !isAdmin, toggleMine: () => this.setState({ onlyMine: !s.onlyMine }),
+      mineTrack: s.onlyMine ? '#a855f7' : '#2a2a36', mineKnob: s.onlyMine ? 16 : 2,
+      calTitle: `${MONTHS[s.calM]} ${s.calY}`, calPrev: shift(-1), calNext: shift(1),
+      calToday: () => this.setState({ calY: TODAY.getFullYear(), calM: TODAY.getMonth(), selKey: todayKey }),
+      weekDays: WEEK, calCells, cellH: isMobile ? 58 : 112,
+      statusLegend: STATUS,
+      selLabel: `${dateLabel(s.selKey) === 'Hoje' ? 'Hoje · ' : ''}${pad(selD.getDate())} de ${MONTHS[selD.getMonth()]}`,
+      selItems, selEmpty: !selItems.length,
+      modalOpen: s.modal, form: f,
+      openModal: () => this.setState({ modal: true, form: { title:'', client:'bella', type:'Reels', date: s.tab === 'calendar' ? s.selKey : todayKey, time:'10:00', owner: s.user === 'joao' ? 'joao' : 'victoria', status:'roteiro' } }),
+      closeModal: () => this.setState({ modal: false }),
+      fTitle: setF('title'), fClient: setF('client'), fType: setF('type'), fDate: setF('date'), fTime: setF('time'), fOwner: setF('owner'), fStatus: setF('status'),
+      clientOptions: CLIENTS, typeOptions: TYPES,
+      saveOpacity: f.title && f.title.trim() ? 1 : 0.5,
+      saveModal: () => {
+        if (!f.title || !f.title.trim() || !f.date) return;
+        const p = { ...f, title: f.title.trim(), id: 'n' + Date.now(), approved: f.status === 'publicado' || (f.status === 'pronto' && isAdmin) };
+        this.setState(st => ({ posts: [...st.posts, p], modal: false }));
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>

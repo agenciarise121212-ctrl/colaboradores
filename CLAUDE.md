@@ -1,0 +1,26 @@
+# Agência Rise — estado do projeto e pendências
+
+## Arquivos
+- Fonte: `Agencia Rise v2.dc.html` (DC único). Publicação: `deploy/index.html` (gerar com super_inline_html a partir da fonte).
+- Supabase: tabela `rise_data` (colunas `id`, `data` JSON). Linhas (COLS): posts, clients, fin, notifs, team, payees, payments, shoots, stories.
+- Edge Function Gemini: `supabase/functions/generate-weekly-stories/index.ts` (modes "week" e "story"). Guia: `COMO-CONFIGURAR-GEMINI.md`. Usuário já cadastrou o Secret GEMINI_API_KEY; função AINDA NÃO publicada (usuário fará pelo painel: Via Editor, desativar Verify JWT). Oferecer checagem após deploy.
+- `.env.example`, `.gitignore`, `supabase/config.toml` (verify_jwt=false).
+
+## PRÓXIMO PASSO — evolução em 5 fases (auditoria já feita e aprovada; usuário dirá "começar fase 1")
+Regras do usuário: não recriar, não remover recursos, reaproveitar estruturas, sem dados fictícios, sem botões só visuais, gerar index.html testado ao fim de cada fase.
+Decisões: novas entidades como novas linhas em rise_data (ex.: ideas, contracts, proposals, checklistTemplates, clientDates, waTemplates). Fluxo de 8 etapas = novo campo `stage` na demanda, sincronizado com `status` atual (Ideia/Aprovado→aberto; Gravar/Editar→andamento; Revisão→revisao; Aprovação do cliente→revisao/aguardando; Agendado/Publicado→concluido). Central Inteligente baseada em regras sobre dados reais (sem IA por ora).
+1. [FEITA] Fase 1 (linha `ideas`; campos na demanda: stage, stageLog, timer{sessions,running,finished}, revisions[], ideaId; abas ideas/metrics; board com modo 'Fluxo de 8 etapas'): Banco de ideias (categorias, status Ideia→Em análise→Aprovada→Transformada em demanda→Produzida→Arquivada, filtros, "Transformar em demanda" com vínculo ideia↔demanda), fluxo visual 8 etapas com drag e log (usuário, etapa anterior/nova, data/hora), timeline completa (pausas, retomadas, links, comentários), cronômetro Iniciar/Pausar/Finalizar (tempo líquido + métricas), controle de revisões (nº, quem pediu, descrição, responsável, status, tempo, link da versão + métricas por cliente/conteúdo).
+2. [FEITA] Fase 2 (linhas ckTemplates, clientDates; gravação: sh.prep[{g,text,done,kind,demandId}], sh.equip[]; abas 'preparar' e 'equip' no drawer; calendário calView mes/semana/dia + calF filtros; prepVals() método): aba "Preparar dia de captação" na gravação (conteúdos/pessoas/produtos/B-roll/fotos marcáveis, "Captação X% concluída", gerar demandas de edição), checklist pré-gravação configurável (16 itens padrão, add/remover, modelos salvos, alerta), calendário editorial (dia/semana/mês, filtros cliente/colaborador/tipo/status/plataforma), datas importantes por cliente com recorrência anual e alerta de conteúdo não planejado.
+3. [FEITA] Fase 3 (linhas contracts, waTemplates; demanda: versions[{n,url,at,by,result}], extra; PKG_LIM; abas whatsapp/contracts; contractAlerts() em runAuto; newVersion()): aprovação externa com versão + revisão automática + "Aprovado pelo cliente"; Central de WhatsApp (categorias, variáveis {cliente} {responsavel} {data} {horario} {demanda} {valor} {vencimento} {link} {link_aprovacao}, editar antes); contratos (campos, status, alertas 30/15/7); demandas extras (limite do pacote alerta sem bloquear).
+4. Fase 4: financeiro colaboradores (modelos Mensal/Por demanda/Diária/Vídeo/Arte/Personalizado, a pagar/pago/pendente); rentabilidade por cliente (receita − custos, horas, margem, 🟢🟡🔴, custo por conteúdo, valor da hora); propostas (status, visual, → cliente/contrato); relatório mensal visual (sem inventar métricas; campos de métricas cadastráveis).
+5. Fase 5: notificações com níveis Informação/Atenção/Urgente e deduplicação; pesquisa global agrupada; Central Inteligente "O que preciso resolver hoje?" com ações rápidas; Modo Segunda-feira (resumo semanal + por colaborador).
+
+## Segurança (fazer SÓ quando o usuário finalizar o projeto e pedir)
+Plano aprovado em conceito, aguardando autorização para implementar:
+1. Supabase Auth: tela Netflix mantida; senha validada pelo Supabase (signInWithPassword). E-mails internos sugeridos: cleverton@agenciarise.app, victoria@agenciarise.app, joao@agenciarise.app (confirmar com o usuário). Remover senhas do código.
+2. RLS: tabela rise_data sem acesso anônimo; só usuários autenticados.
+3. Dados sensíveis (payees/PIX, fin, payments completos) legíveis só pelo admin; colaborador lê apenas os próprios pagamentos (separar em linhas por usuário).
+4. Link de aprovação do cliente: funções SQL security definer (buscar/decidir por token) liberadas ao anon.
+5. Criar perfil na tela inicial exige admin logado.
+6. Edge Function: ativar REQUIRE_AUTH=true e verify_jwt=true.
+Usuário terá de: criar usuários em Authentication → Users (Auto confirm), rodar SQL, republicar index.html. Sugerir troca das senhas atuais.
