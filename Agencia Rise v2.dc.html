@@ -25,6 +25,10 @@ option{background:#111117;color:#ededf2}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <title>Agência Rise · Sistema de Gestão</title>
+<link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+<link id="rise-icon-192" rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link id="rise-icon-512" rel="preload" as="image" type="image/png" href="icons/icon-512.png">
 <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#0a0a0f"></rect><text x="50" y="62" font-family="Arial" font-weight="700" font-size="30" fill="#a855f7" text-anchor="middle">RISE</text></svg></template>
 </helmet>
 
@@ -43,26 +47,43 @@ option{background:#111117;color:#ededf2}
         <div style="font-size:13.5px;color:#8b8b99">Peça um novo link para a equipe da Agência Rise.</div>
       </div>
     </sc-if>
+    <sc-if value="{{ apHasLoadErr }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:50px 12px;text-align:center;font-size:14px;color:#d4d4dc;line-height:1.5">{{ apLoadErr }}</div>
+    </sc-if>
     <sc-if value="{{ apFound }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex;flex-direction:column;gap:18px">
-        <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;flex-direction:column;gap:8px">
           <div style="font-family:'JetBrains Mono';font-size:11px;letter-spacing:0.14em;color:#a78bfa;text-transform:uppercase">Aprovação de conteúdo</div>
-          <div style="font-family:Sora;font-weight:600;font-size:clamp(20px,3vw,26px);letter-spacing:-0.01em;line-height:1.25">{{ apTitle }}</div>
-          <div style="font-size:13.5px;color:#8b8b99">{{ apMeta }}</div>
-          <sc-if value="{{ apHasVersions }}" hint-placeholder-val="{{ false }}">
-            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:4px">
-              <span style="font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;background:rgba(168,85,247,0.16);color:#e9d5ff">{{ apVerLabel }}</span>
-              <sc-for list="{{ apOldVers }}" as="ov" hint-placeholder-count="0"><a href="{{ ov.url }}" target="_blank" rel="noopener" style="font-size:12px;color:#8b8b99;text-decoration:underline">{{ ov.label }}</a></sc-for>
-            </div>
+          <div style="font-size:15px;color:#d4d4dc;line-height:1.5">Olá, <strong style="color:#ffffff">{{ apClient }}</strong>. Este conteúdo está disponível para sua aprovação.</div>
+          <div style="font-family:Sora;font-weight:600;font-size:clamp(21px,3vw,27px);letter-spacing:-0.01em;line-height:1.25;text-wrap:pretty">{{ apTitle }}</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <span style="font-size:12px;font-weight:700;padding:5px 11px;border-radius:20px;background:rgba(168,85,247,0.16);color:#e9d5ff">{{ apKind }}</span>
+            <span style="font-size:12px;font-weight:700;padding:5px 11px;border-radius:20px;background:#17171f;color:#d4d4dc;font-family:'JetBrains Mono'">{{ apVerTag }}</span>
+            <span style="font-size:12px;padding:5px 11px;border-radius:20px;background:#17171f;color:#a1a1b0">{{ apDateLabel }}</span>
+          </div>
+          <sc-if value="{{ apHasOld }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;gap:10px;flex-wrap:wrap"><sc-for list="{{ apOldVers }}" as="ov" hint-placeholder-count="0"><a href="{{ ov.url }}" target="_blank" rel="noopener" style="font-size:12px;color:#8b8b99;text-decoration:underline">{{ ov.label }}</a></sc-for></div>
           </sc-if>
         </div>
-        <sc-if value="{{ apHasPreview }}" hint-placeholder-val="{{ false }}">
-          <div style="display:flex;flex-direction:column;gap:8px">
-            <iframe src="{{ apPreview }}" title="Pré-visualização" allow="autoplay; fullscreen" allowFullScreen="{{ true }}" style="width:100%;aspect-ratio:16 / 10;min-height:260px;border:0;border-radius:14px;background:#000"></iframe>
-            <a href="{{ apDriveUrl }}" target="_blank" rel="noopener" style="align-self:flex-start;display:flex;align-items:center;gap:6px;font-size:13px;color:#c084fc"><span style="width:14px;height:14px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/external-link.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/external-link.svg) center / contain no-repeat"></span>Abrir no Google Drive</a>
+        <sc-if value="{{ apHasMedia }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <sc-if value="{{ apCurIsImg }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ apZoomOpen }}" aria-label="Ampliar" style="border:0;padding:0;background:#000;border-radius:14px;overflow:hidden;cursor:zoom-in;display:flex;justify-content:center;width:100%"><img src="{{ apCurUrl }}" alt="{{ apTitle }}" style="width:100%;max-height:72vh;object-fit:contain;display:block"></button>
+            </sc-if>
+            <sc-if value="{{ apCurIsFrame }}" hint-placeholder-val="{{ false }}">
+              <iframe src="{{ apCurPreview }}" title="Pré-visualização" allow="autoplay; fullscreen" allowFullScreen="{{ true }}" style="width:100%;aspect-ratio:16 / 10;min-height:280px;border:0;border-radius:14px;background:#000"></iframe>
+            </sc-if>
+            <sc-if value="{{ apIsCarousel }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;justify-content:center;gap:12px">
+                <button onClick="{{ apPrev }}" aria-label="Anterior" style="width:48px;height:48px;border-radius:12px;border:1px solid #2a2a36;background:#121218;color:#e9d5ff;display:flex;align-items:center;justify-content:center;cursor:pointer"><span style="width:20px;height:20px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/chevron-left.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/chevron-left.svg) center / contain no-repeat"></span></button>
+                <span style="font-family:'JetBrains Mono';font-size:13px;color:#d4d4dc;min-width:70px;text-align:center">{{ apIdxLabel }}</span>
+                <button onClick="{{ apNext }}" aria-label="Próxima" style="width:48px;height:48px;border-radius:12px;border:1px solid #2a2a36;background:#121218;color:#e9d5ff;display:flex;align-items:center;justify-content:center;cursor:pointer"><span style="width:20px;height:20px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/chevron-right.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/chevron-right.svg) center / contain no-repeat"></span></button>
+              </div>
+            </sc-if>
+            <a href="{{ apCurUrl }}" target="_blank" rel="noopener" style="align-self:flex-start;display:flex;align-items:center;gap:6px;font-size:13px;color:#c084fc"><span style="width:14px;height:14px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/maximize-2.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/maximize-2.svg) center / contain no-repeat"></span>Abrir em tela cheia</a>
           </div>
         </sc-if>
-        <sc-if value="{{ apNoPreview }}" hint-placeholder-val="{{ false }}">
+        <sc-if value="{{ apNoMedia }}" hint-placeholder-val="{{ false }}">
           <div style="padding:40px 12px;text-align:center;font-size:13.5px;color:#8b8b99;border:1px dashed #2a2a36;border-radius:14px">O arquivo ainda não foi anexado.</div>
         </sc-if>
         <sc-if value="{{ apHasBrief }}" hint-placeholder-val="{{ false }}">
@@ -71,47 +92,71 @@ option{background:#111117;color:#ededf2}
             <div style="font-size:14px;color:#d4d4dc;line-height:1.55;white-space:pre-wrap">{{ apBrief }}</div>
           </div>
         </sc-if>
-        <sc-if value="{{ apDecided }}" hint-placeholder-val="{{ false }}">
-          <div style="display:flex;flex-direction:column;gap:6px;padding:12px 14px;border-radius:12px;border:1px solid {{ apStColor }};background:{{ apStTint }}">
-            <div style="font-size:14px;font-weight:700;color:{{ apStColor }}">{{ apStLabel }}</div>
-            <sc-if value="{{ apHasPrevComment }}" hint-placeholder-val="{{ false }}">
-              <div style="font-size:13px;color:#d4d4dc;font-style:italic">“{{ apPrevComment }}”</div>
-            </sc-if>
+        <sc-if value="{{ apAlreadyOk }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:22px 12px;text-align:center;border-radius:14px;background:oklch(0.8 0.15 155 / 0.08);border:1px solid oklch(0.8 0.15 155 / 0.4)">
+            <span style="width:30px;height:30px;flex-shrink:0;background:oklch(0.8 0.15 155);mask:url(https://unpkg.com/lucide-static@0.460.0/icons/badge-check.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/badge-check.svg) center / contain no-repeat"></span>
+            <div style="font-family:Sora;font-weight:600;font-size:17px">Este conteúdo já foi aprovado</div>
+            <div style="font-size:13px;color:#a1a1b0">{{ apApprovedLabel }}</div>
           </div>
         </sc-if>
         <sc-if value="{{ apShowActions }}" hint-placeholder-val="{{ true }}">
           <div style="display:flex;flex-direction:column;gap:12px">
-            <label style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;color:#a1a1b0;min-width:0">Comentário (obrigatório para solicitar ajustes)
-              <textarea value="{{ apComment }}" onChange="{{ onApComment }}" rows="3" placeholder="Ex.: trocar a música, deixar o texto maior no início..." style="padding:11px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px;outline:none;width:100%;resize:vertical;line-height:1.5;font-family:inherit"></textarea>
-            </label>
+            <sc-if value="{{ apPendingAdj }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:12px 14px;border-radius:12px;border:1px solid oklch(0.82 0.13 80 / 0.5);background:oklch(0.82 0.13 80 / 0.08);font-size:13px;color:#e8dcc0;line-height:1.5">Você já pediu alteração nesta versão: “{{ apPrevComment }}”. Nossa equipe vai enviar uma nova versão.</div>
+            </sc-if>
+            <sc-if value="{{ apStepMain }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;gap:10px;flex-wrap:wrap">
+                <button onClick="{{ apOpenAdj }}" style="flex:1 1 220px;min-height:58px;padding:12px 16px;border-radius:14px;border:1px solid oklch(0.82 0.13 80 / 0.6);background:oklch(0.82 0.13 80 / 0.1);color:oklch(0.9 0.1 80);font-size:15px;font-weight:700;letter-spacing:0.02em;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px"><span style="width:17px;height:17px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg) center / contain no-repeat"></span>SOLICITAR ALTERAÇÃO</button>
+                <button onClick="{{ apOpenConfirm }}" style="flex:1 1 220px;min-height:58px;padding:12px 16px;border-radius:14px;border:0;background:#a855f7;color:#0a0a0f;font-size:15px;font-weight:800;letter-spacing:0.02em;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;box-shadow:0 12px 32px -10px rgba(168,85,247,0.9)" style-hover="background:#b86bff"><span style="width:18px;height:18px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/circle-check.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/circle-check.svg) center / contain no-repeat"></span>APROVAR CONTEÚDO</button>
+              </div>
+            </sc-if>
+            <sc-if value="{{ apStepConfirm }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:14px;padding:18px;border-radius:14px;background:#121218;border:1px solid #3a2a55;text-align:center">
+                <div style="font-family:Sora;font-weight:600;font-size:17px">Confirma a aprovação deste conteúdo?</div>
+                <div style="font-size:13px;color:#a1a1b0">{{ apVerTag }} · {{ apTitle }}</div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap">
+                  <button onClick="{{ apBack }}" style="flex:1 1 140px;min-height:52px;border-radius:12px;border:1px solid #2a2a36;background:transparent;color:#d4d4dc;font-size:14.5px;font-weight:600;cursor:pointer">Cancelar</button>
+                  <button onClick="{{ apApprove }}" style="flex:1 1 140px;min-height:52px;border-radius:12px;border:0;background:#a855f7;color:#0a0a0f;font-size:14.5px;font-weight:800;cursor:pointer;opacity:{{ apBusyOpacity }}">{{ apApproveLabel }}</button>
+                </div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ apStepAdj }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <label style="display:flex;flex-direction:column;gap:8px;font-size:14px;font-weight:600;color:#ededf2;min-width:0">Conte para nossa equipe o que precisa ser alterado.
+                  <textarea value="{{ apComment }}" onChange="{{ onApComment }}" rows="6" maxLength="2000" placeholder="Ex.: trocar a música, alterar o texto aos 00:15, substituir a terceira imagem..." style="width:100%;box-sizing:border-box;padding:11px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px;outline:none;font-family:inherit;font-size:15px;resize:vertical;line-height:1.55;min-height:150px"></textarea>
+                </label>
+                <div style="display:flex;gap:10px;flex-wrap:wrap">
+                  <button onClick="{{ apBack }}" style="flex:1 1 120px;min-height:52px;border-radius:12px;border:1px solid #2a2a36;background:transparent;color:#d4d4dc;font-size:14.5px;font-weight:600;cursor:pointer">Cancelar</button>
+                  <button onClick="{{ apAdjust }}" style="flex:2 1 200px;min-height:52px;border-radius:12px;border:0;background:oklch(0.82 0.13 80);color:#1a1405;font-size:14.5px;font-weight:800;letter-spacing:0.02em;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;opacity:{{ apBusyOpacity }}"><span style="width:16px;height:16px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/send.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/send.svg) center / contain no-repeat"></span>{{ apSendLabel }}</button>
+                </div>
+              </div>
+            </sc-if>
             <sc-if value="{{ apHasErr }}" hint-placeholder-val="{{ false }}">
               <div style="font-size:13px;color:oklch(0.75 0.17 25)">{{ apErr }}</div>
             </sc-if>
-            <div style="display:flex;gap:10px;flex-wrap:wrap">
-              <button onClick="{{ apAdjust }}" style="flex:1 1 200px;min-height:52px;padding:12px 16px;border-radius:12px;border:1px solid oklch(0.82 0.13 80 / 0.6);background:oklch(0.82 0.13 80 / 0.1);color:oklch(0.88 0.1 80);font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><span style="width:16px;height:16px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg) center / contain no-repeat"></span>Solicitar ajustes</button>
-              <button onClick="{{ apApprove }}" style="flex:1 1 200px;min-height:52px;padding:12px 16px;border-radius:12px;border:0;background:#a855f7;color:#0a0a0f;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 10px 30px -10px rgba(168,85,247,0.9)" style-hover="background:#b86bff"><span style="width:17px;height:17px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/circle-check.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/circle-check.svg) center / contain no-repeat"></span>Aprovado para postagem</button>
-            </div>
           </div>
         </sc-if>
         <sc-if value="{{ apDoneOk }}" hint-placeholder-val="{{ false }}">
-          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:22px 12px;text-align:center">
-            <span style="width:34px;height:34px;flex-shrink:0;background:oklch(0.8 0.15 155);mask:url(https://unpkg.com/lucide-static@0.460.0/icons/circle-check.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/circle-check.svg) center / contain no-repeat"></span>
-            <div style="font-family:Sora;font-weight:600;font-size:18px">Conteúdo aprovado!</div>
-            <div style="font-size:13.5px;color:#a1a1b0">A equipe da Agência Rise já foi avisada.</div>
-            <button onClick="{{ apAgain }}" style="margin-top:6px;background:none;border:0;color:#c084fc;font-size:13px;cursor:pointer">Alterar resposta</button>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:24px 12px;text-align:center">
+            <span style="width:40px;height:40px;flex-shrink:0;background:oklch(0.8 0.15 155);mask:url(https://unpkg.com/lucide-static@0.460.0/icons/circle-check.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/circle-check.svg) center / contain no-repeat"></span>
+            <div style="font-family:Sora;font-weight:600;font-size:19px">Conteúdo aprovado com sucesso! ✓</div>
+            <div style="font-size:14px;color:#a1a1b0;line-height:1.5">Obrigado pela aprovação. Nossa equipe já foi notificada.</div>
           </div>
         </sc-if>
         <sc-if value="{{ apDoneAdj }}" hint-placeholder-val="{{ false }}">
-          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:22px 12px;text-align:center">
-            <span style="width:32px;height:32px;flex-shrink:0;background:oklch(0.85 0.12 80);mask:url(https://unpkg.com/lucide-static@0.460.0/icons/message-square.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/message-square.svg) center / contain no-repeat"></span>
-            <div style="font-family:Sora;font-weight:600;font-size:18px">Ajustes enviados</div>
-            <div style="font-size:13.5px;color:#a1a1b0">Recebemos seus comentários e vamos ajustar o material.</div>
-            <button onClick="{{ apAgain }}" style="margin-top:6px;background:none;border:0;color:#c084fc;font-size:13px;cursor:pointer">Alterar resposta</button>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:24px 12px;text-align:center">
+            <span style="width:34px;height:34px;flex-shrink:0;background:oklch(0.85 0.12 80);mask:url(https://unpkg.com/lucide-static@0.460.0/icons/message-square.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/message-square.svg) center / contain no-repeat"></span>
+            <div style="font-family:Sora;font-weight:600;font-size:19px">Solicitação enviada</div>
+            <div style="font-size:14px;color:#a1a1b0;line-height:1.5">Recebemos seu pedido de alteração. Nossa equipe já foi notificada e vai enviar uma nova versão.</div>
+            <button onClick="{{ apAgain }}" style="margin-top:6px;min-height:44px;background:none;border:0;color:#c084fc;font-size:13.5px;cursor:pointer">Enviar outra solicitação</button>
           </div>
         </sc-if>
       </div>
     </sc-if>
   </div>
+  <sc-if value="{{ apZoom }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ apZoomClose }}" style="position:fixed;inset:0;z-index:90;background:rgba(0,0,0,0.94);display:flex;align-items:center;justify-content:center;padding:12px;cursor:zoom-out"><img src="{{ apCurUrl }}" alt="" style="max-width:100%;max-height:100%;object-fit:contain"></div>
+  </sc-if>
   <div style="position:relative;font-size:12px;color:#5c5c6a">Agência Rise · Aprovação de conteúdo</div>
 </div>
 </sc-if>
@@ -156,13 +201,19 @@ option{background:#111117;color:#ededf2}
           <div style="font-family:Sora;font-weight:600;font-size:19px">{{ pwdUser.name }}</div>
           <div style="font-size:13px;color:#8b8b99">Digite sua senha para acessar</div>
         </div>
-        <input type="password" autoFocus="{{ true }}" value="{{ pwd }}" onChange="{{ onPwd }}" onKeyDown="{{ onPwdKey }}" placeholder="Senha" style="width:100%;padding:13px 14px;border-radius:11px;background:#111117;color:#ededf2;font-size:15px;outline:none;border:1px solid {{ pwdBorder }}">
+        <input type="text" name="username" autoComplete="username" value="{{ pwdUser.name }}" readOnly="{{ true }}" tabIndex="-1" aria-hidden="true" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
+        <input type="password" name="password" autoComplete="current-password" autoFocus="{{ true }}" value="{{ pwd }}" onChange="{{ onPwd }}" onKeyDown="{{ onPwdKey }}" placeholder="Senha" style="width:100%;padding:13px 14px;border-radius:11px;background:#111117;color:#ededf2;font-size:15px;outline:none;border:1px solid {{ pwdBorder }}">
         <sc-if value="{{ pwdErr }}" hint-placeholder-val="{{ false }}">
           <div style="width:100%;display:flex;align-items:center;gap:8px;font-size:13px;color:oklch(0.75 0.17 25);margin-top:-8px">
             <span style="width:14px;height:14px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/circle-alert.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/circle-alert.svg) center / contain no-repeat"></span>
             {{ pwdMsg }}
           </div>
         </sc-if>
+        <button onClick="{{ toggleSavePw }}" role="checkbox" aria-checked="{{ savePw }}" style="width:100%;min-height:40px;display:flex;align-items:center;gap:10px;background:none;border:0;padding:0;cursor:pointer;color:#c9c9d4;font-size:13px;text-align:left;margin-top:-4px">
+          <sc-if value="{{ savePw }}" hint-placeholder-val="{{ true }}"><span style="width:20px;height:20px;border-radius:6px;background:#a855f7;display:flex;align-items:center;justify-content:center;flex-shrink:0"><span style="width:13px;height:13px;background:#0a0a0f;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/check.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/check.svg) center / contain no-repeat"></span></span></sc-if>
+          <sc-if value="{{ savePwOff }}" hint-placeholder-val="{{ false }}"><span style="width:20px;height:20px;border-radius:6px;border:1.5px solid #3a3a48;flex-shrink:0"></span></sc-if>
+          <span style="display:flex;flex-direction:column;gap:1px"><span>Salvar minha senha neste aparelho</span><span style="font-size:11.5px;color:#6f6f7d">Você continua conectado mesmo fechando a página</span></span>
+        </button>
         <div style="width:100%;display:flex;gap:10px">
           <button onClick="{{ closePwd }}" style="flex:1;padding:12px;border-radius:11px;border:1px solid #23232d;background:transparent;color:#a1a1b0;font-size:14px;cursor:pointer">Cancelar</button>
           <button onClick="{{ submitPwd }}" style-hover="background:#b86bff" style="flex:1;padding:12px;border-radius:11px;border:0;background:#a855f7;color:#0a0a0f;font-weight:700;font-size:14px;cursor:pointer;opacity:{{ pwdBtnOpacity }}">{{ pwdBtnLabel }}</button>
@@ -2857,9 +2908,53 @@ option{background:#111117;color:#ededf2}
             <span style="font-family:Sora;font-weight:600;font-size:13.5px">Versão {{ vv.n }}</span>
             <span style="flex:1 1 140px;font-size:11.5px;color:#8b8b99;min-width:0">{{ vv.meta }}</span>
             <span style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;color:{{ vv.stColor }};background:{{ vv.stTint }}">{{ vv.stLabel }}</span>
+            <sc-if value="{{ vv.hasComment }}" hint-placeholder-val="{{ false }}"><div style="flex-basis:100%;font-size:12.5px;color:#d4d4dc;font-style:italic;line-height:1.45">“{{ vv.comment }}”</div></sc-if>
             <a href="{{ vv.url }}" target="_blank" rel="noopener" style="min-height:40px;padding:8px 14px;border-radius:10px;border:1px solid #2a2a36;background:transparent;color:#e9d5ff;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;min-height:34px;font-size:12px"><span style="width:12px;height:12px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/external-link.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/external-link.svg) center / contain no-repeat"></span>Abrir</a>
           </div>
         </sc-for>
+        <sc-if value="{{ vApCanSend }}" hint-placeholder-val="{{ false }}">
+          <sc-if value="{{ vApSendClosed }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ vApSendStart }}" style="min-height:44px;padding:10px 16px;border-radius:10px;border:0;background:#a855f7;color:#0a0a0f;font-size:13.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none"><span style="width:15px;height:15px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/send.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/send.svg) center / contain no-repeat"></span>Enviar para aprovação</button>
+          </sc-if>
+          <sc-if value="{{ vApSendOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:12px;background:#111117;border:1px solid #3a2a55">
+              <div style="font-size:13px;font-weight:700;color:#e9d5ff">Enviar para aprovação do cliente</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ vApSendKinds }}" as="k" hint-placeholder-count="3"><button onClick="{{ k.pick }}" style="min-height:38px;padding:7px 13px;border-radius:9px;border:1px solid {{ k.border }};background:{{ k.bg }};color:{{ k.color }};font-size:12.5px;font-weight:600;cursor:pointer">{{ k.label }}</button></sc-for></div>
+              <label style="display:flex;flex-direction:column;gap:6px;font-size:12px;color:#a1a1b0">Links do conteúdo (um por linha; no carrossel, cada arte em uma linha)
+                <textarea value="{{ vApSendUrls }}" onChange="{{ onApSendUrls }}" rows="3" placeholder="https://drive.google.com/..." style="width:100%;box-sizing:border-box;padding:11px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px;outline:none;font-family:inherit;resize:vertical;line-height:1.5"></textarea>
+              </label>
+              <div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap"><button onClick="{{ vApSendCancel }}" style="min-height:40px;padding:8px 13px;border-radius:10px;border:1px solid #2a2a36;background:transparent;color:#e9d5ff;font-size:12.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none">Cancelar</button><button onClick="{{ vApSendGo }}" style="min-height:44px;padding:10px 16px;border-radius:10px;border:0;background:#a855f7;color:#0a0a0f;font-size:13.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none"><span style="width:15px;height:15px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/link.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/link.svg) center / contain no-repeat"></span>Gerar link de aprovação</button></div>
+            </div>
+          </sc-if>
+        </sc-if>
+        <sc-if value="{{ vApHas }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:12px;background:#111117;border:1px solid #23232d">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <span style="font-size:13px;font-weight:700;color:#e9d5ff;flex:1">Link de aprovação</span>
+              <sc-if value="{{ vApActive }}" hint-placeholder-val="{{ true }}"><span style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;color:{{ vApStColor }};background:{{ vApStTint }}">{{ vApStLabel }}</span></sc-if>
+              <sc-if value="{{ vApOff }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;color:#a1a1b0;background:#1c1c25">Link desativado</span></sc-if>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(130px,100%),1fr));gap:6px">
+              <sc-for list="{{ vApStats }}" as="st" hint-placeholder-count="4"><div style="padding:8px 10px;border-radius:9px;background:#0b0b0f;display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-size:10.5px;color:#6f6f7d;text-transform:uppercase;letter-spacing:0.05em">{{ st.k }}</span><span style="font-size:12.5px;color:#ededf2;font-family:'JetBrains Mono'">{{ st.v }}</span></div></sc-for>
+            </div>
+            <sc-if value="{{ vApActive }}" hint-placeholder-val="{{ true }}">
+              <input readOnly="{{ true }}" value="{{ vApUrl }}" style="width:100%;box-sizing:border-box;padding:11px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px;outline:none;font-family:inherit;font-size:12.5px;font-family:'JetBrains Mono';color:#a1a1b0">
+              <div style="display:flex;gap:6px;flex-wrap:wrap">
+                <button onClick="{{ vApCopy }}" style="min-height:40px;padding:8px 13px;border-radius:10px;border:1px solid #2a2a36;background:transparent;color:#e9d5ff;font-size:12.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none"><span style="width:13px;height:13px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/copy.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/copy.svg) center / contain no-repeat"></span>Copiar link</button>
+                <a href="{{ vApUrl }}" target="_blank" rel="noopener" style="min-height:40px;padding:8px 13px;border-radius:10px;border:1px solid #2a2a36;background:transparent;color:#e9d5ff;font-size:12.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none"><span style="width:13px;height:13px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/external-link.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/external-link.svg) center / contain no-repeat"></span>Abrir página</a>
+                <a href="{{ vApWa }}" target="_blank" rel="noopener" style="min-height:40px;padding:8px 13px;border-radius:10px;border:1px solid #2a2a36;background:transparent;color:#e9d5ff;font-size:12.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;border-color:oklch(0.72 0.17 150 / 0.5);color:oklch(0.86 0.12 150)"><span style="width:13px;height:13px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/message-circle.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/message-circle.svg) center / contain no-repeat"></span>Enviar para cliente</a>
+                <button onClick="{{ vApRevoke }}" style="min-height:40px;padding:8px 13px;border-radius:10px;border:1px solid #2a2a36;background:transparent;color:#e9d5ff;font-size:12.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;color:oklch(0.78 0.15 25)"><span style="width:13px;height:13px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/link-2-off.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/link-2-off.svg) center / contain no-repeat"></span>Desativar link</button>
+              </div>
+            </sc-if>
+            <button onClick="{{ vApRenew }}" style="min-height:40px;padding:8px 13px;border-radius:10px;border:1px solid #2a2a36;background:transparent;color:#e9d5ff;font-size:12.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;align-self:flex-start"><span style="width:13px;height:13px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/refresh-cw.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/refresh-cw.svg) center / contain no-repeat"></span>Gerar novo link</button>
+            <sc-if value="{{ vApHasEvents }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:5px;padding-top:6px;border-top:1px solid #1c1c25">
+                <div style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#6f6f7d">Auditoria</div>
+                <sc-for list="{{ vApEvents }}" as="ev" hint-placeholder-count="2"><div style="display:flex;gap:10px;font-size:12.5px;line-height:1.45"><span style="font-family:'JetBrains Mono';font-size:11.5px;color:#8b8b99;flex-shrink:0;white-space:nowrap">{{ ev.time }}</span><span style="color:#d4d4dc;min-width:0">{{ ev.text }}</span></div></sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
         <sc-if value="{{ vCanNewVer }}" hint-placeholder-val="{{ false }}">
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <input value="{{ vNewVer }}" onChange="{{ onVNewVer }}" placeholder="Link da nova versão (Google Drive)" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px;font-family:inherit;outline:none;flex:1 1 220px;min-width:0">
@@ -3706,9 +3801,16 @@ const extenso = v => {
   const parts = []; if (r) parts.push(int(r) + (r === 1 ? ' real' : (r % 1e6 === 0 ? ' de reais' : ' reais'))); if (cs) parts.push(int(cs) + (cs === 1 ? ' centavo' : ' centavos'));
   return parts.join(' e ') || 'zero reais';
 };
+const TOK_KEY = 'rise_tok_v1';
+const secTok = () => { const b = new Uint8Array(24); (window.crypto || window.msCrypto).getRandomValues(b); return Array.from(b, x => x.toString(16).padStart(2, '0')).join(''); };
+const isImgU = u => /\.(png|jpe?g|webp|gif|avif)(\?|#|$)/i.test(u || '') || /i\.imgur\.com|googleusercontent\.com/i.test(u || '');
+const SESS_KEY = 'rise_session_v1', PW_KEY = 'rise_saved_pw_v1';
+const lsGet = k => { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } };
+const lsSet = (k, v) => { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+const apWaMsg = (name, url) => 'Olá' + (name ? ', ' + name : '') + '! 👋\n\nSeu conteúdo está pronto para aprovação.\n\nVocê pode visualizar e aprovar diretamente pelo link abaixo, sem precisar de login ou senha:\n\n' + url + '\n\nCaso precise de alguma alteração, é só clicar em \'Solicitar alteração\' e informar o que deseja mudar.';
 const PIX_QR_DEFAULT = { joao:'https://i.imgur.com/E9gOhlw.png', victoria:'https://i.imgur.com/nwKEx7a.png' };
 const numIn = v => Number(String(v == null ? '' : v).replace(',', '.')) || 0;
-const CST = { aguardando:['Aguardando aprovação do cliente', 'oklch(0.82 0.13 80)'], aprovado:['Aprovado pelo cliente para postagem', 'oklch(0.8 0.15 155)'], ajustes:['Cliente solicitou ajustes', 'oklch(0.7 0.19 25)'] };
+const CST = { aguardando:['Aguardando aprovação do cliente', 'oklch(0.82 0.13 80)'], aprovado:['Aprovado pelo cliente para postagem', 'oklch(0.8 0.15 155)'], ajustes:['Alteração solicitada', 'oklch(0.7 0.19 25)'] };
 function drivePreview(u) {
   if (!u) return '';
   const f = u.match(/\/folders\/([\w-]+)/); if (f) return 'https://drive.google.com/embeddedfolderview?id=' + f[1] + '#grid';
@@ -3904,7 +4006,8 @@ class Component extends DCLogic {
     super(props);
     const d = loadData();
     this.state = {
-      user:null, apToken:readApToken(), tab:'dashboard', ...d, clientFilter:'all', onlyMine:false,
+      ...(() => { const ss = readApToken() ? null : lsGet(SESS_KEY); return { user: ss && ss.user ? ss.user : null, tab: ss && ss.tab ? ss.tab : 'dashboard', onlyMine: !!(ss && ss.onlyMine) }; })(),
+      apToken:readApToken(), ...d, clientFilter:'all', savePw:true,
       dragId:null, dragOver:null, w: typeof window !== 'undefined' ? window.innerWidth : 1280, navOpen:false,
       calY:TODAY.getFullYear(), calM:TODAY.getMonth(), selKey:keyOf(TODAY), logoFail:false,
       modal:false, form:null, pwdFor:null, pwd:'', pwdErr:false,
@@ -3912,6 +4015,17 @@ class Component extends DCLogic {
       finFilter:'all', finY:TODAY.getFullYear(), finM:TODAY.getMonth(),
       finForm:{ client:'', desc:'', amount:'', paid:'', due:keyOf(TODAY), status:'pendente', method:'PIX', parcels:1 },
     };
+  }
+  componentDidUpdate(pp, ps) {
+    const s = this.state;
+    if (s.apToken && !this._secure && !this._apSeen && s.remoteReady) {
+      const p = s.posts.find(x => x.approvalToken === s.apToken);
+      if (p && (p.approval || {}).active !== false) { this._apSeen = true; const ap = p.approval || {}, now = Date.now();
+        this.update(p.id, { approval:{ ...ap, views:(ap.views || 0) + 1, lastAccess:now, events:[...arr(ap.events), ...(now - (ap.lastAccess || 0) > 1800000 ? [{ ts:now, type:'view', text:'Cliente visualizou' }] : [])] } }); }
+    }
+    if (s.apToken) return;
+    if (ps.user !== s.user || ps.tab !== s.tab) { if (s.user) lsSet(SESS_KEY, { user:s.user, tab:s.tab, onlyMine:!!s.onlyMine, ts:Date.now() }); }
+    if (s.user && s.remoteReady && (s.team || []) !== ps.team && !USERS[s.user] && !(s.team || []).some(u => u.id === s.user) && !(s.rProfiles || []).some(r => r.app_id === s.user)) { lsSet(SESS_KEY, null); this.setState({ user:null }); }
   }
   componentDidMount() {
     this._r = () => this.setState({ w: window.innerWidth });
@@ -3922,6 +4036,16 @@ class Component extends DCLogic {
       [['theme-color', '#07070a'], ['apple-mobile-web-app-capable', 'yes'], ['mobile-web-app-capable', 'yes'], ['apple-mobile-web-app-status-bar-style', 'black-translucent'], ['apple-mobile-web-app-title', 'Agência Rise']].forEach(([n, c]) => {
         if (!document.querySelector(`meta[name="${n}"]`)) document.head.appendChild(Object.assign(document.createElement('meta'), { name:n, content:c }));
       });
+      if (!document.querySelector('link[rel="manifest"]')) {
+        const addMf = href => document.head.appendChild(Object.assign(document.createElement('link'), { rel:'manifest', href }));
+        fetch('manifest.webmanifest', { method:'HEAD', cache:'no-store' }).then(r => { if (r.ok) addMf('manifest.webmanifest'); else throw 0; }).catch(() => {
+          const i192 = (document.getElementById('rise-icon-192') || {}).href, i512 = (document.getElementById('rise-icon-512') || {}).href;
+          if (!i192) return;
+          const mf = { name:'Agência Rise · Sistema de Gestão', short_name:'Agência Rise', start_url:location.href.split('#')[0], display:'standalone', background_color:'#07070a', theme_color:'#07070a',
+            icons:[{ src:i192, sizes:'192x192', type:'image/png' }, ...(i512 ? [{ src:i512, sizes:'512x512', type:'image/png' }] : [])] };
+          addMf(URL.createObjectURL(new Blob([JSON.stringify(mf)], { type:'application/manifest+json' })));
+        });
+      }
       this._shT = setTimeout(() => this.checkShootReminders(), 3500);
       this._shI = setInterval(() => this.checkShootReminders(), 60000);
       this._gs = e => e.preventDefault();
@@ -3955,11 +4079,17 @@ class Component extends DCLogic {
     const remote = this._remote, fromTab = this._skip;
     this._remote = false; this._skip = false;
     if (!l) return;
-    if (!fromTab) { try { localStorage.setItem(LS, JSON.stringify(this._last)); } catch (e) {} }
+    if (!fromTab && !this.state.apToken) { try { localStorage.setItem(LS, JSON.stringify(this._last)); } catch (e) {} }
     if (SYNC_ON && !remote && !fromTab) ch.forEach(k => this.pushCol(k));
   }
   pushCol(k) {
     if (!this._sb) return;
+    if (this._secure) {
+      if (!this._tok) return;
+      this._sb.rpc('rise_write', { tok:this._tok, p_id:k, p_data:this.state[k] || [] })
+        .then(({ data, error }) => { if (error) return this.setState({ sync:'offline' }); if (this.state.sync !== 'online') this.setState({ sync:'online' }); if (data) this.bcast([k]); });
+      return;
+    }
     this._sb.from(SB_TABLE).upsert({ id:k, data:this.state[k] || [], updated_at:new Date().toISOString() })
       .then(({ error }) => { if (error) this.setState({ sync:'offline' }); else if (this.state.sync !== 'online') this.setState({ sync:'online' }); });
   }
@@ -3974,11 +4104,60 @@ class Component extends DCLogic {
     this._remote = true;
     this.setState(changed);
   }
+  ensureCh() {
+    if (this._ch || !this._sb) return this._ch;
+    this._ch = this._sb.channel('rise-sync-v2', { config:{ broadcast:{ self:false } } })
+      .on('broadcast', { event:'chg' }, ({ payload }) => { const ids = arr(payload && payload.ids).filter(k => COLS.includes(k)); if (ids.length && this._tok) this.secureLoad(this._tok, ids); })
+      .subscribe(st => { if (this._tok) this.setState({ sync: st === 'SUBSCRIBED' ? 'online' : ['CHANNEL_ERROR','TIMED_OUT','CLOSED'].includes(st) ? 'offline' : 'connecting' }); });
+    return this._ch;
+  }
+  bcast(ids) {
+    this._bq = [...new Set([...(this._bq || []), ...ids])];
+    clearTimeout(this._bt);
+    this._bt = setTimeout(() => { const q = this._bq; this._bq = []; const ch = this.ensureCh(); if (ch && q.length) ch.send({ type:'broadcast', event:'chg', payload:{ ids:q } }); }, 350);
+  }
+  async refreshProfiles() { if (!this._sb) return; const { data, error } = await this._sb.rpc('rise_public_profiles'); if (!error) this.setState({ rProfiles:data || [] }); }
+  async secureLoad(tok, ids) {
+    const { data, error } = await this._sb.rpc('rise_read', { tok, ids: ids || null });
+    if (error) { console.warn('Supabase:', error.message); this.setState({ sync:'offline', remoteReady:true }); return 'net'; }
+    if (data == null) return false;
+    this._tok = tok;
+    const remote = {};
+    Object.keys(data).forEach(k => { if (COLS.includes(k)) remote[k] = arr(data[k]); });
+    if (!ids && Object.keys(remote).length) { const pr = purgeSeed({ ...this.state, ...remote }); Object.keys(remote).forEach(k => { remote[k] = pr[k]; }); }
+    if (Object.keys(remote).length) this.applyRemote(remote);
+    if (!ids) {
+      const isAdm = this.userOf(this.state.user).kind === 'admin';
+      COLS.filter(k => !(k in remote) && (isAdm || !['fin','payees','payments','proposals','contracts','reportMetrics','team'].includes(k))).forEach(k => this.pushCol(k));
+      this.setState({ remoteReady:true, sync:'online' });
+      this.ensureCh();
+      if (!this._poll) this._poll = setInterval(() => { if (this._tok && document.visibilityState === 'visible') this.secureLoad(this._tok, ['posts', 'notifs']); }, 45000);
+    }
+    return true;
+  }
+  async apLoad() {
+    const { data, error } = await this._sb.rpc('rise_approval_get', { tok:this.state.apToken });
+    if (error) return this.setState({ remoteReady:true, apLoadErr: /muitas/.test(error.message || '') ? 'Muitos acessos em pouco tempo. Aguarde alguns minutos e abra o link novamente.' : 'Não foi possível carregar. Verifique a internet e tente novamente.' });
+    this._remote = true;
+    if (!data || !data.post) return this.setState({ remoteReady:true, posts:[], clients:[] });
+    this.setState({ remoteReady:true, posts:[data.post], clients:[{ id:'ap', name:data.clientName || '' }] });
+  }
   async startSync() {
     this.setState({ sync:'connecting' });
     const lib = await waitSupabase();
     if (!lib) return this.setState({ sync:'offline', remoteReady:true });
     const sb = lib.createClient(SB_URL, SB_KEY);
+    const pr = await sb.rpc('rise_public_profiles');
+    if (!pr.error) {
+      this._sb = sb; this._secure = true;
+      this.setState({ secure:true, rProfiles:pr.data || [] });
+      if (this.state.apToken) return this.apLoad();
+      const tok = lsGet(TOK_KEY);
+      if (!tok) { if (this.state.user) lsSet(SESS_KEY, null); return this.setState({ user:null, remoteReady:true, sync:'online' }); }
+      const ok = await this.secureLoad(tok);
+      if (ok === false) { lsSet(TOK_KEY, null); lsSet(SESS_KEY, null); this.setState({ user:null, remoteReady:true, sync:'online' }); }
+      return;
+    }
     const { data, error } = await sb.from(SB_TABLE).select('id,data');
     if (error) { console.warn('Supabase:', error.message); return this.setState({ sync:'offline', remoteReady:true }); }
     this._sb = sb;
@@ -4009,6 +4188,10 @@ class Component extends DCLogic {
     if (!out.length) return;
     this.setState(s => ({ contracts:arr(s.contracts).map(c => upd[c.id] ? { ...c, alerted:upd[c.id] } : c) }));
     this.notify(out);
+  }
+  apEvent(id, type, text, extra) {
+    this.setState(s => ({ posts:s.posts.map(p => { if (p.id !== id) return p; const ap = p.approval || {};
+      return { ...p, approval:{ ...ap, ...(extra || {}), events:[...arr(ap.events), { ts:Date.now(), type, text, by:this.actor() }] } }; }) }));
   }
   newVersion(id, url) {
     const p = this.state.posts.find(x => x.id === id); if (!p || !url) return;
@@ -4044,7 +4227,8 @@ class Component extends DCLogic {
   }
   clientName(id) { const c = this.state.clients.find(x => x.id === id); return c ? c.name : 'Cliente removido'; }
   userOf(id) {
-    return USERS[id] || (this.state.team || []).find(u => u.id === id) || { id, name:'Membro', first:'Membro', role:'', photo:avatarUrl('M'), kind:'social' };
+    const rp = (this.state.rProfiles || []).find(r => r.app_id === id);
+    return USERS[id] || (this.state.team || []).find(u => u.id === id) || (rp ? { id, name:rp.name, first:rp.name.split(' ')[0], role:rp.role, photo:rp.photo || avatarUrl(rp.name), kind:rp.kind } : null) || { id, name:'Membro', first:'Membro', role:'', photo:avatarUrl('M'), kind:'social' };
   }
   openDemand(extra) {
     const s = this.state, c = s.clients[0];
@@ -4505,11 +4689,15 @@ class Component extends DCLogic {
     const login = id => {
       const unread = s.notifs.filter(n => n.to === id && !n.read).length;
       const u = this.userOf(id);
+      const saved = lsGet(PW_KEY) || {};
+      if (s.savePw && s.pwd) saved[id] = s.pwd; else delete saved[id];
+      lsSet(PW_KEY, Object.keys(saved).length ? saved : null);
+      lsSet(SESS_KEY, { user:id, tab:'dashboard', onlyMine:u.kind !== 'admin', ts:Date.now() });
       this.setState({ user:id, tab:'dashboard', onlyMine:u.kind !== 'admin', clientFilter:'all', pwdFor:null, pwd:'', pwdErr:false, bellOpen:false, dayOpen:false, briefing:true });
       if (unread) setTimeout(() => this.toast(`Olá, ${u.first}`, `Você tem ${unread} notificação(ões) não lida(s).`, 'bell-ring'), 300);
     };
-    const allUsers = [...Object.values(USERS), ...(s.team || [])];
-    const profiles = allUsers.map((u, i) => ({ ...u, phrase:phraseFor(i), enter: () => this.setState({ pwdFor:u.id, pwd:'', pwdErr:false }) }));
+    const allUsers = s.secure && (s.rProfiles || []).length ? s.rProfiles.map(r => ({ ...(USERS[r.app_id] || {}), id:r.app_id, name:r.name, first:r.name.split(' ')[0], role:r.role, photo:r.photo || (USERS[r.app_id] || {}).photo || avatarUrl(r.name), kind:r.kind })) : [...Object.values(USERS), ...(s.team || [])];
+    const profiles = allUsers.map((u, i) => ({ ...u, phrase:phraseFor(i), enter: () => { const sv = (lsGet(PW_KEY) || {})[u.id]; this.setState({ pwdFor:u.id, pwd:sv || '', pwdErr:false, savePw: sv ? true : s.savePw !== false }); } }));
     const pwdUser = s.pwdFor ? this.userOf(s.pwdFor) : {};
     const pf = s.pf || {};
     const setP = k => e => { const v = e.target.value; this.setState(st => ({ pf:{ ...st.pf, [k]:v }, pfErr:'' })); };
@@ -4526,17 +4714,36 @@ class Component extends DCLogic {
         if (!pf.password || pf.password.length < 4) return this.setState({ pfErr:'A senha precisa ter ao menos 4 caracteres.' });
         const u = { id:'u' + Date.now(), name, first:name.split(' ')[0], role:(pf.role || '').trim() || 'Colaborador', photo: pf.photo && pf.photo.trim() ? pf.photo.trim() : avatarUrl(name), password:pf.password, kind:pf.kind || 'social' };
         if (this.userOf(s.user).kind !== 'admin') return;
-        this.setState(st => ({ team:[...(st.team || []), u], pf:null, pfErr:'' }));
+        const u2 = this._secure ? (({ password, ...r }) => r)(u) : u;
+        if (this._secure) this._sb.rpc('rise_user_save', { tok:this._tok, p_id:u.id, p_kind:u.kind, p_name:u.name, p_role:u.role, p_photo:u.photo, p_pass:u.password })
+          .then(({ data, error }) => { if (error || !data) return this.toast('Não foi possível criar o usuário', 'Verifique a conexão e tente novamente.', 'circle-alert'); this.refreshProfiles(); });
+        this.setState(st => ({ team:[...(st.team || []), u2], pf:null, pfErr:'' }));
         this.toast('Usuário criado', `${name} já aparece na tela inicial.`, 'user-plus');
       },
     };
-    const submitPwd = () => { if (!s.pwdFor) return; if ((s.pwd || '') === pwdUser.password) login(s.pwdFor); else this.setState({ pwdErr:true }); };
+    const submitPwd = () => {
+      if (!s.pwdFor || s.pwdBusy) return;
+      if (this._secure) {
+        const who = s.pwdFor;
+        this.setState({ pwdBusy:true, pwdErr:false });
+        this._sb.rpc('rise_login', { p_user:who, p_pass:s.pwd || '' }).then(async ({ data, error }) => {
+          if (error) return this.setState({ pwdBusy:false, pwdErr:true, pwdMsg: /muitas/.test(error.message || '') ? 'Muitas tentativas. Aguarde alguns minutos.' : 'Sem conexão. Tente novamente.' });
+          if (!data || !data.token) return this.setState({ pwdBusy:false, pwdErr:true, pwdMsg:'' });
+          lsSet(TOK_KEY, data.token); this._tok = data.token;
+          this.setState({ user:who });
+          await this.secureLoad(data.token);
+          this.setState({ pwdBusy:false }); login(who);
+        });
+        return;
+      }
+      if ((s.pwd || '') === pwdUser.password) login(s.pwdFor); else this.setState({ pwdErr:true });
+    };
     const apTok = s.apToken;
     const apReady = !SYNC_ON || !!s.remoteReady;
-    const apPost = apTok ? s.posts.find(p => p.approvalToken === apTok) : null;
+    const apPost = apTok ? s.posts.find(p => p.approvalToken === apTok && (p.approval || {}).active !== false) : null;
     const apC = apPost ? (s.clients.find(c => c.id === apPost.client) || { name:'' }) : { name:'' };
     const apSt = apPost ? CST[apPost.clientStatus] : null;
-    const apDecide = ok => {
+    const apDecideLegacy = ok => {
       if (!apPost) return;
       const comment = (s.apComment || '').trim();
       if (!ok && !comment) return this.setState({ apErr:'Descreva quais ajustes você precisa.' });
@@ -4547,8 +4754,50 @@ class Component extends DCLogic {
       this.notify([...new Set([apPost.owner, 'admin'])].map(u => ({ to:u, title: ok ? 'Cliente aprovou para postagem' : 'Cliente solicitou ajustes', body, icon: ok ? 'circle-check' : 'message-square' })));
       this.setState({ apDone: ok ? 'ok' : 'adj', apErr:'' });
     };
+    const apDecide = ok => {
+      if (!apPost || s.apBusy) return;
+      const comment = (s.apComment || '').trim().slice(0, 2000);
+      if (!ok && !comment) return this.setState({ apErr:'Descreva o que precisa ser alterado.' });
+      if (this._secure) {
+        this.setState({ apBusy:true, apErr:'' });
+        this._sb.rpc('rise_approval_decide', { tok:apTok, ok, comment }).then(({ data, error }) => {
+          if (error) return this.setState({ apBusy:false, apErr: /muitas/.test(error.message || '') ? 'Muitas tentativas em pouco tempo. Aguarde alguns minutos.' : 'Não foi possível enviar. Verifique a internet e tente novamente.' });
+          if (!data) return this.setState({ apBusy:false, apErr:'Este link foi desativado. Peça um novo link para a equipe.' });
+          this.bcast(['posts', 'notifs']);
+          this._remote = true;
+          this.setState(st => ({ apBusy:false, apStep:null, apDone: ok ? 'ok' : 'adj', posts:st.posts.map(p => p.id === apPost.id ? { ...p, clientStatus: ok ? 'aprovado' : 'ajustes', clientComment:comment, approval:{ ...(p.approval || {}), ...(ok ? { approvedAt:Date.now() } : {}) } } : p) }));
+        });
+        return;
+      }
+      apDecideLegacy(ok);
+      const now = Date.now(), ap0 = apPost.approval || {}, vn = Math.max(1, arr(apPost.versions).length);
+      this.setState(st => ({ apStep:null, posts:st.posts.map(p => p.id !== apPost.id ? p : { ...p, versions:arr(p.versions).map((v, i, a) => i === a.length - 1 ? { ...v, comment } : v),
+        approval:{ ...ap0, ...(ok ? { approvedAt:now, approvedVersion:vn } : {}), events:[...arr(ap0.events), { ts:now, type: ok ? 'approved' : 'changes', text:(ok ? 'Cliente aprovou a V' : 'Cliente solicitou alteração na V') + vn + (comment ? ': "' + comment + '"' : ''), version:vn }] } }) }));
+    };
+    const apAp = (apPost && apPost.approval) || {};
+    const apMedia = apPost ? [apPost.driveUrl, ...arr(apAp.media)].filter(Boolean) : [];
+    const apIdx = Math.min(s.apIdx || 0, Math.max(0, apMedia.length - 1)), apCur = apMedia[apIdx] || '';
+    const apVers = apPost ? arr(apPost.versions) : [], apLastV = apVers[apVers.length - 1];
+    const apNew = {
+      apHasLoadErr: !!s.apLoadErr, apLoadErr: s.apLoadErr || '',
+      apClient: apC.name || 'cliente', apHasOld: apVers.length > 1,
+      apKind: apAp.kind || (apMedia.length > 1 ? 'Carrossel' : /v[ií]deo|reels|motion|edi/i.test(((apPost && (apPost.service || apPost.type)) || '')) ? 'Vídeo' : 'Arte'),
+      apVerTag: 'V' + Math.max(1, apVers.length), apDateLabel: apLastV && apLastV.at ? 'Enviado em ' + fmtDT(apLastV.at) : apPost ? 'Entrega ' + dateLabel(apPost.due || apPost.date) : '',
+      apHasMedia: apMedia.length > 0, apNoMedia: !!apPost && !apMedia.length, apCurUrl: apCur || '#', apCurIsImg: !!apCur && isImgU(apCur), apCurIsFrame: !!apCur && !isImgU(apCur), apCurPreview: apCur && !isImgU(apCur) ? drivePreview(apCur) : '',
+      apIsCarousel: apMedia.length > 1, apIdxLabel: (apIdx + 1) + ' de ' + apMedia.length,
+      apPrev: () => this.setState({ apIdx:(apIdx - 1 + apMedia.length) % apMedia.length }), apNext: () => this.setState({ apIdx:(apIdx + 1) % apMedia.length }),
+      apZoom: !!s.apZoom && isImgU(apCur), apZoomOpen: () => this.setState({ apZoom:true }), apZoomClose: () => this.setState({ apZoom:false }),
+      apAlreadyOk: !!apPost && apPost.clientStatus === 'aprovado' && !s.apDone,
+      apApprovedLabel: apAp.approvedAt ? 'Aprovado em ' + fmtDT(apAp.approvedAt) : 'Nossa equipe já recebeu a aprovação.',
+      apShowActions: !!apPost && !s.apDone && apPost.clientStatus !== 'aprovado',
+      apPendingAdj: !!apPost && apPost.clientStatus === 'ajustes' && !!apPost.clientComment && !s.apStep,
+      apStepMain: !s.apStep, apStepConfirm: s.apStep === 'confirm', apStepAdj: s.apStep === 'adj',
+      apOpenConfirm: () => this.setState({ apStep:'confirm', apErr:'' }), apOpenAdj: () => this.setState({ apStep:'adj', apErr:'' }), apBack: () => this.setState({ apStep:null, apErr:'' }),
+      apApproveLabel: s.apBusy ? 'Enviando…' : 'Sim, aprovar', apSendLabel: s.apBusy ? 'Enviando…' : 'ENVIAR SOLICITAÇÃO', apBusyOpacity: s.apBusy ? 0.6 : 1,
+      apAgain: () => this.setState({ apDone:null, apComment:'', apStep:'adj' }),
+    };
     const apVals = {
-      isApproval:!!apTok, apLoading:!!apTok && !apReady, apNotFound:!!apTok && apReady && !apPost, apFound:!!apPost && apReady,
+      isApproval:!!apTok, apLoading:!!apTok && !apReady, apNotFound:!!apTok && apReady && !apPost && !s.apLoadErr, apFound:!!apPost && apReady,
       apTitle: apPost ? apPost.title : '',
       apMeta: apPost ? [apC.name, apPost.service || apPost.type, `Entrega ${dateLabel(apPost.due || apPost.date)}`].filter(Boolean).join(' · ') : '',
       apBrief: apPost ? [apPost.coverage ? 'Cobertura: ' + apPost.coverage : '', apPost.brief || ''].filter(Boolean).join('\n\n') : '', apHasBrief: !!(apPost && (apPost.brief || apPost.coverage)),
@@ -4561,7 +4810,7 @@ class Component extends DCLogic {
       apHasVersions: !!apPost && arr(apPost.versions).length > 0,
       apVerLabel: apPost && arr(apPost.versions).length ? 'Versão ' + arr(apPost.versions).length + ' · enviada em ' + fmtDT(arr(apPost.versions).slice(-1)[0].at) : '',
       apOldVers: apPost ? arr(apPost.versions).slice(0, -1).reverse().map(v => ({ label:'Ver versão ' + v.n, url:v.url })) : [],
-      apShowActions: !s.apDone, apDoneOk: s.apDone === 'ok', apDoneAdj: s.apDone === 'adj', apAgain: () => this.setState({ apDone:null, apComment:'' }),
+      apDoneOk: s.apDone === 'ok', apDoneAdj: s.apDone === 'adj', ...apNew,
     };
     const toasts = s.toasts.map(t => ({ ...t, dismiss: () => this.setState(st => ({ toasts:st.toasts.filter(x => x.id !== t.id) })) }));
     const base = { profiles, isLogin:!s.user && !s.apToken, isApp:!!s.user && !s.apToken, ...apVals, logoOk:!s.logoFail, logoFail:s.logoFail,
@@ -4569,6 +4818,8 @@ class Component extends DCLogic {
       pwdOpen:!!s.pwdFor, pwdUser, pwd:s.pwd || '', pwdErr:!!s.pwdErr, pwdBorder: s.pwdErr ? 'oklch(0.65 0.2 25)' : '#2a2a3a',
       onPwd: e => this.setState({ pwd:e.target.value, pwdErr:false }),
       onPwdKey: e => { if (e.key === 'Enter') submitPwd(); if (e.key === 'Escape') this.setState({ pwdFor:null }); },
+      savePw: s.savePw !== false, savePwOff: s.savePw === false, toggleSavePw: () => this.setState(st => ({ savePw: st.savePw === false })),
+      pwdSavedHint: !!((lsGet(PW_KEY) || {})[s.pwdFor]),
       pwdMsg: s.pwdMsg || 'Senha incorreta', pwdBtnLabel: s.pwdBusy ? 'Entrando…' : 'Entrar', pwdBtnOpacity: s.pwdBusy ? 0.6 : 1,
       submitPwd, closePwd: () => this.setState({ pwdFor:null, pwd:'', pwdErr:false, pwdMsg:'' }), stop: e => e.stopPropagation(), toasts, ...profileVals };
     if (!s.user) return base;
@@ -5544,6 +5795,7 @@ class Component extends DCLogic {
     const teamCards = [...Object.values(USERS).map(u => ({ ...u, _fixed:true })), ...(s.team || [])].map(u => ({
       name:u.name, role:u.role, photo:u.photo, kindLabel:KIND_L[u.kind] || 'Colaborador', fixed:!!u._fixed, removable:!u._fixed,
       remove: () => { if (!window.confirm(`Remover o usuário ${u.name}? Ele deixará de aparecer na tela inicial. As demandas atribuídas a ele continuam no sistema.`)) return;
+        if (this._secure) this._sb.rpc('rise_user_remove', { tok:this._tok, p_id:u.id }).then(() => this.refreshProfiles());
         this.setState(st => ({ team:(st.team || []).filter(x => x.id !== u.id) })); this.toast('Usuário removido', u.name, 'user-minus'); } }));
     // ===== Fase 5: notificações por nível, pesquisa global, Central Inteligente, Modo Segunda-feira =====
     const tk5 = keyOf(TODAY), U = NLV.urgente.color, A5 = NLV.atencao.color, Iv = NLV.info.color;
@@ -5903,13 +6155,49 @@ class Component extends DCLogic {
     const ctF = s.ctFilter || 'all';
     const ctf = s.ctForm;
     const setCt = k => e => { const v = e.target.value; this.setState(st => ({ ctForm:{ ...st.ctForm, [k]:v } })); };
+    const apMgr = (() => {
+      if (!vp) return { vApHas:false, vApCanSend:false, vApSendOpen:false, vApSendClosed:true };
+      const ap = vp.approval || {}, has = !!vp.approvalToken, act = has && ap.active !== false;
+      const url = has ? approvalLink(vp.approvalToken) : '', cl = s.clients.find(c => c.id === vp.client) || {};
+      const ph = String(cl.phone || cl.whatsapp || cl.whats || '').replace(/\D/g, '');
+      const cst = CST[vp.clientStatus] || ['Aguardando aprovação do cliente', AMBER];
+      const sf = s.apSend;
+      const guess = /v[ií]deo|reels|motion|edi/i.test(vp.service || vp.type || '') ? 'Vídeo' : /carrossel/i.test(vp.type || '') ? 'Carrossel' : 'Arte';
+      return {
+        vApHas: has && vCan, vApActive: act, vApOff: has && !act, vApUrl: url,
+        vApStLabel: cst[0], vApStColor: cst[1], vApStTint: tint(cst[1], 16),
+        vApStats: [['Criado', ap.createdAt ? fmtDT(ap.createdAt) : vp.clientSentAt ? fmtDT(vp.clientSentAt) : '—'], ['Último acesso', ap.lastAccess ? fmtDT(ap.lastAccess) : 'Não abriu'], ['Visualizações', String(ap.views || 0)], ['Aprovado em', ap.approvedAt ? fmtDT(ap.approvedAt) : '—']].map(([k, v]) => ({ k, v })),
+        vApCopy: () => { (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(() => this.toast('Link copiado', 'Envie para o cliente aprovar.', 'link')).catch(() => window.prompt('Copie o link:', url)); },
+        vApWa: 'https://wa.me/' + ph + '?text=' + encodeURIComponent(apWaMsg(cl.name || '', url)),
+        vApRevoke: () => { if (!window.confirm('Desativar este link? O cliente não conseguirá mais abrir nem aprovar por ele.')) return; this.apEvent(vp.id, 'revoked', 'Link desativado', { active:false }); this.toast('Link desativado', 'O link antigo deixou de funcionar.', 'link-2-off'); },
+        vApRenew: () => { if (!window.confirm('Gerar um novo link? O link atual deixará de funcionar.')) return; const tok = secTok();
+          this.update(vp.id, { approvalToken:tok, clientStatus: vp.clientStatus === 'aprovado' ? 'aprovado' : 'aguardando' });
+          this.apEvent(vp.id, 'created', 'Novo link gerado (o anterior foi desativado)', { active:true, createdAt:Date.now(), views:0, lastAccess:null });
+          this.toast('Novo link gerado', 'Copie e envie ao cliente.', 'refresh-cw'); },
+        vApEvents: arr(ap.events).slice().reverse().slice(0, 40).map(e => ({ time: fmtDT(e.ts), text: e.text + (e.by ? ' · ' + this.userOf(e.by).first : '') })), vApHasEvents: arr(ap.events).length > 0,
+        vApCanSend: vCan && !has, vApSendOpen: !!sf, vApSendClosed: !sf,
+        vApSendStart: () => this.setState({ apSend:{ kind:guess, urls:vp.driveUrl || '' } }), vApSendCancel: () => this.setState({ apSend:null }),
+        vApSendKinds: ['Vídeo', 'Arte', 'Carrossel'].map(k => { const on = sf && sf.kind === k; return { label:k, pick: () => this.setState(st => ({ apSend:{ ...st.apSend, kind:k } })), bg: on ? tint('#a855f7', 22) : 'transparent', color: on ? '#e9d5ff' : '#a1a1b0', border: on ? '#a855f7' : '#2a2a36' }; }),
+        vApSendUrls: sf ? sf.urls : '', onApSendUrls: e => { const v = e.target.value; this.setState(st => ({ apSend:{ ...st.apSend, urls:v } })); },
+        vApSendGo: () => {
+          const urls = String((sf && sf.urls) || '').split(/\s*\n\s*/).map(x => x.trim()).filter(x => /^https?:\/\//i.test(x));
+          if (!urls.length) return this.toast('Cole o link do conteúdo', 'Use o link completo (Google Drive ou imagem).', 'circle-alert');
+          const now = Date.now(), tok = secTok(), vs = arr(vp.versions), n = vs.length + 1;
+          this.update(vp.id, { approvalToken:tok, driveUrl:urls[0], clientStatus:'aguardando', status: vp.status === 'concluido' ? 'concluido' : 'revisao', clientSentAt:now,
+            versions:[...vs, { n, url:urls[0], at:now, by:this.actor() }],
+            approval:{ ...(vp.approval || {}), active:true, createdAt:now, views:0, lastAccess:null, approvedAt:null, kind:sf.kind, media:urls.slice(1), events:[...arr((vp.approval || {}).events), { ts:now, type:'created', text:'Link de aprovação criado · V' + n + ' (' + sf.kind + (urls.length > 1 ? ', ' + urls.length + ' arquivos' : '') + ')', by:this.actor() }] },
+            history:this.hist(vp, 'Enviado para aprovação do cliente · V' + n) });
+          this.setState({ apSend:null }); this.toast('Link de aprovação gerado', 'Use "Enviar para cliente" para mandar pelo WhatsApp.', 'link'); },
+      };
+    })();
     const p3Vals = {
+      ...apMgr,
       vVerCount: vVersL.length, vNoVers: !vVersL.length, vClientOk: !!vp && vp.clientStatus === 'aprovado',
       vVers: vVersL.slice().reverse().map((v, i) => { const cur = i === 0, r = v.result ? VR[v.result] : cur && vp.clientStatus === 'aguardando' ? ['Aguardando cliente', 'oklch(0.82 0.13 80)'] : ['Enviada', '#8b8b99'];
-        return { n:v.n, url:v.url || '#', meta:'Enviada ' + fmtDT(v.at) + (v.by ? ' por ' + v.by : '') + (v.decidedAt ? ' · resposta ' + fmtDT(v.decidedAt) : ''), stLabel:r[0], stColor:r[1], stTint:tint(r[1], 15), border: cur ? '#3a2a55' : '#1c1c25' }; }),
+        return { comment:v.comment || '', hasComment:!!v.comment, n:v.n, url:v.url || '#', meta:'Enviada ' + fmtDT(v.at) + (v.by ? ' por ' + v.by : '') + (v.decidedAt ? ' · resposta ' + fmtDT(v.decidedAt) : ''), stLabel:r[0], stColor:r[1], stTint:tint(r[1], 15), border: cur ? '#3a2a55' : '#1c1c25' }; }),
       vCanNewVer: !!vp && vCan && !!vp.approvalToken, vNewVer: s.vNewVer || '', onVNewVer: e => this.setState({ vNewVer:e.target.value }),
       vSendVer: () => { const u = (s.vNewVer || '').trim(); if (!/^https?:\/\//i.test(u)) return this.toast('Link inválido', 'Cole o link completo da nova versão.', 'circle-alert');
-        if (!window.confirm('Enviar esta nova versão para aprovação do cliente? O status volta para "Aguardando aprovação".')) return; this.newVersion(vp.id, u); this.setState({ vNewVer:'' }); },
+        if (!window.confirm('Enviar esta nova versão para aprovação do cliente? O status volta para "Aguardando aprovação".')) return; this.newVersion(vp.id, u); this.apEvent(vp.id, 'version', 'Nova versão enviada ao cliente', { approvedAt:null }); this.setState({ vNewVer:'' }); },
       fExtra: !!fEx, fExtraText: fEx ? 'Limite do pacote ' + ((PACKAGES.find(x => x.id === fEx.c.pkg) || PACKAGES[0]).name) + ' atingido: ' + fEx.used + ' de ' + fEx.max + (fEx.rl ? ' Reels' : ' posts') + ' neste mês para ' + fEx.c.name + '. A demanda será salva normalmente e marcada como extra.' : '',
       isWhats: s.tab === 'whatsapp', wa:waS, waCats:WA_CATS, waVarList:WA_VARS.map(v => '{' + v + '}'),
       waTplOpts: waAll.map(t => ({ id:t.id, label:t.cat + ' · ' + t.name })),
@@ -6147,7 +6435,7 @@ class Component extends DCLogic {
       ...base, ...briefVals, ...viewVals, ...payVals, ...shootVals, ...storyVals, ...vidVals, ...ideaVals, ...drawerVals, ...boardVals, ...metricVals, ...calVals, ...p4Vals, ...p5Vals, ...p3Vals, me, isAdmin, isMobile, isDesktop:!isMobile,
       showSidebar: !isMobile || s.navOpen, showBackdrop: isMobile && s.navOpen, mainPad: isMobile ? 0 : 248,
       openNav: () => this.setState({ navOpen:true }), closeNav: () => this.setState({ navOpen:false }),
-      logout: () => this.setState({ user:null, navOpen:false, bellOpen:false }),
+      logout: () => { if (!window.confirm('Sair deste perfil? Na próxima vez será preciso escolher o perfil novamente.')) return; lsSet(SESS_KEY, null); if (this._secure && this._tok) { this._sb.rpc('rise_logout', { tok:this._tok }); this._tok = null; lsSet(TOK_KEY, null); } this.setState({ user:null, navOpen:false, bellOpen:false }); },
       resetData: () => { if (!window.confirm('Zerar clientes, demandas, financeiro e notificações? Os perfis da equipe serão mantidos.')) return; this.setState({ posts:[], clients:[], fin:[], notifs:[] }); this.toast('Dados zerados', 'A base está vazia e pronta para novos cadastros.', 'undo-2'); },
       navOps, navMgmt, pageTitle:titles[s.tab], pageSub:subs[s.tab],
       todayLabel:`${WEEK[TODAY.getDay()]}, ${pad(TODAY.getDate())} ${MONTHS[TODAY.getMonth()].slice(0, 3).toLowerCase()} ${TODAY.getFullYear()}`,
@@ -6280,15 +6568,15 @@ class Component extends DCLogic {
           bg: a ? tint(st.color, 20) : '#111117', color: a ? st.color : '#8b8b99', border: a ? st.color : '#23232d' }; }),
       fDue:setF('due'), fBrief:setF('brief'), fDrive:setF('driveUrl'), fCoverage:setF('coverage'), fPaid:setF('paid'), isCoverage: f.service === COVERAGE,
       hasToken:!!f.approvalToken, canGenLink:!f.approvalToken, apLinkUrl: f.approvalToken ? approvalLink(f.approvalToken) : '',
-      waLink: f.approvalToken ? `https://wa.me/?text=${encodeURIComponent(`Olá! Segue o material "${f.title || ''}" para sua aprovação: ${approvalLink(f.approvalToken)}`)}` : '#',
+      waLink: f.approvalToken ? `https://wa.me/?text=${encodeURIComponent(apWaMsg(f.client ? this.clientName(f.client) : '', approvalLink(f.approvalToken)))}` : '#',
       copyLink: () => { const u = approvalLink(f.approvalToken);
         (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(() => this.toast('Link copiado', 'Envie para o cliente aprovar.', 'link')).catch(() => window.prompt('Copie o link:', u)); },
       genLink: () => {
         if (!f.driveUrl || !f.driveUrl.trim()) return this.toast('Cole o link do Google Drive', 'O cliente precisa de um arquivo para aprovar.', 'circle-alert');
-        const tok = Math.random().toString(36).slice(2, 12);
+        const tok = secTok(), apObj = { active:true, createdAt:Date.now(), views:0, events:[{ ts:Date.now(), type:'created', text:'Link de aprovação criado · V1', by:this.actor() }] };
         const st = f.status === 'concluido' ? 'concluido' : 'revisao';
-        this.setState(x => ({ form:{ ...x.form, approvalToken:tok, clientStatus:x.form.clientStatus || 'aguardando', status:st } }));
-        if (f.id) { const op = s.posts.find(x => x.id === f.id) || {}; this.update(f.id, { approvalToken:tok, driveUrl:f.driveUrl.trim(), clientStatus:f.clientStatus || 'aguardando', status:st, clientSentAt:Date.now(), ...(arr(op.versions).length ? {} : { versions:[{ n:1, url:f.driveUrl.trim(), at:Date.now(), by:this.actor() }] }) }); }
+        this.setState(x => ({ form:{ ...x.form, approvalToken:tok, approval:apObj, clientStatus:x.form.clientStatus || 'aguardando', status:st } }));
+        if (f.id) { const op = s.posts.find(x => x.id === f.id) || {}; this.update(f.id, { approvalToken:tok, approval:apObj, driveUrl:f.driveUrl.trim(), clientStatus:f.clientStatus || 'aguardando', status:st, clientSentAt:Date.now(), ...(arr(op.versions).length ? {} : { versions:[{ n:1, url:f.driveUrl.trim(), at:Date.now(), by:this.actor() }] }) }); }
         this.toast('Link de aprovação gerado', 'Copie e envie para o cliente.', 'link');
       },
       hasFClientSt:!!CST[f.clientStatus], fClientSt:(CST[f.clientStatus] || [''])[0], fClientStColor:(CST[f.clientStatus] || ['', '#8b8b99'])[1],
