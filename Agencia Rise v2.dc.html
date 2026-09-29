@@ -921,6 +921,10 @@ option{background:#111117;color:#ededf2}
                   </sc-if>
                   <sc-if value="{{ stHasPlan }}" hint-placeholder-val="{{ false }}">
                     <div style="font-size:12.5px;color:#a1a1b0">{{ stPlanSummary }}</div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;padding-top:4px;border-top:1px solid #1c1c25">
+                      <button onClick="{{ stPdfWeek }}" style="min-height:40px;padding:8px 13px;border-radius:10px;border:1px solid #2a2a36;background:transparent;color:#e9d5ff;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;flex:1 1 200px;border-color:#3a2a55;opacity:{{ pdfOpacity }}"><span style="width:15px;height:15px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/file-down.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/file-down.svg) center / contain no-repeat"></span>{{ pdfWeekLabel }}</button>
+                      <button onClick="{{ stPdfShare }}" style="min-height:40px;padding:8px 13px;border-radius:10px;border:1px solid #2a2a36;background:transparent;color:#e9d5ff;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;flex:1 1 200px;border-color:oklch(0.72 0.17 150 / 0.5);color:oklch(0.85 0.13 150);opacity:{{ pdfOpacity }}"><span style="width:15px;height:15px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/share-2.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/share-2.svg) center / contain no-repeat"></span>Enviar PDF pelo WhatsApp</button>
+                    </div>
                   </sc-if>
                 </div>
                 <sc-if value="{{ stNoPlan }}" hint-placeholder-val="{{ false }}">
@@ -937,6 +941,7 @@ option{background:#111117;color:#ededf2}
                       <span style="font-family:'JetBrains Mono';font-size:12px;color:#8b8b99">{{ d.date }}</span>
                       <span style="flex:1;height:1px;background:#1c1c25"></span>
                       <span style="font-size:11.5px;color:{{ d.countColor }}">{{ d.countText }}</span>
+                      <sc-if value="{{ d.hasStories }}" hint-placeholder-val="{{ false }}"><button onClick="{{ d.pdf }}" title="Baixar o PDF deste dia" style="min-height:36px;padding:6px 10px;border-radius:8px;border:1px solid #2a2a36;background:transparent;color:#d4d4dc;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px"><span style="width:12px;height:12px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/file-down.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/file-down.svg) center / contain no-repeat"></span>PDF do dia</button></sc-if>
                       <button onClick="{{ d.add }}" style="min-height:36px;padding:6px 10px;border-radius:8px;border:1px solid #2a2a36;background:transparent;color:#d4d4dc;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px"><span style="width:12px;height:12px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/plus.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/plus.svg) center / contain no-repeat"></span>Story</button>
                     </div>
                     <sc-if value="{{ d.empty }}" hint-placeholder-val="{{ false }}"><div style="padding:14px;border-radius:12px;border:1px dashed #22222c;font-size:12.5px;color:#5c5c6a">{{ d.emptyText }}</div></sc-if>
@@ -989,6 +994,61 @@ option{background:#111117;color:#ededf2}
                     </div>
                   </div>
                 </sc-for>
+                <div style="display:flex;flex-direction:column;gap:12px;margin-top:10px;padding-top:18px;border-top:1px solid #1c1c25">
+                  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                    <div style="width:36px;height:36px;border-radius:10px;background:rgba(168,85,247,0.16);display:flex;align-items:center;justify-content:center;flex-shrink:0"><span style="width:18px;height:18px;flex-shrink:0;background:#c084fc;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/clapperboard.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/clapperboard.svg) center / contain no-repeat"></span></div>
+                    <div style="flex:1 1 220px;min-width:0;display:flex;flex-direction:column;gap:2px"><div style="font-family:Sora;font-weight:600;font-size:16px">Roteiros de vídeo para o feed</div><div style="font-size:12.5px;color:#8b8b99">Reels, institucional e outros vídeos para gravar na semana de {{ stVWeek }}</div></div>
+                  </div>
+                  <sc-if value="{{ stVHasDates }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+                      <span style="font-size:11.5px;color:#8b8b99">Datas chegando:</span>
+                      <sc-for list="{{ stVDates }}" as="vd" hint-placeholder-count="3"><span style="font-size:11.5px;font-weight:600;padding:4px 9px;border-radius:20px;background:rgba(251,146,60,0.12);color:oklch(0.83 0.12 60)">{{ vd.label }}</span></sc-for>
+                    </div>
+                  </sc-if>
+                  <div style="display:flex;gap:8px;flex-wrap:wrap">
+                    <button onClick="{{ stVGen }}" style="min-height:44px;padding:10px 16px;border-radius:10px;border:0;background:#a855f7;color:#0a0a0f;font-size:13.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;flex:1 1 240px;box-shadow:0 8px 28px -8px rgba(168,85,247,0.8)"><span style="width:16px;height:16px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/sparkles.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/sparkles.svg) center / contain no-repeat"></span>Gerar roteiros de vídeo com IA</button>
+                    <button onClick="{{ stVAdd }}" style="min-height:40px;padding:8px 13px;border-radius:10px;border:1px solid #2a2a36;background:transparent;color:#e9d5ff;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px"><span style="width:14px;height:14px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/plus.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/plus.svg) center / contain no-repeat"></span>Criar manualmente</button>
+                    <sc-if value="{{ stVHas }}" hint-placeholder-val="{{ false }}"><button onClick="{{ stVPdf }}" style="min-height:40px;padding:8px 13px;border-radius:10px;border:1px solid #2a2a36;background:transparent;color:#e9d5ff;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;border-color:#3a2a55;opacity:{{ pdfOpacity }}"><span style="width:14px;height:14px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/file-down.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/file-down.svg) center / contain no-repeat"></span>PDF dos vídeos</button></sc-if>
+                  </div>
+                  <sc-if value="{{ stVEmpty }}" hint-placeholder-val="{{ false }}">
+                    <div style="padding:22px 16px;border-radius:14px;border:1px dashed #2a2a36;font-size:13px;color:#8b8b99;line-height:1.5;text-align:center">Nenhum roteiro de vídeo para esta semana. A IA usa o segmento do cliente e as datas comemorativas próximas para sugerir o que gravar.</div>
+                  </sc-if>
+                  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(340px,100%),1fr));gap:10px">
+                    <sc-for list="{{ stVCards }}" as="v" hint-placeholder-count="0">
+                      <div style="background:#111117;border:1px solid #1f1f29;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0">
+                        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+                          <span style="font-size:11px;font-weight:700;letter-spacing:0.04em;padding:3px 9px;border-radius:6px;background:rgba(168,85,247,0.16);color:#d8b4fe">{{ v.formato }}</span>
+                          <sc-if value="{{ v.hasDate }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px;background:rgba(251,146,60,0.12);color:oklch(0.83 0.12 60)">{{ v.dataRel }}</span></sc-if>
+                          <span style="flex:1"></span><span style="font-family:'JetBrains Mono';font-size:11.5px;color:#6f6f7d">#{{ v.n }}</span>
+                        </div>
+                        <div style="font-family:Sora;font-weight:600;font-size:15.5px;line-height:1.35;text-wrap:pretty">{{ v.titulo }}</div>
+                        <sc-if value="{{ v.hasObj }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:10.5px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#6f6f7d">Objetivo</span><span style="font-size:13px;line-height:1.45;color:#d4d4dc">{{ v.objetivo }}</span></div></sc-if>
+                        <sc-if value="{{ v.hasGancho }}" hint-placeholder-val="{{ false }}">
+                          <div style="display:flex;flex-direction:column;gap:4px;padding:10px 12px;border-radius:10px;background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.25)"><span style="font-size:10.5px;font-weight:700;letter-spacing:0.08em;color:#a78bfa">GANCHO · PRIMEIROS 3 SEGUNDOS</span><span style="font-size:13.5px;line-height:1.5;color:#f3e8ff">{{ v.gancho }}</span></div>
+                        </sc-if>
+                        <sc-if value="{{ v.hasRoteiro }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:10.5px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#6f6f7d">Roteiro</span><span style="font-size:13px;line-height:1.55;color:#dcdce4;white-space:pre-wrap">{{ v.roteiro }}</span></div></sc-if>
+                        <sc-if value="{{ v.hasCta }}" hint-placeholder-val="{{ false }}"><div style="font-size:12.5px;color:#e9d5ff"><span style="font-weight:700;color:#a78bfa">CTA · </span>{{ v.cta }}</div></sc-if>
+                        <sc-for list="{{ v.rows }}" as="r" hint-placeholder-count="0"><div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:10.5px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#6f6f7d">{{ r.label }}</span><span style="font-size:13px;line-height:1.45;color:#d4d4dc;white-space:pre-wrap">{{ r.value }}</span></div></sc-for>
+                        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px">
+                          <sc-for list="{{ v.chips }}" as="c" hint-placeholder-count="3"><button onClick="{{ c.pick }}" style="min-height:34px;padding:4px;border-radius:8px;font-size:11.5px;font-weight:700;cursor:pointer;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }}">{{ c.label }}</button></sc-for>
+                        </div>
+                        <div style="display:flex;gap:4px;flex-wrap:wrap;border-top:1px solid #1c1c25;padding-top:10px">
+                          <button onClick="{{ v.edit }}" style="min-height:36px;padding:6px 10px;border-radius:8px;border:1px solid #2a2a36;background:transparent;color:#d4d4dc;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px"><span style="width:12px;height:12px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg) center / contain no-repeat"></span>Editar</button>
+                          <button onClick="{{ v.copy }}" style="min-height:36px;padding:6px 10px;border-radius:8px;border:1px solid #2a2a36;background:transparent;color:#d4d4dc;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px"><span style="width:12px;height:12px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/copy.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/copy.svg) center / contain no-repeat"></span>Copiar</button>
+                          <button onClick="{{ v.demand }}" style="min-height:36px;padding:6px 10px;border-radius:8px;border:1px solid #2a2a36;background:transparent;color:#d4d4dc;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px"><span style="width:12px;height:12px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/list-plus.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/list-plus.svg) center / contain no-repeat"></span>Criar demanda</button>
+                          <button onClick="{{ v.del }}" style="min-height:36px;padding:6px 10px;border-radius:8px;border:1px solid #2a2a36;background:transparent;color:#d4d4dc;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;color:oklch(0.75 0.17 25)"><span style="width:12px;height:12px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/trash-2.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/trash-2.svg) center / contain no-repeat"></span>Excluir</button>
+                          <button onClick="{{ v.toggleAi }}" style="min-height:36px;padding:6px 10px;border-radius:8px;border:1px solid #2a2a36;background:transparent;color:#d4d4dc;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;margin-left:auto;border-color:#a855f7;color:#f3e8ff;background:rgba(168,85,247,0.12)"><span style="width:12px;height:12px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/sparkles.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/sparkles.svg) center / contain no-repeat"></span>Refazer com IA</button>
+                        </div>
+                        <sc-if value="{{ v.aiOpen }}" hint-placeholder-val="{{ false }}">
+                          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(130px,100%),1fr));gap:4px">
+                            <sc-for list="{{ v.aiActs }}" as="a" hint-placeholder-count="4"><button onClick="{{ a.go }}" style="min-height:36px;padding:6px 10px;border-radius:8px;border:1px solid #2a2a36;background:transparent;color:#d4d4dc;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;justify-content:center;border-color:#3a2a55;color:#e9d5ff">{{ a.label }}</button></sc-for>
+                          </div>
+                        </sc-if>
+                        <sc-if value="{{ v.busy }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:#c084fc;font-weight:600"><span style="width:14px;height:14px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/sparkles.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/sparkles.svg) center / contain no-repeat"></span>Refazendo com IA...</div></sc-if>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
               </sc-if>
             </div>
           </div>
@@ -2388,6 +2448,54 @@ option{background:#111117;color:#ededf2}
     </aside>
   </sc-if>
 
+  <sc-if value="{{ vgOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:88;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;padding:12px">
+      <div style="width:100%;max-width:560px;max-height:calc(100dvh - 24px);overflow-y:auto;overscroll-behavior:contain;background:#0e0e13;border:1px solid #2a2140;border-radius:18px;padding:clamp(16px,3vw,24px);display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:center;gap:10px"><span style="width:18px;height:18px;flex-shrink:0;background:#c084fc;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/clapperboard.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/clapperboard.svg) center / contain no-repeat"></span><div style="font-family:Sora;font-weight:600;font-size:18px;flex:1">Roteiros de vídeo com IA</div>
+          <sc-if value="{{ vgIdle }}" hint-placeholder-val="{{ true }}"><button onClick="{{ vgClose }}" aria-label="Fechar" style="width:40px;height:40px;border-radius:10px;border:1px solid #1f1f29;background:transparent;color:#a1a1b0;display:flex;align-items:center;justify-content:center;cursor:pointer"><span style="width:17px;height:17px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/x.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/x.svg) center / contain no-repeat"></span></button></sc-if></div>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+          <div style="padding:10px 12px;border-radius:10px;background:#111117;display:flex;flex-direction:column;gap:2px"><span style="font-size:11px;color:#8b8b99">Cliente</span><span style="font-size:13.5px;font-weight:600">{{ genClient }}</span></div>
+          <div style="padding:10px 12px;border-radius:10px;background:#111117;display:flex;flex-direction:column;gap:2px"><span style="font-size:11px;color:#8b8b99">Semana de gravação</span><span style="font-size:13.5px;font-weight:600">{{ stVWeek }}</span></div>
+        </div>
+        <label style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-size:12px;font-weight:600;color:#a1a1b0">Quantidade de vídeos</span><select value="{{ vg.count }}" onChange="{{ vgCount }}" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px;font-family:inherit;outline:none"><sc-for list="{{ vgCounts }}" as="o" hint-placeholder-count="8"><option value="{{ o }}">{{ o }}</option></sc-for></select></label>
+        <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:600;color:#a1a1b0">Formatos</span><div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ vgFormats }}" as="c" hint-placeholder-count="7"><button onClick="{{ c.pick }}" style="min-height:36px;padding:6px 12px;border-radius:20px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }};font-size:12.5px;font-weight:600;cursor:pointer">{{ c.label }}</button></sc-for></div></div>
+        <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:600;color:#a1a1b0">Datas para aproveitar</span>
+          <sc-if value="{{ vgNoDates }}" hint-placeholder-val="{{ false }}"><span style="font-size:12.5px;color:#6f6f7d">Nenhuma data comemorativa nas próximas semanas.</span></sc-if>
+          <div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ vgDates }}" as="c" hint-placeholder-count="0"><button onClick="{{ c.pick }}" style="min-height:36px;padding:6px 12px;border-radius:20px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }};font-size:12.5px;font-weight:600;cursor:pointer">{{ c.label }}</button></sc-for></div></div>
+        <label style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-size:12px;font-weight:600;color:#a1a1b0">Observações para esta gravação</span><textarea value="{{ vg.notes }}" onChange="{{ vgNotes }}" rows="3" placeholder="Ex.: vamos gravar na loja nova, destacar a linha de skincare" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px;font-family:inherit;outline:none;resize:vertical;line-height:1.5"></textarea></label>
+        <div style="font-size:12px;color:#6f6f7d;line-height:1.5">A IA usa o Contexto para IA do cliente e evita repetir vídeos gerados antes. Não inventa preços nem ofertas.</div>
+        <sc-if value="{{ vgHasErr }}" hint-placeholder-val="{{ false }}"><div style="padding:10px 12px;border-radius:10px;background:oklch(0.68 0.2 25 / 0.1);border:1px solid oklch(0.68 0.2 25 / 0.4);font-size:13px;color:oklch(0.8 0.14 25)">{{ vgErr }}</div></sc-if>
+        <sc-if value="{{ vgBusy }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;justify-content:center;gap:10px;min-height:48px;border-radius:10px;background:rgba(168,85,247,0.12);color:#e9d5ff;font-weight:600;font-size:14px"><span style="width:16px;height:16px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/sparkles.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/sparkles.svg) center / contain no-repeat"></span>Gerando roteiros com IA...</div></sc-if>
+        <sc-if value="{{ vgIdle }}" hint-placeholder-val="{{ true }}"><div style="display:flex;gap:8px;justify-content:flex-end"><button onClick="{{ vgClose }}" style="min-height:40px;padding:8px 13px;border-radius:10px;border:1px solid #2a2a36;background:transparent;color:#e9d5ff;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px">Cancelar</button><button onClick="{{ vgSubmit }}" style="min-height:44px;padding:10px 16px;border-radius:10px;border:0;background:#a855f7;color:#0a0a0f;font-size:13.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px"><span style="width:15px;height:15px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/sparkles.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/sparkles.svg) center / contain no-repeat"></span>Gerar roteiros</button></div></sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ veOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ veClose }}" style="position:fixed;inset:0;z-index:88;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;padding:12px">
+      <div onClick="{{ stop }}" style="width:100%;max-width:600px;max-height:calc(100dvh - 24px);overflow-y:auto;overscroll-behavior:contain;background:#0e0e13;border:1px solid #2a2140;border-radius:18px;padding:clamp(16px,3vw,24px);display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:10px"><span style="width:18px;height:18px;flex-shrink:0;background:#c084fc;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/clapperboard.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/clapperboard.svg) center / contain no-repeat"></span><div style="font-family:Sora;font-weight:600;font-size:18px;flex:1">{{ veTitle }}</div><button onClick="{{ veClose }}" aria-label="Fechar" style="width:40px;height:40px;border-radius:10px;border:1px solid #1f1f29;background:transparent;color:#a1a1b0;display:flex;align-items:center;justify-content:center;cursor:pointer"><span style="width:17px;height:17px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/x.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/x.svg) center / contain no-repeat"></span></button></div>
+        <label style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-size:12px;font-weight:600;color:#a1a1b0">Título *</span><input value="{{ ve.titulo }}" onChange="{{ veTitulo }}" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px;font-family:inherit;outline:none"></label>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(170px,100%),1fr));gap:10px">
+          <label style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-size:12px;font-weight:600;color:#a1a1b0">Formato</span><input value="{{ ve.formato }}" onChange="{{ veFormato }}" placeholder="Reels" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px;font-family:inherit;outline:none"></label>
+          <label style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-size:12px;font-weight:600;color:#a1a1b0">Data relacionada</span><input value="{{ ve.dataRelacionada }}" onChange="{{ veData }}" placeholder="Ex.: Dia das Crianças 12/10" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px;font-family:inherit;outline:none"></label>
+          <label style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-size:12px;font-weight:600;color:#a1a1b0">Duração</span><input value="{{ ve.duracao }}" onChange="{{ veDuracao }}" placeholder="30 a 45 s" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px;font-family:inherit;outline:none"></label>
+        </div>
+        <label style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-size:12px;font-weight:600;color:#a1a1b0">Objetivo</span><input value="{{ ve.objetivo }}" onChange="{{ veObjetivo }}" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px;font-family:inherit;outline:none"></label>
+        <label style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-size:12px;font-weight:600;color:#a1a1b0">Gancho (primeiros 3 segundos)</span><textarea value="{{ ve.gancho }}" onChange="{{ veGancho }}" rows="2" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px;font-family:inherit;outline:none;resize:vertical;line-height:1.5"></textarea></label>
+        <label style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-size:12px;font-weight:600;color:#a1a1b0">Roteiro</span><textarea value="{{ ve.desenvolvimento }}" onChange="{{ veDesenv }}" rows="6" placeholder="Cena 1 — ..." style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px;font-family:inherit;outline:none;resize:vertical;line-height:1.5"></textarea></label>
+        <label style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-size:12px;font-weight:600;color:#a1a1b0">CTA</span><input value="{{ ve.cta }}" onChange="{{ veCta }}" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px;font-family:inherit;outline:none"></label>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:10px">
+          <label style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-size:12px;font-weight:600;color:#a1a1b0">Quem aparece</span><input value="{{ ve.pessoa }}" onChange="{{ vePessoa }}" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px;font-family:inherit;outline:none"></label>
+          <label style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-size:12px;font-weight:600;color:#a1a1b0">Cenas de apoio</span><input value="{{ ve.cenas }}" onChange="{{ veCenas }}" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px;font-family:inherit;outline:none"></label>
+        </div>
+        <label style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-size:12px;font-weight:600;color:#a1a1b0">Legenda sugerida</span><textarea value="{{ ve.legenda }}" onChange="{{ veLegenda }}" rows="2" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px;font-family:inherit;outline:none;resize:vertical;line-height:1.5"></textarea></label>
+        <label style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font-size:12px;font-weight:600;color:#a1a1b0">Observação</span><textarea value="{{ ve.observacao }}" onChange="{{ veObs }}" rows="2" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px;font-family:inherit;outline:none;resize:vertical;line-height:1.5"></textarea></label>
+        <div style="display:flex;gap:8px;justify-content:flex-end"><button onClick="{{ veClose }}" style="min-height:40px;padding:8px 13px;border-radius:10px;border:1px solid #2a2a36;background:transparent;color:#e9d5ff;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px">Cancelar</button><button onClick="{{ veSave }}" style="min-height:44px;padding:10px 16px;border-radius:10px;border:0;background:#a855f7;color:#0a0a0f;font-size:13.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px">Salvar roteiro</button></div>
+      </div>
+    </div>
+  </sc-if>
+
   <sc-if value="{{ genOpen }}" hint-placeholder-val="{{ false }}">
     <div style="position:fixed;inset:0;z-index:88;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;padding:12px">
       <div style="width:100%;max-width:520px;max-height:calc(100vh - 24px);overflow-y:auto;overscroll-behavior:contain;background:#0e0e13;border:1px solid #2a2140;border-radius:18px;padding:clamp(16px,4vw,24px);display:flex;flex-direction:column;gap:14px;box-shadow:0 30px 90px -20px rgba(168,85,247,0.5)">
@@ -3479,6 +3587,11 @@ const AI_FIELDS = [
 ];
 const WDAY_FULL = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
 const ST_STATUS = { pendente:['Pendente', '#8b8b99'], gravado:['Gravado', AMBER], publicado:['Publicado', GREEN] };
+const V_FORMATS = ['Reels', 'Institucional', 'Dica / educativo', 'Bastidores', 'Produto / serviço', 'Depoimento / prova social', 'Tendência'];
+const V_ACTIONS = [['regenerate', 'Outra ideia'], ['shorter', 'Mais curto'], ['more_natural', 'Mais natural'], ['more_commercial', 'Mais comercial']];
+const VST = { ideia:['Ideia', '#8b8b99'], aprovado:['Aprovado', 'oklch(0.8 0.1 230)'], gravado:['Gravado', 'oklch(0.8 0.15 155)'] };
+const V_FIELDS = ['titulo','formato','dataRelacionada','objetivo','gancho','desenvolvimento','cta','cenas','pessoa','duracao','legenda','observacao'];
+const videoText = v => [v.titulo ? '*' + v.titulo + '*' : '', [v.formato, v.dataRelacionada].filter(Boolean).join(' · '), v.objetivo ? 'Objetivo: ' + v.objetivo : '', v.gancho ? 'Gancho (3s): ' + v.gancho : '', v.desenvolvimento ? 'Roteiro:\n' + v.desenvolvimento : '', v.cta ? 'CTA: ' + v.cta : '', v.cenas ? 'Cenas de apoio: ' + v.cenas : '', v.pessoa ? 'Quem aparece: ' + v.pessoa : '', v.duracao ? 'Duração: ' + v.duracao : '', v.legenda ? 'Legenda: ' + v.legenda : '', v.observacao ? 'Obs.: ' + v.observacao : ''].filter(Boolean).join('\n');
 const AI_ACTIONS = [['regenerate', 'Outra ideia'], ['more_natural', 'Mais natural'], ['shorter', 'Mais curto'], ['more_commercial', 'Mais comercial'], ['improve_speech', 'Melhorar a fala']];
 const uid = p => (p || 'x') + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 const nextMonday = () => { const dw = TODAY.getDay(); return keyOf(addDays(dw === 0 ? 1 : 8 - dw)); };
@@ -3865,6 +3978,142 @@ class Component extends DCLogic {
   editPlanStory(planId, storyId, fn) {
     const plan = arr(this.state.stories).find(x => x.id === planId); if (!plan) return;
     this.upsertPlan({ ...plan, days:plan.days.map(d => ({ ...d, stories:fn(d.stories, storyId, d) })) });
+  }
+  loadJsPdf() {
+    if (window.jspdf && window.jspdf.jsPDF) return Promise.resolve(window.jspdf.jsPDF);
+    if (!this._jsp) this._jsp = new Promise((res, rej) => { const sc = document.createElement('script'); sc.src = 'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js';
+      sc.onload = () => res(window.jspdf.jsPDF); sc.onerror = () => { this._jsp = null; rej(new Error('jspdf')); }; document.head.appendChild(sc); });
+    return this._jsp;
+  }
+  async riseLogo() {
+    if (this._logo !== undefined) return this._logo;
+    try {
+      const b = await (await fetch('https://i.imgur.com/YhR1iHF.png')).blob();
+      const url = await new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.onerror = rej; fr.readAsDataURL(b); });
+      const im = await new Promise(res => { const x = new Image(); x.onload = () => res(x); x.onerror = () => res(null); x.src = url; });
+      if (!im) { this._logo = null; return null; }
+      const w0 = im.naturalWidth || 1, h0 = im.naturalHeight || 1, cw = Math.min(360, w0), ch = Math.round(cw * h0 / w0);
+      const cv = document.createElement('canvas'); cv.width = cw; cv.height = ch; cv.getContext('2d').drawImage(im, 0, 0, cw, ch);
+      this._logo = { url:cv.toDataURL('image/png'), w:cw, h:ch };
+    } catch (e) { this._logo = null; }
+    return this._logo;
+  }
+  async makePdf(o) {
+    const JsPDF = await this.loadJsPdf(), logo = await this.riseLogo();
+    const doc = new JsPDF({ unit:'mm', format:'a4' });
+    const W = 210, H = 297, M = 14, CW = W - 2 * M, LIM = H - 16;
+    const P = [124, 58, 237], PD = [76, 29, 149], PL = [246, 241, 255], PB = [221, 214, 254], INK = [26, 22, 36], MUT = [112, 106, 128];
+    const T = t => String(t == null ? '' : t).replace(/[“”«»]/g, '"').replace(/[‘’]/g, "'").replace(/[–—]/g, '-').replace(/…/g, '...').replace(/[•●▪]/g, '-').replace(/[^\x00-\xFF\n]/g, '').trim();
+    const lh = fs => fs * 0.3528 * 1.2;
+    doc.setLineHeightFactor(1.2);
+    const wrap = (t, fs, w, st) => { doc.setFont('helvetica', st || 'normal'); doc.setFontSize(fs); return doc.splitTextToSize(T(t), w); };
+    let y = 0;
+    const header = first => {
+      if (first) {
+        doc.setFillColor(18, 12, 31); doc.rect(0, 0, W, 40, 'F'); doc.setFillColor(...P); doc.rect(0, 40, W, 1.6, 'F');
+        if (logo) { const lh2 = 17, lw = Math.min(62, lh2 * logo.w / logo.h); doc.addImage(logo.url, 'PNG', M, 20 - lh2 / 2, lw, lh2, undefined, 'FAST'); }
+        else { doc.setTextColor(255); doc.setFont('helvetica', 'bold'); doc.setFontSize(17); doc.text(T('AGÊNCIA RISE'), M, 23); }
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(8); doc.setTextColor(196, 181, 253); doc.text(T(o.kicker), W - M, 14, { align:'right' });
+        const cl = wrap(o.client, 15, 112, 'bold')[0] || ''; doc.setTextColor(255); doc.text(cl, W - M, 23, { align:'right' });
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor(221, 214, 254); doc.text(T(o.range), W - M, 30.5, { align:'right' });
+        y = 50;
+        if (o.info) { doc.setFontSize(9); doc.setTextColor(...MUT); doc.text(wrap(o.info, 9, CW), M, y); y += 8; }
+      } else {
+        doc.setFillColor(...P); doc.rect(0, 0, W, 9, 'F'); doc.setTextColor(255); doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5);
+        doc.text(wrap('AGÊNCIA RISE  ·  ' + o.client, 8.5, 110, 'bold')[0] || '', M, 6); doc.setFont('helvetica', 'normal'); doc.text(T(o.range), W - M, 6, { align:'right' });
+        y = 17;
+      }
+    };
+    const need = hh => { if (y + hh > LIM) { doc.addPage(); header(false); } };
+    const section = t => { need(16); doc.setFont('helvetica', 'bold'); doc.setFontSize(11.5); doc.setTextColor(...PD); doc.text(T(t), M, y + 4); doc.setFillColor(...P); doc.rect(M, y + 6.5, 26, 0.9, 'F'); y += 12; };
+    const LW = 30;
+    const val = r => T(r[1]);
+    const rowsH = (rows, w) => rows.reduce((a, r) => a + Math.max(1, wrap(r[1], 9.5, w - LW).length) * lh(9.5) + 2, 0);
+    const drawRows = (rows, x, w) => rows.forEach(r => { const ls = wrap(r[1], 9.5, w - LW);
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(7.2); doc.setTextColor(...MUT); doc.text(T(r[0]).toUpperCase(), x, y + 3.2);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor(...INK); doc.text(ls, x + LW, y + 3.3); y += Math.max(1, ls.length) * lh(9.5) + 2; });
+    const boxH = (t, w) => wrap(t, 10, w - 8, 'italic').length * lh(10) + 11.5;
+    const drawBox = (label, t, x, w) => { const ls = wrap(t, 10, w - 8, 'italic'), hh = ls.length * lh(10) + 9;
+      doc.setFillColor(...PL); doc.setDrawColor(...PB); doc.setLineWidth(0.3); doc.roundedRect(x, y, w, hh, 1.6, 1.6, 'FD');
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(7.2); doc.setTextColor(...P); doc.text(T(label), x + 4, y + 4.6);
+      doc.setFont('helvetica', 'italic'); doc.setFontSize(10); doc.setTextColor(46, 16, 101); doc.text(ls, x + 4, y + 9.4); y += hh + 2.5; };
+    const plainH = (t, w) => 5 + wrap(t, 9.5, w).length * lh(9.5) + 2;
+    const drawPlain = (label, t, x, w) => { const ls = wrap(t, 9.5, w); doc.setFont('helvetica', 'bold'); doc.setFontSize(7.2); doc.setTextColor(...P); doc.text(T(label), x, y + 3.2);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor(...INK); doc.text(ls, x, y + 7.6); y += ls.length * lh(9.5) + 7; };
+    header(true);
+    if (o.overview && o.days.length) {
+      section('CRONOGRAMA DA SEMANA');
+      o.days.forEach(d => { const txt = d.stories.length ? d.stories.map(s2 => (s2.horario || '--:--') + ' ' + (s2.tema || '')).join('   |   ') : 'Sem stories neste dia';
+        const ls = wrap(txt, 9, CW - 30), hh = Math.max(1, ls.length) * lh(9) + 4; need(hh);
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(...P); doc.text(T(d.short + '  ' + d.date), M, y + 3.6);
+        doc.setFont('helvetica', 'normal'); doc.setTextColor(...(d.stories.length ? INK : MUT)); doc.text(ls, M + 30, y + 3.6);
+        y += hh; doc.setDrawColor(236, 232, 245); doc.setLineWidth(0.2); doc.line(M, y - 1.2, W - M, y - 1.2); });
+      y += 6;
+    }
+    o.days.forEach(d => {
+      need(40);
+      doc.setFillColor(...P); doc.roundedRect(M, y, CW, 9, 1.5, 1.5, 'F'); doc.setTextColor(255); doc.setFont('helvetica', 'bold'); doc.setFontSize(10.5);
+      doc.text(T(d.label.toUpperCase() + '   ' + d.date), M + 4, y + 6.1); doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5);
+      doc.text(d.stories.length + (d.stories.length === 1 ? ' story' : ' stories'), W - M - 4, y + 6.1, { align:'right' }); y += 12;
+      if (!d.stories.length) { doc.setFontSize(9); doc.setTextColor(...MUT); doc.text(T('Sem stories neste dia.'), M + 2, y + 2); y += 8; return; }
+      d.stories.forEach(st => {
+        const ix = M + 5, iw = CW - 10;
+        const rows = [['Objetivo', st.objetivo], ['Gravar', st.gravacao], ['Quem aparece', st.pessoa], ['Orientação', st.orientacao]].filter(val);
+        const tail = [['CTA', st.cta], ['Observação', st.observacao]].filter(val);
+        const tl = wrap(String(st.tema || '').toUpperCase(), 10.5, iw - 22, 'bold');
+        const top = 5 + Math.max(1, tl.length) * lh(10.5) + 3;
+        const hh = top + rowsH(rows, iw) + (T(st.fala) ? boxH('"' + st.fala + '"', iw) : 0) + rowsH(tail, iw) + 2;
+        need(hh + 3);
+        const y0 = y; doc.setDrawColor(...PB); doc.setLineWidth(0.3); doc.roundedRect(M, y0, CW, hh, 2, 2, 'S');
+        doc.setFillColor(...P); doc.roundedRect(ix, y0 + 4, 17, 6, 1.2, 1.2, 'F'); doc.setTextColor(255); doc.setFont('helvetica', 'bold'); doc.setFontSize(9);
+        doc.text(T(st.horario || '--:--'), ix + 8.5, y0 + 8.1, { align:'center' });
+        doc.setTextColor(...INK); doc.setFontSize(10.5); doc.text(tl, ix + 21, y0 + 8.2);
+        y = y0 + top; drawRows(rows, ix, iw);
+        if (T(st.fala)) drawBox('FALA', '"' + T(st.fala) + '"', ix, iw);
+        drawRows(tail, ix, iw); y = y0 + hh + 3;
+      });
+      y += 3;
+    });
+    if (o.videos && o.videos.length) {
+      if (o.days.length) { doc.addPage(); header(false); }
+      section('ROTEIROS DE VÍDEO PARA O FEED');
+      o.videos.forEach((v, i) => {
+        const ix = M + 5, iw = CW - 10;
+        const kick = [v.formato, v.dataRelacionada].map(T).filter(Boolean).join('  ·  ').toUpperCase();
+        const tl = wrap((i + 1) + '. ' + (v.titulo || ''), 11.5, iw, 'bold');
+        const rows = [['Objetivo', v.objetivo], ['Quem aparece', v.pessoa], ['Duração', v.duracao]].filter(val);
+        const tail = [['CTA', v.cta], ['Cenas de apoio', v.cenas], ['Legenda', v.legenda], ['Observação', v.observacao]].filter(val);
+        const top = 5 + (kick ? 5 : 0) + tl.length * lh(11.5) + 2.5;
+        const hh = top + rowsH(rows, iw) + (T(v.gancho) ? boxH(v.gancho, iw) : 0) + (T(v.desenvolvimento) ? plainH(v.desenvolvimento, iw) : 0) + rowsH(tail, iw) + 2;
+        need(Math.min(hh, LIM - 20) + 3);
+        const y0 = y; doc.setDrawColor(...PB); doc.setLineWidth(0.3); doc.roundedRect(M, y0, CW, hh, 2, 2, 'S');
+        y = y0 + 5;
+        if (kick) { doc.setFont('helvetica', 'bold'); doc.setFontSize(7.5); doc.setTextColor(...P); doc.text(kick, ix, y + 2.5); y += 5; }
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(11.5); doc.setTextColor(...INK); doc.text(tl, ix, y + 3.6); y = y0 + top;
+        drawRows(rows, ix, iw);
+        if (T(v.gancho)) drawBox('GANCHO - PRIMEIROS 3 SEGUNDOS', v.gancho, ix, iw);
+        if (T(v.desenvolvimento)) drawPlain('ROTEIRO', v.desenvolvimento, ix, iw);
+        drawRows(tail, ix, iw); y = y0 + hh + 4;
+      });
+    }
+    const n = doc.getNumberOfPages();
+    for (let i = 1; i <= n; i++) { doc.setPage(i); doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5); doc.setTextColor(...MUT);
+      doc.text(T('Agência Rise  ·  gerado em ' + fmtDT(Date.now())), M, H - 7); doc.text('Página ' + i + ' de ' + n, W - M, H - 7, { align:'right' }); }
+    return doc;
+  }
+  async outPdf(o, share) {
+    if (this.state.pdfBusy) return;
+    this.setState({ pdfBusy:true });
+    try {
+      const doc = await this.makePdf(o), name = o.file.replace(/[\\/:*?"<>|]/g, '-') + '.pdf';
+      if (share) {
+        const file = new File([doc.output('blob')], name, { type:'application/pdf' });
+        if (navigator.canShare && navigator.canShare({ files:[file] })) {
+          try { await navigator.share({ files:[file], title:name, text:o.shareText }); } catch (e) { if (!e || e.name !== 'AbortError') doc.save(name); }
+        } else { doc.save(name); this.toast('PDF baixado', 'Abra o WhatsApp e anexe o arquivo baixado.', 'file-down'); window.open('https://wa.me/?text=' + encodeURIComponent(o.shareText), '_blank', 'noopener'); }
+      } else { doc.save(name); this.toast('PDF gerado', name, 'file-down'); }
+    } catch (e) { console.warn('PDF:', e && e.message); this.toast('Não foi possível gerar o PDF', 'Verifique a internet e tente novamente.', 'circle-alert'); }
+    this.setState({ pdfBusy:false });
   }
   async callAI(body) {
     const generic = 'Não foi possível gerar o planejamento agora. Tente novamente.';
@@ -4855,7 +5104,7 @@ class Component extends DCLogic {
       },
     };
     // Weekly Stories
-    const sw_recs = arr(s.stories), sw_plans = sw_recs.filter(x => x.kind !== 'task');
+    const sw_recs = arr(s.stories), sw_plans = sw_recs.filter(x => x.kind !== 'task' && x.kind !== 'videos');
     const sw_nm = nextMonday(), sw_ws = s.stWeek || sw_nm;
     const sw_wkLabel = k => `${ddmm(parseKey(k))} – ${ddmm(parseKey(shiftKey(k, 6)))}`;
     const sw_actives = clients.filter(c => c.kind !== 'avulso');
@@ -4882,7 +5131,7 @@ class Component extends DCLogic {
     const sw_sDays = sw_stC && Array.isArray(sw_stC.storyDays) ? sw_stC.storyDays : [0,1,2,3,4,5,6];
     const sw_stDays = !sw_plan ? [] : sw_plan.days.map((d, di) => {
       const wd = parseKey(d.date).getDay(), on = sw_sDays.includes(wd), per = sw_plan.perDay || 4;
-      return { label:WDAY_FULL[wd], date:ddmm(parseKey(d.date)), empty:!d.stories.length, emptyText: on ? 'Nenhum story neste dia.' : 'Dia sem Stories para este cliente.',
+      return { pdf: () => sw_pdf(di, false), hasStories: d.stories.length > 0, label:WDAY_FULL[wd], date:ddmm(parseKey(d.date)), empty:!d.stories.length, emptyText: on ? 'Nenhum story neste dia.' : 'Dia sem Stories para este cliente.',
         countText: on ? `${d.stories.length}/${per} stories` : 'sem Stories', countColor: !on ? '#5c5c6a' : d.stories.length >= per ? GREEN : '#8b8b99',
         add: () => this.setState({ se:{ planId:sw_plan.id, dayIdx:di, storyId:null, horario:'09:00', tema:'', objetivo:'', gravacao:'', pessoa:sw_stC.execOwner || '', orientacao:'', fala:'', cta:'', observacao:'' } }),
         stories: d.stories.map(st => { const [sl, sc] = ST_STATUS[st.status || 'pendente'] || ST_STATUS.pendente, busy = s.aiBusy === st.id;
@@ -4996,6 +5245,91 @@ class Component extends DCLogic {
         return { label:WEEK[d], bg: on ? '#a855f7' : '#0b0b0f', color: on ? '#0a0a0f' : '#8b8b99', border: on ? '#a855f7' : '#23232d',
           toggle: () => this.setState(st => { const cur = Array.isArray(st.cForm.storyDays) ? st.cForm.storyDays : [0,1,2,3,4,5,6]; return { cForm:{ ...st.cForm, storyDays: cur.includes(d) ? cur.filter(x => x !== d) : [...cur, d] } }; }) }; }),
       aiFields: AI_FIELDS.map(([k, label, ph]) => ({ label, ph, value:sw_cfAi[k] || '', set: e => { const v = e.target.value; this.setState(st => ({ cForm:{ ...st.cForm, ai:{ ...(st.cForm.ai || {}), [k]:v } } })); } })),
+    };
+    const sw_vrec = sw_stClientId ? sw_recs.find(x => x.kind === 'videos' && x.client === sw_stClientId && x.weekStart === sw_ws) : null;
+    const sw_vids = sw_vrec ? arr(sw_vrec.videos) : [];
+    const sw_upDates = (() => { if (!sw_stC) return []; const tk = keyOf(TODAY), start = sw_ws < tk ? sw_ws : tk, out = [];
+      for (let i = 0; i <= 45; i++) { const k = shiftKey(start, i); holidaysOn(k).forEach(n => out.push({ k, n })); }
+      arr(s.clientDates).filter(cd => cd.client === sw_stClientId).forEach(cd => { const oc = cdOcc(cd, start); if (oc && diffDays(oc) <= 45) out.push({ k:oc, n:cd.title }); });
+      return out.filter(x => x.k >= tk).sort((a, b) => a.k.localeCompare(b.k)).filter((x, i, a) => a.findIndex(y => y.k === x.k && y.n === x.n) === i).slice(0, 10); })();
+    const sw_dayShort = k => WEEK[parseKey(k).getDay()].toUpperCase();
+    const sw_pdf = (dayIdx, share, onlyVideos) => {
+      if (!sw_stC) return;
+      if (!onlyVideos && !sw_plan) return this.toast('Nenhum planejamento', 'Gere ou crie os Stories da semana primeiro.', 'circle-alert');
+      const days = onlyVideos ? [] : sw_plan.days.map((d, i) => ({ ...d, i })).filter(d => dayIdx == null || d.i === dayIdx);
+      const d0 = dayIdx != null && sw_plan ? sw_plan.days[dayIdx] : null;
+      const nSt = days.reduce((a, d) => a + d.stories.length, 0);
+      const ddf = k => ddmm(parseKey(k)).replace('/', '-');
+      const range = d0 ? WDAY_FULL[parseKey(d0.date).getDay()] + ', ' + fmtD(d0.date) : 'Semana de ' + fmtD(sw_ws) + ' a ' + fmtD(shiftKey(sw_ws, 6));
+      const po = this.userOf((sw_plan && sw_plan.planOwner) || sw_stC.planOwner || 'victoria').name;
+      this.outPdf({ client:sw_stC.name, range,
+        kicker: onlyVideos ? 'ROTEIROS DE VÍDEO PARA O FEED' : d0 ? 'ROTEIRO DE STORIES DO DIA' : 'ROTEIRO SEMANAL DE STORIES',
+        info: ['Planejamento: ' + po, sw_stC.execOwner ? 'Execução: ' + sw_stC.execOwner : '', onlyVideos ? '' : nSt + ' stories', (dayIdx == null && sw_vids.length) ? sw_vids.length + ' roteiro(s) de vídeo' : ''].filter(Boolean).join('   ·   '),
+        overview: dayIdx == null && !onlyVideos,
+        days: days.map(d => ({ label:WDAY_FULL[parseKey(d.date).getDay()], short:sw_dayShort(d.date), date:ddmm(parseKey(d.date)), stories:[...d.stories].sort((a, b) => (a.horario || '').localeCompare(b.horario || '')) })),
+        videos: dayIdx == null ? sw_vids : [],
+        file: (onlyVideos ? 'Roteiros de video ' : 'Stories ') + sw_stC.name + ' ' + (d0 ? WDAY_FULL[parseKey(d0.date).getDay()] + ' ' + ddf(d0.date) : ddf(sw_ws) + ' a ' + ddf(shiftKey(sw_ws, 6))),
+        shareText: (onlyVideos ? 'Roteiros de vídeo' : 'Roteiro de Stories') + ' · ' + sw_stC.name + ' · ' + range }, share);
+    };
+    if (s.tab === 'stories' && !this._pdfPre) { this._pdfPre = true; setTimeout(() => { this.loadJsPdf().catch(() => {}); this.riseLogo(); }, 1200); }
+    const sw_updRec = fn => { const rec = sw_vrec && arr(this.state.stories).find(x => x.id === sw_vrec.id); if (rec) this.upsertPlan({ ...rec, videos:fn(arr(rec.videos)) }); };
+    const sw_updV = (id, patch) => sw_updRec(vs => vs.map(x => x.id === id ? { ...x, ...patch } : x));
+    const sw_vg = s.vgen || { count:'4', formats:[], dates:[], notes:'' };
+    const sw_ve = s.ve || {};
+    const sw_setVe = k => e => { const v = e.target.value; this.setState(st => ({ ve:{ ...st.ve, [k]:v } })); };
+    const chip = (on, label, pick) => ({ label, pick, bg: on ? '#a855f7' : '#111117', color: on ? '#0a0a0f' : '#a1a1b0', border: on ? '#a855f7' : '#23232d' });
+    const vidVals = {
+      pdfOpacity: s.pdfBusy ? 0.55 : 1, pdfWeekLabel: s.pdfBusy ? 'Gerando PDF...' : 'Baixar PDF da semana',
+      stPdfWeek: () => sw_pdf(null, false), stPdfShare: () => sw_pdf(null, true), stVPdf: () => sw_pdf(null, false, true),
+      stVWeek: sw_wkLabel(sw_ws), stVHas: sw_vids.length > 0, stVEmpty: !!sw_stC && !sw_vids.length,
+      stVDates: sw_upDates.slice(0, 6).map(x => ({ label:ddmm(parseKey(x.k)) + ' · ' + x.n })), stVHasDates: sw_upDates.length > 0,
+      stVGen: () => { if (!sw_stC) return; this.setState({ vgen:{ count:'4', formats:['Reels', 'Institucional'], dates:sw_upDates.filter(x => x.k <= shiftKey(sw_ws, 20)).map(x => x.k + '|' + x.n), notes:'' }, vgenErr:'' }); },
+      stVAdd: () => { if (!sw_stC) return; this.setState({ ve:{ videoId:null, formato:'Reels', ...V_FIELDS.reduce((o2, k) => ({ ...o2, [k]:'' }), {}), formato:'Reels' } }); },
+      stVCards: sw_vids.map((v, i) => { const st = VST[v.status] || VST.ideia;
+        return { n:i + 1, titulo:v.titulo || 'Sem título', formato:v.formato || 'Vídeo', hasDate:!!v.dataRelacionada, dataRel:v.dataRelacionada || '',
+          objetivo:v.objetivo || '', hasObj:!!v.objetivo, gancho:v.gancho || '', hasGancho:!!v.gancho, roteiro:v.desenvolvimento || '', hasRoteiro:!!v.desenvolvimento, cta:v.cta || '', hasCta:!!v.cta,
+          rows:[['Quem aparece', v.pessoa], ['Duração', v.duracao], ['Cenas de apoio', v.cenas], ['Legenda sugerida', v.legenda], ['Observação', v.observacao]].filter(r => r[1]).map(([label, value]) => ({ label, value })),
+          chips: Object.keys(VST).map(k => { const a = (v.status || 'ideia') === k; return { label:VST[k][0], pick: () => sw_updV(v.id, { status:k }), bg: a ? tint(VST[k][1], 18) : 'transparent', color: a ? VST[k][1] : '#8b8b99', border: a ? VST[k][1] : '#2a2a36' }; }),
+          edit: () => this.setState({ ve:{ videoId:v.id, ...V_FIELDS.reduce((o2, k) => ({ ...o2, [k]:v[k] || '' }), {}) } }),
+          copy: () => { const t = videoText(v); try { navigator.clipboard.writeText(t); this.toast('Roteiro copiado', v.titulo || '', 'copy'); } catch (e) { window.prompt('Copie o roteiro:', t); } },
+          demand: () => this.openDemand({ client:sw_stClientId, title:v.titulo || 'Vídeo', type: /institucional/i.test(v.formato || '') ? 'Vídeo institucional' : 'Reels', service:'Edição de vídeo', date:shiftKey(sw_ws, 4), due:shiftKey(sw_ws, 4), brief:videoText(v).replace(/\*/g, '') }),
+          del: () => { if (!window.confirm('Excluir este roteiro de vídeo?')) return; sw_updRec(vs => vs.filter(x => x.id !== v.id)); },
+          aiOpen: s.vAi === v.id, toggleAi: () => this.setState({ vAi: s.vAi === v.id ? null : v.id }), busy: s.aiBusy === 'v:' + v.id,
+          aiActs: V_ACTIONS.map(([a, label]) => ({ label, go: async () => { if (this.state.aiBusy) return; this.setState({ aiBusy:'v:' + v.id, vAi:null });
+            try { const r = await this.callAI({ mode:'video', recId:sw_vrec.id, videoId:v.id, action:a }); sw_updV(v.id, { ...r.video }); this.toast('Roteiro atualizado', r.video.titulo || '', 'sparkles'); }
+            catch (e) { this.toast('Não foi possível refazer', e.message, 'circle-alert'); }
+            this.setState({ aiBusy:null }); } })) }; }),
+      vgOpen:!!s.vgen, vg:sw_vg, vgIdle: s.aiBusy !== 'videos', vgBusy: s.aiBusy === 'videos', vgErr: s.vgenErr || '', vgHasErr: !!s.vgenErr,
+      vgCounts:['1','2','3','4','5','6','7','8'], vgCount: e => { const v = e.target.value; this.setState(st => ({ vgen:{ ...st.vgen, count:v } })); },
+      vgNotes: e => { const v = e.target.value; this.setState(st => ({ vgen:{ ...st.vgen, notes:v } })); },
+      vgFormats: V_FORMATS.map(fm => chip(sw_vg.formats.includes(fm), fm, () => this.setState(st => ({ vgen:{ ...st.vgen, formats: st.vgen.formats.includes(fm) ? st.vgen.formats.filter(x => x !== fm) : [...st.vgen.formats, fm] }, vgenErr:'' })))),
+      vgDates: sw_upDates.map(x => { const key = x.k + '|' + x.n; return chip(sw_vg.dates.includes(key), ddmm(parseKey(x.k)) + ' · ' + x.n, () => this.setState(st => ({ vgen:{ ...st.vgen, dates: st.vgen.dates.includes(key) ? st.vgen.dates.filter(y => y !== key) : [...st.vgen.dates, key] } }))); }),
+      vgNoDates: !sw_upDates.length,
+      vgClose: () => { if (s.aiBusy !== 'videos') this.setState({ vgen:null, vgenErr:'' }); },
+      vgSubmit: async () => {
+        if (this.state.aiBusy || !sw_stC) return; const g = this.state.vgen || sw_vg;
+        if (!g.formats.length) return this.setState({ vgenErr:'Escolha ao menos um formato.' });
+        this.setState({ aiBusy:'videos', vgenErr:'' });
+        try {
+          const r = await this.callAI({ mode:'videos', clientId:sw_stClientId, weekStart:sw_ws, count:Number(g.count) || 4, formats:g.formats,
+            dates:g.dates.map(x => { const p = x.split('|'); return { data:p[0], nome:p.slice(1).join('|') }; }), notes:(g.notes || '').slice(0, 1500) });
+          const vids = arr(r.videos).map(v => ({ ...v, id:uid('vd'), status:'ideia' }));
+          if (!vids.length) throw new Error('A IA não retornou roteiros. Tente novamente.');
+          const cur = arr(this.state.stories).find(x => x.kind === 'videos' && x.client === sw_stClientId && x.weekStart === sw_ws);
+          this.upsertPlan({ ...(cur || { id:uid('vr'), kind:'videos', client:sw_stClientId, weekStart:sw_ws, createdAt:Date.now(), createdBy:this.actor() }), videos:[...(cur ? arr(cur.videos) : []), ...vids] });
+          this.setState({ vgen:null, aiBusy:null });
+          this.toast('Roteiros de vídeo gerados', vids.length + ' roteiro(s) para ' + sw_stC.name, 'clapperboard');
+        } catch (e) { this.setState({ aiBusy:null, vgenErr:e.message }); }
+      },
+      veOpen:!!s.ve, ve:sw_ve, veTitle: sw_ve.videoId ? 'Editar roteiro de vídeo' : 'Novo roteiro de vídeo', veClose: () => this.setState({ ve:null }),
+      veTitulo:sw_setVe('titulo'), veFormato:sw_setVe('formato'), veData:sw_setVe('dataRelacionada'), veDuracao:sw_setVe('duracao'), veObjetivo:sw_setVe('objetivo'), veGancho:sw_setVe('gancho'),
+      veDesenv:sw_setVe('desenvolvimento'), veCta:sw_setVe('cta'), vePessoa:sw_setVe('pessoa'), veCenas:sw_setVe('cenas'), veLegenda:sw_setVe('legenda'), veObs:sw_setVe('observacao'),
+      veSave: () => { const e2 = this.state.ve; if (!e2 || !(e2.titulo || '').trim()) return this.toast('Informe o título', '', 'circle-alert');
+        const data = V_FIELDS.reduce((o2, k) => ({ ...o2, [k]:String(e2[k] || '').trim() }), {});
+        if (e2.videoId) sw_updV(e2.videoId, data);
+        else { const cur = arr(this.state.stories).find(x => x.kind === 'videos' && x.client === sw_stClientId && x.weekStart === sw_ws);
+          this.upsertPlan({ ...(cur || { id:uid('vr'), kind:'videos', client:sw_stClientId, weekStart:sw_ws, createdAt:Date.now(), createdBy:this.actor() }), videos:[...(cur ? arr(cur.videos) : []), { ...data, id:uid('vd'), status:'ideia' }] }); }
+        this.setState({ ve:null }); this.toast('Roteiro salvo', data.titulo, 'clapperboard'); },
     };
     const KIND_L = { admin:'Administrador', social:'Social Media', editor:'Editor' };
     const teamCards = [...Object.values(USERS).map(u => ({ ...u, _fixed:true })), ...(s.team || [])].map(u => ({
@@ -5588,7 +5922,7 @@ class Component extends DCLogic {
       ] };
 
     return {
-      ...base, ...briefVals, ...viewVals, ...payVals, ...shootVals, ...storyVals, ...ideaVals, ...drawerVals, ...boardVals, ...metricVals, ...calVals, ...p4Vals, ...p5Vals, ...p3Vals, me, isAdmin, isMobile, isDesktop:!isMobile,
+      ...base, ...briefVals, ...viewVals, ...payVals, ...shootVals, ...storyVals, ...vidVals, ...ideaVals, ...drawerVals, ...boardVals, ...metricVals, ...calVals, ...p4Vals, ...p5Vals, ...p3Vals, me, isAdmin, isMobile, isDesktop:!isMobile,
       showSidebar: !isMobile || s.navOpen, showBackdrop: isMobile && s.navOpen, mainPad: isMobile ? 0 : 248,
       openNav: () => this.setState({ navOpen:true }), closeNav: () => this.setState({ navOpen:false }),
       logout: () => this.setState({ user:null, navOpen:false, bellOpen:false }),
