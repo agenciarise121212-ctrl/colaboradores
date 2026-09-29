@@ -3578,6 +3578,7 @@ const remStateFor = (sh, prev) => { const tk = keyOf(TODAY), out = {};
     const days = Number(((sh.rem || {})[r.id]) ?? r.days); if (shiftKey(sh.date, -days) <= tk) out[r.id] = 'skipped'; });
   return out; };
 const AI_FN = 'generate-weekly-stories';
+const AI_FN_REELS = 'generate-weekly-reels';
 const AI_FIELDS = [
   ['segmento', 'Segmento', 'Ex.: farmácia de bairro'], ['descricao', 'Descrição da empresa', ''], ['produtos', 'Produtos', ''], ['servicos', 'Serviços', ''],
   ['publico', 'Público-alvo', ''], ['tom', 'Tom de comunicação', 'Ex.: próximo, leve, bem-humorado'], ['pessoas', 'Pessoas que podem aparecer nos Stories', 'Ex.: Mileny (atendente), Dr. Paulo'],
@@ -4119,7 +4120,7 @@ class Component extends DCLogic {
     const generic = 'Não foi possível gerar o planejamento agora. Tente novamente.';
     if (!this._sb) throw new Error('A IA só funciona com o sistema online (Supabase conectado).');
     let res;
-    try { res = await this._sb.functions.invoke(AI_FN, { body }); } catch (e) { throw new Error('Sem conexão com o servidor. Verifique a internet e tente novamente.'); }
+    try { res = await this._sb.functions.invoke(body && (body.mode === 'videos' || body.mode === 'video') ? AI_FN_REELS : AI_FN, { body }); } catch (e) { throw new Error('Sem conexão com o servidor. Verifique a internet e tente novamente.'); }
     if (res.error) {
       let msg = '';
       try { const ctx = res.error.context; if (ctx && typeof ctx.json === 'function') { const j = await ctx.json(); msg = j && j.message; } } catch (e) {}
