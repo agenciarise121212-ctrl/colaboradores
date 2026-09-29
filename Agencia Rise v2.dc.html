@@ -1760,6 +1760,13 @@ option{background:#111117;color:#ededf2}
                     <sc-if value="{{ r.hasNotes }}" hint-placeholder-val="{{ false }}">
                       <div style="font-size:12.5px;color:#a1a1b0;line-height:1.45;font-style:italic">{{ r.notes }}</div>
                     </sc-if>
+                    <sc-if value="{{ r.hasReceipt }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+                        <span style="font-family:'JetBrains Mono';font-size:11px;color:#8b8b99;margin-right:auto">Comprovante {{ r.receiptNo }}</span>
+                        <button onClick="{{ r.receipt }}" style="min-height:36px;padding:6px 11px;border-radius:8px;border:1px solid #3a2a55;background:transparent;color:#e9d5ff;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px"><span style="width:13px;height:13px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/file-check-2.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/file-check-2.svg) center / contain no-repeat"></span>Baixar comprovante</button>
+                        <button onClick="{{ r.receiptShare }}" style="min-height:36px;padding:6px 11px;border-radius:8px;border:1px solid #3a2a55;background:transparent;color:#e9d5ff;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;border-color:oklch(0.72 0.17 150 / 0.5);color:oklch(0.85 0.13 150)"><span style="width:13px;height:13px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/share-2.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/share-2.svg) center / contain no-repeat"></span>Enviar pelo WhatsApp</button>
+                      </div>
+                    </sc-if>
                     <sc-if value="{{ r.hasActions }}" hint-placeholder-val="{{ false }}">
                       <div style="display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap">
                         <sc-for list="{{ r.actions }}" as="a" hint-placeholder-count="2">
@@ -1783,6 +1790,30 @@ option{background:#111117;color:#ededf2}
                   <sc-if value="{{ hasPayFormCat }}" hint-placeholder-val="{{ false }}">
                     <div style="font-size:12px;color:#a78bfa;margin-top:-4px">Categoria: {{ payFormCat }}</div>
                   </sc-if>
+                  <sc-if value="{{ pqShow }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex;flex-direction:column;gap:12px;padding:14px;border-radius:14px;background:#111117;border:1px solid #3a2a55">
+                      <div style="display:flex;align-items:center;gap:10px">
+                        <img src="{{ pq.photo }}" alt="{{ pq.name }}" style="width:42px;height:42px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid #26263a">
+                        <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-family:Sora;font-weight:600;font-size:15px">{{ pq.name }}</span><span style="font-size:12px;color:#8b8b99">{{ pq.role }}</span></div>
+                      </div>
+                      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+                        <div style="padding:10px 12px;border-radius:10px;background:#0b0b0f;display:flex;flex-direction:column;gap:3px;min-width:0"><span style="font-size:11px;color:#8b8b99">{{ pq.dueTitle }}</span><span style="font-family:'JetBrains Mono';font-size:15px;font-weight:600;color:#e9d5ff">{{ pq.due }}</span><span style="font-size:11px;color:#6f6f7d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ pq.dueSub }}</span></div>
+                        <div style="padding:10px 12px;border-radius:10px;background:#0b0b0f;display:flex;flex-direction:column;gap:3px;min-width:0"><span style="font-size:11px;color:#8b8b99">Chave PIX · {{ pq.pixType }}</span><span style="font-family:'JetBrains Mono';font-size:13px;color:#ededf2;word-break:break-all">{{ pq.pixKey }}</span>
+                          <sc-if value="{{ pq.hasKey }}" hint-placeholder-val="{{ false }}"><button onClick="{{ pq.copyKey }}" style="align-self:flex-start;margin-top:2px;padding:4px 9px;border-radius:7px;border:1px solid #2a2a36;background:transparent;color:#c4b5fd;font-size:11.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px"><span style="width:11px;height:11px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/copy.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/copy.svg) center / contain no-repeat"></span>Copiar chave</button></sc-if>
+                        </div>
+                      </div>
+                      <sc-if value="{{ pq.hasQr }}" hint-placeholder-val="{{ false }}">
+                        <button onClick="{{ pqZoom }}" aria-label="Ampliar QR Code" style="align-self:center;padding:12px;border-radius:14px;border:0;background:#ffffff;cursor:zoom-in;display:flex">
+                          <img src="{{ pq.qr }}" alt="QR Code PIX de {{ pq.name }}" style="width:min(240px,62vw);height:auto;aspect-ratio:1;object-fit:contain;display:block">
+                        </button>
+                        <button onClick="{{ pqZoom }}" style="min-height:40px;padding:8px 12px;border-radius:10px;border:1px solid #3a2a55;background:transparent;color:#e9d5ff;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px"><span style="width:15px;height:15px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/scan-line.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/scan-line.svg) center / contain no-repeat"></span>Visualizar QR Code</button>
+                      </sc-if>
+                      <sc-if value="{{ pq.noQr }}" hint-placeholder-val="{{ false }}">
+                        <div style="padding:14px;border-radius:10px;border:1px dashed #2a2a36;font-size:12.5px;color:#8b8b99;text-align:center;line-height:1.5">QR Code PIX não cadastrado. Adicione em "Dados financeiros" do colaborador.</div>
+                      </sc-if>
+                      <sc-if value="{{ pq.canFill }}" hint-placeholder-val="{{ false }}"><button onClick="{{ pq.fill }}" style="min-height:40px;padding:8px 12px;border-radius:10px;border:1px solid #3a2a55;background:transparent;color:#e9d5ff;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;border-color:#2a2a36;color:#c9c9d4"><span style="width:14px;height:14px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/wand-sparkles.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/wand-sparkles.svg) center / contain no-repeat"></span>Usar valor a pagar ({{ pq.due }})</button></sc-if>
+                    </div>
+                  </sc-if>
                   <label style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;color:#a1a1b0;min-width:0">Descrição
                     <input value="{{ payForm.desc }}" onChange="{{ pfDesc }}" placeholder="Ex.: Edições de setembro" style="padding:11px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px;outline:none;width:100%">
                   </label>
@@ -1804,6 +1835,9 @@ option{background:#111117;color:#ededf2}
                       </select>
                     </label>
                   </div>
+                  <label style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;color:#a1a1b0;min-width:0">Referência / competência
+                    <input type="month" value="{{ payForm.ref }}" onChange="{{ pfRef }}" style="padding:11px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px;outline:none;width:100%">
+                  </label>
                   <label style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;color:#a1a1b0;min-width:0">Observação
                     <textarea value="{{ payForm.notes }}" onChange="{{ pfNotes }}" rows="2" placeholder="Opcional" style="padding:11px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px;outline:none;width:100%;resize:vertical;font-family:inherit;line-height:1.5"></textarea>
                   </label>
@@ -2913,6 +2947,12 @@ option{background:#111117;color:#ededf2}
                 <input value="{{ pe.pixKey }}" onChange="{{ pePixKey }}" placeholder="Pode cadastrar depois" style="padding:11px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px;outline:none;width:100%">
               </label>
             </div>
+            <label style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;color:#a1a1b0;min-width:0">URL do QR Code PIX
+              <input value="{{ pe.pixQr }}" onChange="{{ pePixQr }}" placeholder="https://i.imgur.com/....png" style="padding:11px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px;outline:none;width:100%">
+            </label>
+            <sc-if value="{{ peHasQr }}" hint-placeholder-val="{{ false }}">
+              <div style="align-self:flex-start;padding:8px;border-radius:10px;background:#ffffff;display:flex"><img src="{{ pe.pixQr }}" alt="Prévia do QR Code" style="width:120px;height:120px;object-fit:contain;display:block"></div>
+            </sc-if>
             <label style="display:flex;flex-direction:column;gap:6px;font-size:12.5px;color:#a1a1b0;min-width:0">Banco (opcional)
               <input value="{{ pe.bank }}" onChange="{{ peBank }}" style="padding:11px 12px;border-radius:10px;border:1px solid #23232d;background:#111117;color:#ededf2;font-size:14px;outline:none;width:100%">
             </label>
@@ -3087,6 +3127,19 @@ option{background:#111117;color:#ededf2}
             </sc-for>
           </div>
         </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ qrZoomOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ qrZoomClose }}" style="position:fixed;inset:0;z-index:95;background:rgba(0,0,0,0.88);display:flex;align-items:center;justify-content:center;padding:16px">
+      <div onClick="{{ stop }}" style="width:min(460px,100%);max-height:calc(100dvh - 32px);overflow-y:auto;background:#0e0e13;border:1px solid #2a2140;border-radius:20px;padding:18px;display:flex;flex-direction:column;align-items:center;gap:14px">
+        <div style="width:100%;display:flex;align-items:center;gap:10px"><img src="{{ qrZoom.photo }}" alt="" style="width:36px;height:36px;border-radius:50%;object-fit:cover"><div style="flex:1;min-width:0;display:flex;flex-direction:column"><span style="font-family:Sora;font-weight:600;font-size:16px">{{ qrZoom.name }}</span><span style="font-size:12px;color:#8b8b99">Aponte a câmera do app do banco</span></div>
+          <button onClick="{{ qrZoomClose }}" aria-label="Fechar" style="width:40px;height:40px;border-radius:10px;border:1px solid #1f1f29;background:transparent;color:#a1a1b0;display:flex;align-items:center;justify-content:center;cursor:pointer"><span style="width:17px;height:17px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/x.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/x.svg) center / contain no-repeat"></span></button></div>
+        <div style="width:100%;padding:16px;border-radius:16px;background:#ffffff;box-sizing:border-box;display:flex"><img src="{{ qrZoom.qr }}" alt="QR Code PIX" style="width:100%;height:auto;aspect-ratio:1;object-fit:contain;display:block"></div>
+        <div style="font-family:'JetBrains Mono';font-size:20px;font-weight:600;color:#e9d5ff">{{ qrZoom.amount }}</div>
+        <sc-if value="{{ qrZoom.hasKey }}" hint-placeholder-val="{{ false }}"><div style="font-size:12.5px;color:#a1a1b0;text-align:center;word-break:break-all">Chave PIX ({{ qrZoom.pixType }}): <span style="color:#ededf2;font-family:'JetBrains Mono'">{{ qrZoom.pixKey }}</span></div></sc-if>
+        <a href="{{ qrZoom.qr }}" target="_blank" rel="noopener" style="min-height:40px;padding:8px 12px;border-radius:10px;border:1px solid #3a2a55;background:transparent;color:#e9d5ff;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;border-color:#2a2a36;color:#c9c9d4"><span style="width:14px;height:14px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/external-link.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/external-link.svg) center / contain no-repeat"></span>Abrir imagem original</a>
       </div>
     </div>
   </sc-if>
@@ -3641,6 +3694,19 @@ const isArtP = p => !isVidP(p) && /arte|post|carrossel|design|3d/i.test((p.servi
 const PR_ST = [{ id:'rascunho', label:'Rascunho', color:'#8b8b99' }, { id:'enviada', label:'Enviada', color:'oklch(0.8 0.1 230)' }, { id:'negociacao', label:'Em negociação', color:'oklch(0.82 0.13 80)' }, { id:'aceita', label:'Aceita', color:'oklch(0.8 0.15 155)' }, { id:'recusada', label:'Recusada', color:'oklch(0.68 0.2 25)' }];
 const NLV = { urgente:{ label:'Urgente', color:'oklch(0.72 0.19 25)', rank:0 }, atencao:{ label:'Atenção', color:'oklch(0.82 0.13 80)', rank:1 }, info:{ label:'Informação', color:'#c084fc', rank:2 } };
 const nLevel = n => n.level || (/atras|vencid|urgent|cancelad|recusad|falt/i.test((n.title || '') + ' ' + (n.body || '')) ? 'urgente' : /revis|ajuste|prazo|vence|lembrete|pendent|aguard|próxim|amanhã/i.test((n.title || '') + ' ' + (n.body || '')) ? 'atencao' : 'info');
+const extenso = v => {
+  const u = ['', 'um', 'dois', 'três', 'quatro', 'cinco', 'seis', 'sete', 'oito', 'nove', 'dez', 'onze', 'doze', 'treze', 'quatorze', 'quinze', 'dezesseis', 'dezessete', 'dezoito', 'dezenove'];
+  const d = ['', '', 'vinte', 'trinta', 'quarenta', 'cinquenta', 'sessenta', 'setenta', 'oitenta', 'noventa'];
+  const c = ['', 'cento', 'duzentos', 'trezentos', 'quatrocentos', 'quinhentos', 'seiscentos', 'setecentos', 'oitocentos', 'novecentos'];
+  const tri = n => { if (n === 100) return 'cem'; const p = []; if (n >= 100) p.push(c[Math.floor(n / 100)]); const r = n % 100; if (r) p.push(r < 20 ? u[r] : d[Math.floor(r / 10)] + (r % 10 ? ' e ' + u[r % 10] : '')); return p.join(' e '); };
+  const int = n => { if (!n) return 'zero'; const mi = Math.floor(n / 1e6), mil = Math.floor((n % 1e6) / 1000), r = n % 1000, p = [];
+    if (mi) p.push(mi === 1 ? 'um milhão' : tri(mi) + ' milhões'); if (mil) p.push(mil === 1 ? 'mil' : tri(mil) + ' mil'); if (r) p.push(tri(r));
+    return p.length > 1 && (r < 100 || r % 100 === 0) && r ? p.slice(0, -1).join(' ') + ' e ' + p[p.length - 1] : p.join(' '); };
+  const t = Math.round((Number(v) || 0) * 100), r = Math.floor(t / 100), cs = t % 100;
+  const parts = []; if (r) parts.push(int(r) + (r === 1 ? ' real' : (r % 1e6 === 0 ? ' de reais' : ' reais'))); if (cs) parts.push(int(cs) + (cs === 1 ? ' centavo' : ' centavos'));
+  return parts.join(' e ') || 'zero reais';
+};
+const PIX_QR_DEFAULT = { joao:'https://i.imgur.com/E9gOhlw.png', victoria:'https://i.imgur.com/nwKEx7a.png' };
 const numIn = v => Number(String(v == null ? '' : v).replace(',', '.')) || 0;
 const CST = { aguardando:['Aguardando aprovação do cliente', 'oklch(0.82 0.13 80)'], aprovado:['Aprovado pelo cliente para postagem', 'oklch(0.8 0.15 155)'], ajustes:['Cliente solicitou ajustes', 'oklch(0.7 0.19 25)'] };
 function drivePreview(u) {
@@ -4138,6 +4204,69 @@ class Component extends DCLogic {
       doc.text(T('Agência Rise  ·  gerado em ' + fmtDT(Date.now())), M, H - 7); doc.text('Página ' + i + ' de ' + n, W - M, H - 7, { align:'right' }); }
     return doc;
   }
+  async makeReceipt(r) {
+    const JsPDF = await this.loadJsPdf(), logo = await this.riseLogo();
+    const doc = new JsPDF({ unit:'mm', format:'a4' });
+    const W = 210, H = 297, M = 18, CW = W - 2 * M;
+    const P = [124, 58, 237], PD = [76, 29, 149], PL = [246, 241, 255], PB = [221, 214, 254], INK = [26, 22, 36], MUT = [112, 106, 128], DK = [18, 12, 31];
+    const T = t => String(t == null ? '' : t).replace(/[“”«»]/g, '"').replace(/[‘’]/g, "'").replace(/[–—]/g, '-').replace(/…/g, '...').replace(/[^\x00-\xFF\n]/g, '').trim();
+    doc.setLineHeightFactor(1.35);
+    doc.setFillColor(...DK); doc.rect(0, 0, W, 58, 'F');
+    doc.setFillColor(...P); doc.rect(0, 58, W, 2, 'F');
+    doc.setFillColor(40, 22, 72); doc.circle(W - 8, 6, 34, 'F'); doc.setFillColor(...DK); doc.circle(W - 8, 6, 22, 'F');
+    if (logo) { const lh = 22, lw = Math.min(78, lh * logo.w / logo.h); doc.addImage(logo.url, 'PNG', M, 18, lw, lh, undefined, 'FAST'); }
+    else { doc.setTextColor(255); doc.setFont('helvetica', 'bold'); doc.setFontSize(20); doc.text(T('AGÊNCIA RISE'), M, 32); }
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5); doc.setTextColor(196, 181, 253); doc.text(T('COMPROVANTE DE PAGAMENTO'), W - M, 24, { align:'right' });
+    doc.setFontSize(13); doc.setTextColor(255); doc.text(T('Nº ' + r.no), W - M, 32, { align:'right' });
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(221, 214, 254); doc.text(T('Emitido em ' + r.issued), W - M, 39, { align:'right' });
+    let y = 74;
+    doc.setFillColor(...PL); doc.setDrawColor(...PB); doc.setLineWidth(0.35); doc.roundedRect(M, y, CW, 38, 3, 3, 'FD');
+    doc.setFillColor(...P); doc.roundedRect(M, y, 3.2, 38, 1.5, 1.5, 'F');
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(8); doc.setTextColor(...P); doc.text(T('VALOR PAGO'), M + 10, y + 10);
+    doc.setFontSize(26); doc.setTextColor(...PD); doc.text(T(r.amount), M + 10, y + 23);
+    doc.setFont('helvetica', 'italic'); doc.setFontSize(9); doc.setTextColor(...MUT); doc.text(doc.splitTextToSize(T('(' + r.words + ')'), CW - 70), M + 10, y + 31);
+    doc.setFillColor(22, 163, 74); doc.roundedRect(W - M - 34, y + 8, 26, 8, 4, 4, 'F');
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5); doc.setTextColor(255); doc.text('PAGO', W - M - 21, y + 13.4, { align:'center' });
+    y += 50;
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.setTextColor(...PD); doc.text(T('DECLARAÇÃO'), M, y); doc.setFillColor(...P); doc.rect(M, y + 2.5, 22, 0.9, 'F'); y += 9;
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(10.5); doc.setTextColor(...INK);
+    const decl = doc.splitTextToSize(T(r.statement), CW); doc.text(decl, M, y); y += decl.length * 10.5 * 0.3528 * 1.35 + 8;
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.setTextColor(...PD); doc.text(T('DADOS DO PAGAMENTO'), M, y); doc.setFillColor(...P); doc.rect(M, y + 2.5, 22, 0.9, 'F'); y += 8;
+    r.rows.forEach(([k, v], i) => {
+      const ls = doc.splitTextToSize(T(v || '-'), CW - 62), hh = Math.max(9, ls.length * 10 * 0.3528 * 1.35 + 5);
+      if (i % 2 === 0) { doc.setFillColor(250, 248, 255); doc.rect(M, y, CW, hh, 'F'); }
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(8); doc.setTextColor(...MUT); doc.text(T(k).toUpperCase(), M + 4, y + 5.8);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(...INK); doc.text(ls, M + 58, y + 5.8); y += hh;
+    });
+    doc.setDrawColor(...PB); doc.setLineWidth(0.3); doc.line(M, y, W - M, y);
+    y = Math.max(y + 22, 232);
+    doc.setDrawColor(...INK); doc.setLineWidth(0.3); doc.line(M, y, M + 72, y);
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(...INK); doc.text(T('Agência Rise'), M, y + 5.5);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(...MUT); doc.text(T('Pagador · ' + r.issuer), M, y + 10);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.text(T('Recebedor'), W - M, y + 10, { align:'right' });
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(...INK); doc.text(T(r.name), W - M, y + 5.5, { align:'right' });
+    doc.setDrawColor(...INK); doc.line(W - M - 72, y, W - M, y);
+    doc.setFillColor(...DK); doc.rect(0, H - 18, W, 18, 'F'); doc.setFillColor(...P); doc.rect(0, H - 18, W, 1.2, 'F');
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(7.8); doc.setTextColor(196, 181, 253);
+    doc.text(T('Documento gerado pelo sistema de gestão da Agência Rise. Comprovante de pagamento por prestação de serviços.'), W / 2, H - 9.5, { align:'center' });
+    doc.text(T('Nº ' + r.no + '  ·  ' + r.issued), W / 2, H - 5.5, { align:'center' });
+    return doc;
+  }
+  async outReceipt(r, share) {
+    if (this.state.pdfBusy) return;
+    this.setState({ pdfBusy:true });
+    try {
+      const doc = await this.makeReceipt(r), name = ('Comprovante ' + r.no + ' ' + r.name).replace(/[\\/:*?"<>|]/g, '-') + '.pdf';
+      const text = 'Olá, ' + r.first + '! Segue o comprovante do pagamento de ' + r.amount + ' referente aos serviços prestados (' + r.refLabel + '). Obrigado pela parceria! · Agência Rise';
+      if (share) {
+        const file = new File([doc.output('blob')], name, { type:'application/pdf' });
+        if (navigator.canShare && navigator.canShare({ files:[file] })) { try { await navigator.share({ files:[file], title:name, text }); } catch (e) { if (!e || e.name !== 'AbortError') doc.save(name); } }
+        else { doc.save(name); this.toast('Comprovante baixado', 'Anexe o arquivo na conversa do WhatsApp.', 'file-check-2'); window.open('https://wa.me/' + (r.phone || '') + '?text=' + encodeURIComponent(text), '_blank', 'noopener'); }
+      } else { doc.save(name); this.toast('Comprovante gerado', name, 'file-check-2'); }
+      this.setState(st => ({ payments:arr(st.payments).map(x => x.id === r.id ? { ...x, receiptNo:r.no, log:[...(x.log || []), { ts:Date.now(), by:this.actor(), text: share ? 'Comprovante enviado' : 'Comprovante gerado' }] } : x) }));
+    } catch (e) { console.warn('Comprovante:', e && e.message); this.toast('Não foi possível gerar o comprovante', 'Verifique a internet e tente novamente.', 'circle-alert'); }
+    this.setState({ pdfBusy:false });
+  }
   async outPdf(o, share) {
     if (this.state.pdfBusy) return;
     this.setState({ pdfBusy:true });
@@ -4206,7 +4335,7 @@ class Component extends DCLogic {
     if (status === 'cancelado' && !window.confirm('Cancelar este pagamento? Ele continuará no histórico como cancelado.')) return;
     if (status === 'pago' && !window.confirm(`Confirmar pagamento de ${BRL2(p.amount)} para ${p.payeeName}?`)) return;
     const who = this.actor();
-    this.setState(s => ({ payments:arr(s.payments).map(x => x.id === id ? { ...x, status, log:[...(x.log || []), { ts:Date.now(), by:who, text: status === 'pago' ? 'Marcado como pago' : 'Cancelado' }] } : x) }));
+    this.setState(s => ({ payments:arr(s.payments).map(x => x.id === id ? { ...x, status, ...(status === 'pago' ? { paidAt:Date.now(), paidBy:this.state.user } : {}), log:[...(x.log || []), { ts:Date.now(), by:who, text: status === 'pago' ? 'Marcado como pago' : 'Cancelado' }] } : x) }));
     if (status === 'pago' && p.payeeType === 'colab') this.notify([{ to:p.payeeId, title:'Pagamento recebido', body:`${p.desc} · ${BRL2(p.amount)} via ${p.method || 'PIX'}`, icon:'hand-coins' }]);
     this.toast(status === 'pago' ? 'Pagamento confirmado' : 'Pagamento cancelado', `${p.payeeName} · ${BRL2(p.amount)}`, status === 'pago' ? 'circle-check' : 'x');
   }
@@ -4935,6 +5064,7 @@ class Component extends DCLogic {
     const collabs = [...Object.values(USERS), ...(s.team || [])].filter(u => u.kind !== 'admin');
     const payees = arr(s.payees), tools = payees.filter(x => x.kind === 'tool');
     const colabInfo = u => payees.find(x => x.kind === 'colab' && x.userId === u.id) || {};
+    const qrOf = u => { const i = colabInfo(u); return i.pixQr != null ? i.pixQr : (PIX_QR_DEFAULT[u.id] || ''); };
     const allPays = arr(s.payments);
     const myPays = isAdmin ? allPays : allPays.filter(p => p.payeeType === 'colab' && p.payeeId === s.user);
     const pPer = s.payPeriod || 'mes';
@@ -4948,19 +5078,31 @@ class Component extends DCLogic {
     const sumP = (l, st) => l.filter(p => !st || p.status === st).reduce((a, p) => a + (Number(p.amount) || 0), 0);
     const perTitle = pPer === 'tudo' ? 'Todo o período' : pPer === 'ano' ? String(pY) : `${MONTHS[pM]}/${pY}`;
     const payeeObj = p => p.payeeType === 'colab' ? this.userOf(p.payeeId) : (tools.find(t => t.id === p.payeeId) || { name:p.payeeName });
+    const rcptNo = p => { const y = (p.date || keyOf(TODAY)).slice(0, 4), paid = allPays.filter(x => x.status === 'pago' && x.payeeType === 'colab' && (x.date || '').startsWith(y)).sort((a, b) => (a.paidAt || a.createdAt || 0) - (b.paidAt || b.createdAt || 0) || String(a.id).localeCompare(String(b.id)));
+      return 'RISE-' + y + '-' + String(Math.max(1, paid.findIndex(x => x.id === p.id) + 1)).padStart(4, '0'); };
     const payRows = listPays.map(p => {
       const st = PSTAT[p.status] || PSTAT.pendente, who = payeeObj(p);
       const acts = !isAdmin ? [] : p.status === 'pendente' ? [['Marcar como pago', 'pago'], ['Cancelar', 'cancelado']] : p.status === 'pago' ? [['Cancelar', 'cancelado']] : [];
       return { name: who.name || p.payeeName, photo: p.payeeType === 'colab' && who.photo ? who.photo : avatarUrl(who.name || p.payeeName),
         catLabel: p.payeeType === 'colab' ? 'Colaborador' : `Ferramentas / Serviços${who.cat ? ' · ' + who.cat : ''}`, desc:p.desc,
         amountLabel:BRL2(p.amount), amountColor: p.status === 'cancelado' ? '#6f6f7d' : '#ededf2', strike: p.status === 'cancelado' ? 'line-through' : 'none',
-        dateLabel:fmtD(p.date), method:p.method || '—', stLabel:st[0], stColor:st[1], stTint:tint(st[1], 15), opacity: p.status === 'cancelado' ? 0.6 : 1,
+        dateLabel:fmtD(p.date) + (p.paidAt ? ' · ' + pad(new Date(p.paidAt).getHours()) + ':' + pad(new Date(p.paidAt).getMinutes()) : '') + (p.ref ? ' · ref. ' + MONTHS[Number(p.ref.slice(5, 7)) - 1] + '/' + p.ref.slice(0, 4) : ''), method:p.method || '—', stLabel:st[0], stColor:st[1], stTint:tint(st[1], 15), opacity: p.status === 'cancelado' ? 0.6 : 1,
         notes:p.notes || '', hasNotes:!!p.notes, hasActions:acts.length > 0,
+        ...(() => { if (p.status !== 'pago' || p.payeeType !== 'colab') return { hasReceipt:false };
+          const no = p.receiptNo || rcptNo(p), info = colabInfo(who), ts = p.paidAt || p.createdAt || Date.now(), dt = new Date(ts);
+          const ref = p.ref || (p.date || '').slice(0, 7), refLabel = ref ? MONTHS[Number(ref.slice(5, 7)) - 1] + '/' + ref.slice(0, 4) : '';
+          const role = info.role || who.role || 'Colaborador';
+          const r = { id:p.id, no, name:who.name || p.payeeName, first:(who.name || p.payeeName || '').split(' ')[0], amount:BRL2(p.amount), words:extenso(p.amount), refLabel: refLabel || fmtD(p.date),
+            issued:fmtDT(Date.now()), issuer:this.userOf(p.paidBy || 'admin').name || 'Cleverton',
+            statement:'A AGÊNCIA RISE declara, para os devidos fins, que efetuou o pagamento de ' + BRL2(p.amount) + ' (' + extenso(p.amount) + ') a ' + (who.name || p.payeeName) + ', referente à colaboração e aos serviços prestados como ' + role + (refLabel ? ', na competência de ' + refLabel : '') + (p.desc ? ' - ' + p.desc : '') + '.',
+            rows:[['Colaborador', who.name || p.payeeName], ['Função', role], ['Descrição', p.desc], ['Competência', refLabel || '-'], ['Data do pagamento', fmtD(p.date)], ['Registrado em', fmtD(keyOf(dt)) + ' às ' + pad(dt.getHours()) + ':' + pad(dt.getMinutes())],
+              ['Forma de pagamento', p.method || 'PIX'], ...(info.pixKey ? [['Chave PIX (' + (info.pixType || 'chave') + ')', info.pixKey]] : []), ...(info.bank ? [['Banco', info.bank]] : []), ...(p.notes ? [['Observação', p.notes]] : [])] };
+          return { hasReceipt:true, receiptNo:no, receipt: () => this.outReceipt(r, false), receiptShare: () => this.outReceipt(r, true) }; })(),
         actions: acts.map(([label, to]) => ({ label, go: () => this.setPay(p.id, to), color: to === 'pago' ? '#0a0a0f' : 'oklch(0.75 0.17 25)', bg: to === 'pago' ? '#a855f7' : 'transparent', border: to === 'pago' ? '#a855f7' : '#2a2a36' })) };
     });
     const grp = {};
     perPays.filter(p => p.status === 'pago').forEach(p => { const k = `${p.payeeType}:${p.payeeId}`; (grp[k] = grp[k] || { p, total:0 }).total += Number(p.amount) || 0; });
-    const pf2 = s.payForm || { who:'', desc:'', amount:'', date:keyOf(TODAY), method:'PIX', status:'pago', notes:'' };
+    const pf2 = s.payForm || { who:'', desc:'', amount:'', date:keyOf(TODAY), method:'PIX', status:'pago', notes:'', ref:keyOf(TODAY).slice(0, 7) };
     const setPF = k => e => { const v = e.target.value; this.setState(st => ({ payForm:{ ...(st.payForm || pf2), [k]:v } })); };
     const pfValid = !!pf2.who && !!(pf2.desc || '').trim() && numIn(pf2.amount) > 0 && !!pf2.date;
     const pe = s.pe;
@@ -5642,6 +5784,18 @@ class Component extends DCLogic {
         const l = myPays.filter(p => p.date.startsWith(mk)), pend = sumP(l, 'pendente'), a = pPer === 'mes' && mk === pMK;
         return { label:`${MONTHS[d.getMonth()]}/${d.getFullYear()}`, paid:BRL2(sumP(l, 'pago')), hasPend: pend > 0, pendLabel:`${BRL2(pend)} pend.`,
           bg: a ? 'rgba(168,85,247,0.12)' : 'transparent', border: a ? '#a855f7' : 'transparent', pick: () => this.setState({ payPeriod:'mes', payY:d.getFullYear(), payM:d.getMonth() }) }; }),
+      ...(() => { const [ty, pid] = (pf2.who || '').split(':'); if (ty !== 'colab' || !pid) return { pqShow:false, pq:{}, pqZoom:() => {} };
+        const u = this.userOf(pid), info = colabInfo(u), qr = qrOf(u), mk = (pf2.ref || pf2.date || keyOf(TODAY)).slice(0, 7), c = calcDue(u, mk), lanc = lancMonth(u.id, mk), rest = Math.max(0, c.amount - lanc);
+        const mLbl = MONTHS[Number(mk.slice(5, 7)) - 1] + '/' + mk.slice(0, 4);
+        const pq = { name:u.name, role:info.role || u.role || 'Colaborador', photo:u.photo || avatarUrl(u.name), qr, hasQr:!!qr, noQr:!qr,
+          pixKey:info.pixKey || 'Não cadastrada', pixType:info.pixType || '—', hasKey:!!info.pixKey,
+          copyKey: () => { try { navigator.clipboard.writeText(info.pixKey); this.toast('Chave PIX copiada', info.pixKey, 'copy'); } catch (e) { window.prompt('Copie a chave PIX:', info.pixKey); } },
+          dueTitle:'A pagar · ' + mLbl, due: c.auto ? BRL2(rest) : (numIn(pf2.amount) > 0 ? BRL2(numIn(pf2.amount)) : '—'), dueSub: c.auto ? c.basis + (lanc > 0 ? ' · já lançado ' + BRL2(lanc) : '') : c.basis,
+          canFill: c.auto && rest > 0.009 && Math.abs(numIn(pf2.amount) - rest) > 0.009,
+          fill: () => this.setState(st => ({ payForm:{ ...(st.payForm || pf2), amount:rest.toFixed(2), desc:(st.payForm && st.payForm.desc) || ('Pagamento ' + mLbl) } })) };
+        return { pqShow:true, pq, pqZoom: () => this.setState({ qrZoom:{ name:u.name, photo:pq.photo, qr, pixKey:info.pixKey || '', pixType:pq.pixType, hasKey:!!info.pixKey, amount: numIn(pf2.amount) > 0 ? BRL2(numIn(pf2.amount)) : pq.due } }) }; })(),
+      qrZoomOpen: !!(s.qrZoom && s.qrZoom.qr), qrZoom: s.qrZoom || {}, qrZoomClose: () => this.setState({ qrZoom:null }),
+      pfRef:setPF('ref'), pePixQr:setPE('pixQr'), peHasQr: !!(pe && /^https?:\/\//i.test(pe.pixQr || '')),
       payForm:pf2, pfWho:setPF('who'), pfDesc:setPF('desc'), pfAmount:setPF('amount'), pfDate:setPF('date'), pfMethod:setPF('method'), pfStatus:setPF('status'), pfNotes:setPF('notes'),
       payMethods:PAY_METHODS, payAddOpacity: pfValid ? 1 : 0.5,
       payeeOptions: [{ id:'', name:'Selecione o beneficiário' }, ...collabs.map(u => ({ id:'colab:' + u.id, name:`${u.name} · colaborador` })), ...tools.map(t => ({ id:'tool:' + t.id, name:`${t.name} · ${t.cat || 'ferramenta'}` }))],
@@ -5653,17 +5807,18 @@ class Component extends DCLogic {
         const now = Date.now();
         const rec = { id:'pg' + now, payeeType:type, payeeId:pid, payeeName:who.name || '', category: type === 'colab' ? 'Colaborador' : 'Ferramentas / Serviços', toolCat:who.cat || '',
           desc:pf2.desc.trim(), amount:numIn(pf2.amount), date:pf2.date, method:pf2.method || 'PIX', status:pf2.status || 'pago', notes:(pf2.notes || '').trim(),
+          ref:pf2.ref || (pf2.date || '').slice(0, 7), ...((pf2.status || 'pago') === 'pago' ? { paidAt:now, paidBy:s.user } : {}),
           createdAt:now, createdBy:this.actor(), log:[{ ts:now, by:this.actor(), text:'Pagamento registrado' }] };
         this.setState(st => ({ payments:[...arr(st.payments), rec], payForm:{ ...pf2, desc:'', amount:'', notes:'' } }));
         if (type === 'colab' && rec.status === 'pago') this.notify([{ to:pid, title:'Pagamento recebido', body:`${rec.desc} · ${BRL2(rec.amount)} via ${rec.method}`, icon:'hand-coins' }]);
-        this.toast('Pagamento registrado', `${rec.payeeName} · ${BRL2(rec.amount)}`, 'circle-check');
+        this.toast('Pagamento registrado', `${rec.payeeName} · ${BRL2(rec.amount)}${type === 'colab' && rec.status === 'pago' ? ' · comprovante disponível no histórico' : ''}`, 'circle-check');
       },
       benefCards: [
         ...collabs.map(u => { const i = colabInfo(u);
           return { name:u.name, photo:u.photo, sub:i.role || u.role, kindLabel:'Colaborador', hasPix:true,
-            pixText: i.pixKey ? `PIX (${i.pixType || 'chave'}): ${i.pixKey}` : 'PIX não cadastrado', pixColor: i.pixKey ? '#e9d5ff' : '#6f6f7d',
+            pixText: (i.pixKey ? `PIX (${i.pixType || 'chave'}): ${i.pixKey}` : 'PIX não cadastrado') + (qrOf(u) ? ' · QR Code cadastrado' : ''), pixColor: i.pixKey ? '#e9d5ff' : '#6f6f7d',
             extra:[i.bank ? 'Banco: ' + i.bank : '', i.notes || ''].filter(Boolean).join(' · '), hasExtra:!!(i.bank || i.notes), paidLabel:BRL2(perPaid('colab', u.id)),
-            edit: () => this.setState({ pe:{ kind:'colab', userId:u.id, name:u.name, role:i.role || u.role, pixType:i.pixType || 'CPF', pixKey:i.pixKey || '', bank:i.bank || '', notes:i.notes || '', payModel:i.payModel || '', rate: i.rate ? String(i.rate).replace('.', ',') : '' } }), ...p4Due(u) }; }),
+            edit: () => this.setState({ pe:{ kind:'colab', userId:u.id, name:u.name, role:i.role || u.role, pixType:i.pixType || 'CPF', pixKey:i.pixKey || '', pixQr:qrOf(u), bank:i.bank || '', notes:i.notes || '', payModel:i.payModel || '', rate: i.rate ? String(i.rate).replace('.', ',') : '' } }), ...p4Due(u) }; }),
         ...tools.map(t => ({ name:t.name, photo:avatarUrl(t.name), sub:t.cat || 'Outros', kindLabel:'Ferramenta', hasPix:false, pixText:'', pixColor:'#a1a1b0',
           extra:t.notes || '', hasExtra:!!t.notes, paidLabel:BRL2(perPaid('tool', t.id)), hasDue:false,
           edit: () => this.setState({ pe:{ kind:'tool', id:t.id, name:t.name, cat:t.cat || TOOL_CATS[0], notes:t.notes || '' } }) })),
@@ -5685,7 +5840,7 @@ class Component extends DCLogic {
           const rec = { id: pe.id || 'tl' + Date.now(), kind:'tool', name:pe.name.trim(), cat:pe.cat || TOOL_CATS[0], notes:(pe.notes || '').trim() };
           this.setState(st => ({ payees: pe.id ? arr(st.payees).map(x => x.id === pe.id ? { ...x, ...rec } : x) : [...arr(st.payees), rec], pe:null }));
         } else {
-          const rec = { kind:'colab', userId:pe.userId, role:(pe.role || '').trim(), pixType:pe.pixType || 'CPF', pixKey:(pe.pixKey || '').trim(), bank:(pe.bank || '').trim(), notes:(pe.notes || '').trim(), payModel:pe.payModel || '', rate:numIn(pe.rate) };
+          const rec = { kind:'colab', userId:pe.userId, role:(pe.role || '').trim(), pixType:pe.pixType || 'CPF', pixKey:(pe.pixKey || '').trim(), pixQr:(pe.pixQr || '').trim(), bank:(pe.bank || '').trim(), notes:(pe.notes || '').trim(), payModel:pe.payModel || '', rate:numIn(pe.rate) };
           this.setState(st => { const l = arr(st.payees), ex = l.find(x => x.kind === 'colab' && x.userId === pe.userId);
             return { payees: ex ? l.map(x => x === ex ? { ...x, ...rec } : x) : [...l, { id:'pc' + Date.now(), ...rec }], pe:null }; });
         }

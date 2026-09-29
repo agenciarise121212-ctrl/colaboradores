@@ -4,7 +4,13 @@
 - Fonte: `Agencia Rise v2.dc.html` (DC único). Publicação: `deploy/index.html` (gerar com super_inline_html a partir da fonte).
 - Supabase: tabela `rise_data` (colunas `id`, `data` JSON). Linhas (COLS): posts, clients, fin, notifs, team, payees, payments, shoots, stories.
 - Edge Function Gemini: `supabase/functions/generate-weekly-stories/index.ts` (modes "week" e "story"). Guia: `COMO-CONFIGURAR-GEMINI.md`. Usuário já cadastrou o Secret GEMINI_API_KEY; função AINDA NÃO publicada (usuário fará pelo painel: Via Editor, desativar Verify JWT). Oferecer checagem após deploy.
-- `.env.example`, `.gitignore`, `supabase/config.toml` (verify_jwt=false).
+- `.env.example`, `.gitignore`, `supabase/config.toml` (verify_jwt=false para as duas funções).
+- Edge Function Reels: `supabase/functions/generate-weekly-reels/index.ts` (modes "videos" e "video"; cópia em CODIGO-PARA-COLAR.txt). Front chama AI_FN_REELS para mode videos/video. Usuário criou a função no Supabase mas ela ainda devolve texto fixo — PENDENTE: ele colar o código completo e fazer deploy; depois testar geração.
+
+## Últimas entregas (após as 5 fases)
+- Planejamento Semanal: PDF (jsPDF via CDN, makePdf/outPdf/riseLogo com logo reduzida a 360px) da semana completa (cronograma + dias + roteiros de vídeo), PDF por dia, 'Enviar PDF pelo WhatsApp' (navigator.share com arquivo; fallback download + wa.me).
+- Roteiros de vídeo para o feed: registros kind:'videos' na linha stories {client, weekStart, videos[]}; sw_plans exclui kind 'videos'. Gerar com IA (qtd, formatos, datas comemorativas/cliente 45 dias), editar, copiar, criar demanda, refazer com IA, status Ideia/Aprovado/Gravado. Front normaliza campos alternativos da resposta.
+- Organização: abas Stories | Vídeos do feed (sticky), recolher/expandir todos os dias, cards compactos (toque expande), 'Minimizar/Expandir todos os roteiros' (stDet / stFold).
 
 ## PRÓXIMO PASSO — evolução em 5 fases (auditoria já feita e aprovada; usuário dirá "começar fase 1")
 Regras do usuário: não recriar, não remover recursos, reaproveitar estruturas, sem dados fictícios, sem botões só visuais, gerar index.html testado ao fim de cada fase.
