@@ -232,7 +232,7 @@ option{background:#111117;color:#ededf2}
   </sc-if>
 
   <sc-if value="{{ showSidebar }}" hint-placeholder-val="{{ true }}">
-  <aside style="position:fixed;top:0;left:0;bottom:0;width:248px;background:linear-gradient(180deg, rgba(24,18,40,0.82), rgba(10,9,17,0.88));border-right:1px solid rgba(190,160,255,0.12);display:flex;flex-direction:column;padding:22px 16px;z-index:50;overflow-y:auto;backdrop-filter:blur(20px) saturate(150%);-webkit-backdrop-filter:blur(20px) saturate(150%);box-shadow:inset -1px 0 0 rgba(190,160,255,0.08), 12px 0 40px -20px rgba(0,0,0,0.8)">
+  <aside style="position:fixed;top:0;left:0;bottom:0;width:{{ sideW }}px;overflow-x:hidden;transition:width .2s ease;background:linear-gradient(180deg, rgba(24,18,40,0.82), rgba(10,9,17,0.88));border-right:1px solid rgba(190,160,255,0.12);display:flex;flex-direction:column;padding:22px 16px;z-index:50;overflow-y:auto;backdrop-filter:blur(20px) saturate(150%);-webkit-backdrop-filter:blur(20px) saturate(150%);box-shadow:inset -1px 0 0 rgba(190,160,255,0.08), 12px 0 40px -20px rgba(0,0,0,0.8)">
     <div style="display:flex;align-items:center;justify-content:space-between;padding:0 8px 22px;border-bottom:1px solid #17171f">
       <div style="display:flex;align-items:center;gap:10px">
         <sc-if value="{{ logoOk }}" hint-placeholder-val="{{ true }}">
@@ -241,10 +241,10 @@ option{background:#111117;color:#ededf2}
         <sc-if value="{{ logoFail }}" hint-placeholder-val="{{ false }}">
           <div style="font-family:Sora;font-weight:700;font-size:20px;letter-spacing:0.08em;color:#c084fc">RISE</div>
         </sc-if>
-        <div style="display:flex;flex-direction:column;gap:2px">
+        <sc-if value="{{ navFull }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;gap:2px">
           <div style="font-family:Sora;font-weight:600;font-size:13.5px;letter-spacing:0.04em">AGÊNCIA RISE</div>
           <div style="font-size:11px;color:#6f6f7d">Gestão de produção</div>
-        </div>
+        </div></sc-if>
       </div>
       <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
         <button onClick="{{ closeNav }}" style="background:none;border:0;color:#8b8b99;cursor:pointer;padding:4px;display:flex">
@@ -252,53 +252,64 @@ option{background:#111117;color:#ededf2}
         </button>
       </sc-if>
     </div>
-    <div style="font-family:'JetBrains Mono';font-size:10.5px;letter-spacing:0.16em;color:#5c5c6a;padding:22px 10px 10px;text-transform:uppercase">Operação</div>
+    <sc-if value="{{ navFull }}" hint-placeholder-val="{{ true }}"><div style="font-family:'JetBrains Mono';font-size:10.5px;letter-spacing:0.16em;color:#5c5c6a;padding:22px 10px 10px;text-transform:uppercase">Operação</div></sc-if><sc-if value="{{ navMini }}" hint-placeholder-val="{{ false }}"><div style="height:18px"></div></sc-if>
     <nav style="display:flex;flex-direction:column;gap:4px">
       <sc-for list="{{ navOps }}" as="n" hint-placeholder-count="3">
-        <button onClick="{{ n.go }}" style="display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:10px;border:0;cursor:pointer;font-size:14px;font-weight:500;text-align:left;background:{{ n.bg }};color:{{ n.color }}" style-hover="color:#ededf2">
+        <button onClick="{{ n.go }}" title="{{ n.label }}" style="display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:10px;border:0;cursor:pointer;font-size:14px;font-weight:500;text-align:left;background:{{ n.bg }};color:{{ n.color }}" style-hover="color:#ededf2">
           <span style="width:18px;height:18px;flex-shrink:0;background:{{ n.iconColor }};mask:{{ n.icon }} center / contain no-repeat;-webkit-mask:{{ n.icon }} center / contain no-repeat"></span>
-          <span style="flex:1">{{ n.label }}</span>
-          <sc-if value="{{ n.hasBadge }}" hint-placeholder-val="{{ false }}">
+          <sc-if value="{{ navFull }}" hint-placeholder-val="{{ true }}"><span style="flex:1;white-space:nowrap">{{ n.label }}</span></sc-if>
+          <sc-if value="{{ n.showBadge }}" hint-placeholder-val="{{ false }}">
             <span style="font-family:'JetBrains Mono';font-size:11px;padding:2px 7px;border-radius:20px;background:linear-gradient(180deg, #c596ff 0%, #a855f7 48%, #8a3cf0 100%);color:#0a0a0f;box-shadow:inset 0 1px 0 rgba(255,255,255,0.4), inset 0 -2px 0 rgba(40,8,90,0.25), 0 1px 0 rgba(0,0,0,0.4), 0 12px 26px -12px rgba(168,85,247,0.95)">{{ n.badge }}</span>
           </sc-if>
         </button>
       </sc-for>
     </nav>
-    <div style="font-family:'JetBrains Mono';font-size:10.5px;letter-spacing:0.16em;color:#5c5c6a;padding:22px 10px 10px;text-transform:uppercase">Gestão</div>
+    <sc-if value="{{ navHasMgmt }}" hint-placeholder-val="{{ true }}"><sc-if value="{{ navFull }}" hint-placeholder-val="{{ true }}"><div style="font-family:'JetBrains Mono';font-size:10.5px;letter-spacing:0.16em;color:#5c5c6a;padding:22px 10px 10px;text-transform:uppercase">Gestão</div></sc-if><sc-if value="{{ navMini }}" hint-placeholder-val="{{ false }}"><div style="height:1px;margin:14px 8px;background:rgba(190,160,255,0.12)"></div></sc-if></sc-if>
     <nav style="display:flex;flex-direction:column;gap:4px">
       <sc-for list="{{ navMgmt }}" as="n" hint-placeholder-count="2">
-        <button onClick="{{ n.go }}" style="display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:10px;border:0;cursor:pointer;font-size:14px;font-weight:500;text-align:left;background:{{ n.bg }};color:{{ n.color }}" style-hover="color:#ededf2">
+        <button onClick="{{ n.go }}" title="{{ n.label }}" style="display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:10px;border:0;cursor:pointer;font-size:14px;font-weight:500;text-align:left;background:{{ n.bg }};color:{{ n.color }}" style-hover="color:#ededf2">
           <span style="width:18px;height:18px;flex-shrink:0;background:{{ n.iconColor }};mask:{{ n.icon }} center / contain no-repeat;-webkit-mask:{{ n.icon }} center / contain no-repeat"></span>
-          <span style="flex:1">{{ n.label }}</span>
-          <sc-if value="{{ n.hasBadge }}" hint-placeholder-val="{{ false }}">
+          <sc-if value="{{ navFull }}" hint-placeholder-val="{{ true }}"><span style="flex:1;white-space:nowrap">{{ n.label }}</span></sc-if>
+          <sc-if value="{{ n.showBadge }}" hint-placeholder-val="{{ false }}">
             <span style="font-family:'JetBrains Mono';font-size:11px;padding:2px 7px;border-radius:20px;background:oklch(0.68 0.2 25);color:#0a0a0f">{{ n.badge }}</span>
           </sc-if>
         </button>
       </sc-for>
     </nav>
-    <div style="margin-top:auto;padding-top:22px;display:flex;flex-direction:column;gap:10px">
-      <div style="display:flex;flex-direction:column;gap:10px;padding:12px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);border:1px solid rgba(190,160,255,0.12);box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)">
-        <div style="display:flex;align-items:center;gap:11px">
-          <img src="{{ me.photo }}" alt="{{ me.name }}" style="width:38px;height:38px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid #a855f7">
-          <div style="display:flex;flex-direction:column;gap:2px;min-width:0">
-            <div style="font-weight:600;font-size:13.5px">{{ me.name }}</div>
-            <div style="font-size:11.5px;color:#8b8b99;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ me.role }}</div>
-          </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:4px;border-top:1px solid rgba(190,160,255,0.12);padding-top:10px">
-          <div style="font-size:12.5px;font-weight:600;color:#e9d5ff">{{ greeting }}</div>
-          <div style="font-size:11.5px;color:#b794f6;font-style:italic;line-height:1.45">{{ myPhrase }}</div>
-        </div>
-      </div>
-      <button onClick="{{ logout }}" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;border-radius:10px;border:1px solid rgba(190,160,255,0.12);background:transparent;color:#a1a1b0;font-size:13px;cursor:pointer" style-hover="border-color:#a855f7;color:#e9d5ff">
-        <span style="width:15px;height:15px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/log-out.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/log-out.svg) center / contain no-repeat"></span>
-        Trocar perfil
-      </button>
-      <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}">
-        <button onClick="{{ resetData }}" style="background:none;border:0;color:#5c5c6a;font-size:11.5px;cursor:pointer;padding:4px" style-hover="color:#a1a1b0">Zerar todos os dados</button>
-      </sc-if>
-    </div>
-  </aside>
+    <div style="height:1px;margin:16px 8px 8px;background:rgba(190,160,255,0.1)"></div>
+    <button onClick="{{ moreToggle }}" title="Mais ferramentas" style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;border:0;cursor:pointer;font-size:13.5px;font-weight:600;text-align:left;background:transparent;color:#a1a1b0" style-hover="color:#e9d5ff">
+      <span style="width:18px;height:18px;flex-shrink:0;background:#8b8b99;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/layout-grid.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/layout-grid.svg) center / contain no-repeat"></span>
+      <sc-if value="{{ navFull }}" hint-placeholder-val="{{ true }}"><span style="flex:1">Mais</span></sc-if>
+      <sc-if value="{{ moreDot }}" hint-placeholder-val="{{ false }}"><span style="width:7px;height:7px;border-radius:50%;background:#a855f7;flex-shrink:0"></span></sc-if>
+      <sc-if value="{{ navFull }}" hint-placeholder-val="{{ true }}"><span style="width:14px;height:14px;flex-shrink:0;background:currentColor;transition:transform .2s;transform:rotate({{ moreRot }}deg);mask:url(https://unpkg.com/lucide-static@0.460.0/icons/chevron-down.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/chevron-down.svg) center / contain no-repeat"></span></sc-if>
+    </button>
+    <sc-if value="{{ moreOpen }}" hint-placeholder-val="{{ false }}">
+      <nav style="display:flex;flex-direction:column;gap:2px;padding:4px 0 0">
+        <sc-for list="{{ navMore }}" as="n" hint-placeholder-count="6">
+        <button onClick="{{ n.go }}" title="{{ n.label }}" style="display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:10px;border:0;cursor:pointer;font-size:13.5px;font-weight:500;text-align:left;background:{{ n.bg }};color:{{ n.color }}" style-hover="color:#e9d5ff">
+          <span style="width:16px;height:16px;flex-shrink:0;background:{{ n.iconColor }};mask:{{ n.icon }} center / contain no-repeat;-webkit-mask:{{ n.icon }} center / contain no-repeat"></span>
+          <sc-if value="{{ navFull }}" hint-placeholder-val="{{ true }}"><span style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.label }}</span></sc-if>
+          <sc-if value="{{ n.showBadge }}" hint-placeholder-val="{{ false }}"><span style="font-family:'JetBrains Mono';font-size:10.5px;padding:1px 6px;border-radius:20px;background:rgba(168,85,247,0.2);color:#e9d5ff">{{ n.badge }}</span></sc-if>
+        </button>
+        </sc-for>
+      </nav>
+    </sc-if>
+    <div style="margin-top:auto;padding-top:18px;display:flex;flex-direction:column;gap:8px;position:relative">
+<sc-if value="{{ profOpen }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:4px;padding:6px;border-radius:12px;background:rgba(16,12,28,0.96);border:1px solid rgba(190,160,255,0.16);box-shadow:0 18px 40px -16px rgba(0,0,0,0.9)">
+<button onClick="{{ logout }}" title="Trocar perfil" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;border:0;background:transparent;color:#e9d5ff;font-size:13px;font-weight:600;cursor:pointer;text-align:left" style-hover="background:rgba(168,85,247,0.12)"><span style="width:15px;height:15px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/log-out.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/log-out.svg) center / contain no-repeat"></span><sc-if value="{{ navFull }}" hint-placeholder-val="{{ true }}"><span>Trocar perfil</span></sc-if></button>
+<sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ navFull }}" hint-placeholder-val="{{ true }}"><button onClick="{{ resetData }}" style="background:none;border:0;color:#5c5c6a;font-size:11.5px;cursor:pointer;padding:4px" style-hover="color:#a1a1b0">Zerar todos os dados</button></sc-if></sc-if>
+</div>
+</sc-if>
+<button onClick="{{ profToggle }}" title="{{ me.name }}" style="display:flex;align-items:center;gap:10px;padding:8px;border-radius:12px;border:0;background:transparent;color:#ededf2;cursor:pointer;text-align:left" style-hover="background:rgba(168,85,247,0.08)">
+<img src="{{ me.photo }}" alt="{{ me.name }}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid rgba(168,85,247,0.7)">
+<sc-if value="{{ navFull }}" hint-placeholder-val="{{ true }}"><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px"><span style="font-weight:600;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ me.name }}</span><span style="font-size:11.5px;color:#8b8b99;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ meRoleShort }}</span></span><span style="width:14px;height:14px;flex-shrink:0;background:#6f6f7d;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/chevrons-up-down.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/chevrons-up-down.svg) center / contain no-repeat"></span></sc-if>
+</button>
+<sc-if value="{{ canMini }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ miniToggle }}" title="{{ miniLabel }}" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:8px;border-radius:10px;border:0;background:transparent;color:#6f6f7d;font-size:12px;cursor:pointer" style-hover="color:#e9d5ff"><span style="width:15px;height:15px;flex-shrink:0;background:currentColor;mask:{{ miniIcon }} center / contain no-repeat;-webkit-mask:{{ miniIcon }} center / contain no-repeat"></span><sc-if value="{{ navFull }}" hint-placeholder-val="{{ true }}"><span>{{ miniLabel }}</span></sc-if></button>
+</sc-if>
+</div>
+</aside>
   </sc-if>
 
   <main style="padding-left:{{ mainPad }}px;min-height:100vh;overflow-x:clip;max-width:100vw">
@@ -320,7 +331,7 @@ option{background:#111117;color:#ededf2}
           <span style="width:8px;height:8px;border-radius:50%;flex-shrink:0;background:{{ syncColor }};box-shadow:0 0 8px {{ syncColor }}"></span>
           <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}"><span>{{ syncLabel }}</span></sc-if>
         </div>
-        <button onClick="{{ openSearch }}" title="Pesquisar" aria-label="Pesquisar" style="width:40px;height:40px;border-radius:10px;border:1px solid rgba(190,160,255,0.12);background:linear-gradient(180deg, rgba(38,28,60,0.58) 0%, rgba(17,14,27,0.62) 100%);color:#ededf2;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;box-shadow:inset 0 1px 0 rgba(255,255,255,0.07), 0 1px 0 rgba(0,0,0,0.5), 0 22px 44px -24px rgba(0,0,0,0.9), 0 10px 30px -18px rgba(124,58,237,0.35);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%)"><span style="width:18px;height:18px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/search.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/search.svg) center / contain no-repeat"></span></button>
+        <button onClick="{{ openSearch }}" title="Buscar (Ctrl + P)" aria-label="Pesquisar" style="width:40px;height:40px;border-radius:10px;border:1px solid rgba(190,160,255,0.12);background:linear-gradient(180deg, rgba(38,28,60,0.58) 0%, rgba(17,14,27,0.62) 100%);color:#ededf2;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;box-shadow:inset 0 1px 0 rgba(255,255,255,0.07), 0 1px 0 rgba(0,0,0,0.5), 0 22px 44px -24px rgba(0,0,0,0.9), 0 10px 30px -18px rgba(124,58,237,0.35);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%)"><span style="width:18px;height:18px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/search.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/search.svg) center / contain no-repeat"></span></button>
         <button onClick="{{ toggleBell }}" title="Notificações" style="position:relative;width:40px;height:40px;border-radius:10px;border:1px solid rgba(190,160,255,0.12);background:linear-gradient(180deg, rgba(38,28,60,0.58) 0%, rgba(17,14,27,0.62) 100%);color:#ededf2;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,0.07), 0 1px 0 rgba(0,0,0,0.5), 0 22px 44px -24px rgba(0,0,0,0.9), 0 10px 30px -18px rgba(124,58,237,0.35);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%)" style-hover="border-color:#a855f7">
           <span style="width:18px;height:18px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/bell.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/bell.svg) center / contain no-repeat"></span>
           <sc-if value="{{ hasBellCount }}" hint-placeholder-val="{{ false }}">
@@ -338,23 +349,19 @@ option{background:#111117;color:#ededf2}
 
       <sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex;flex-direction:column;gap:22px">
-          <div style="display:flex;flex-direction:column;gap:6px">
-            <div style="display:flex;align-items:center;gap:14px;margin-bottom:8px">
-              <img src="{{ me.photo }}" alt="{{ me.name }}" style="width:54px;height:54px;border-radius:50%;object-fit:cover;border:2px solid #a855f7;flex-shrink:0">
-              <div style="display:flex;flex-direction:column;gap:2px;min-width:0">
-                <div style="font-family:Sora;font-weight:600;font-size:17px">{{ me.name }}</div>
-                <div style="font-size:13px;color:#8b8b99">{{ me.role }}</div>
-              </div>
+          <div style="display:flex;align-items:flex-end;gap:12px 16px;flex-wrap:wrap">
+            <div style="flex:1 1 300px;min-width:0;display:flex;flex-direction:column;gap:6px">
+              <div style="font-family:Sora;font-weight:600;font-size:clamp(22px,2.6vw,28px);letter-spacing:-0.02em;line-height:1.2">{{ greeting }}</div>
+              <div style="color:#a1a1b0;font-size:14px;line-height:1.5">{{ roleLine }}</div>
+              <div style="font-size:12.5px;color:#9a84c4;font-style:italic;line-height:1.45">{{ myPhrase }}</div>
             </div>
-            <div style="font-family:Sora;font-weight:600;font-size:clamp(21px,2.6vw,28px);letter-spacing:-0.02em">{{ greeting }}</div>
-            <div style="color:#8b8b99;font-size:14.5px">{{ roleLine }}</div>
-            <div style="display:flex;align-items:flex-start;gap:8px;margin-top:4px;font-size:13.5px;color:#c4a5f5;font-style:italic;line-height:1.45"><span style="width:15px;height:15px;flex-shrink:0;background:#a855f7;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/sparkles.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/sparkles.svg) center / contain no-repeat"></span><span>{{ myPhrase }}</span></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap"><button onClick="{{ openMonday }}" style="min-height:38px;padding:7px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.2);background:transparent;color:#e9d5ff;font-size:12.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap;border-color:{{ mdBtnBorder }};background:{{ mdBtnBg }}"><span style="width:14px;height:14px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/calendar-range.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/calendar-range.svg) center / contain no-repeat"></span>Modo Segunda-feira</button></div>
           </div>
           <div style="background:linear-gradient(180deg, rgba(38,28,60,0.58) 0%, rgba(17,14,27,0.62) 100%);border:1px solid #2a2140;border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.07), 0 1px 0 rgba(0,0,0,0.5), 0 22px 44px -24px rgba(0,0,0,0.9), 0 10px 30px -18px rgba(124,58,237,0.35);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%)">
             <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
               <div style="width:36px;height:36px;border-radius:10px;background:rgba(168,85,247,0.16);display:flex;align-items:center;justify-content:center;flex-shrink:0"><span style="width:18px;height:18px;flex-shrink:0;background:#c084fc;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/brain-circuit.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/brain-circuit.svg) center / contain no-repeat"></span></div>
               <div style="flex:1 1 200px;min-width:0;display:flex;flex-direction:column;gap:2px"><div style="font-family:Sora;font-weight:600;font-size:16px">O que preciso resolver hoje?</div><div style="font-size:12.5px;color:#8b8b99">{{ ciSub }}</div></div>
-              <button onClick="{{ openMonday }}" style="min-height:38px;padding:7px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.2);background:transparent;color:#e9d5ff;font-size:12.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap;border-color:{{ mdBtnBorder }};background:{{ mdBtnBg }}"><span style="width:14px;height:14px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/calendar-range.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/calendar-range.svg) center / contain no-repeat"></span>Modo Segunda-feira</button>
+              
             </div>
             <div style="display:flex;gap:6px;flex-wrap:wrap">
               <sc-for list="{{ ciCounts }}" as="cc" hint-placeholder-count="3"><span style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 10px;border-radius:20px;background:{{ cc.bg }};color:{{ cc.color }};font-weight:600"><span style="width:7px;height:7px;border-radius:50%;background:{{ cc.color }}"></span>{{ cc.label }}</span></sc-for>
@@ -362,10 +369,10 @@ option{background:#111117;color:#ededf2}
             <sc-if value="{{ ciEmpty }}" hint-placeholder-val="{{ false }}"><div style="padding:18px 12px;border-radius:12px;border:1px dashed #22222c;text-align:center;font-size:13.5px;color:#8b8b99">Nada pendente para hoje. Tudo em dia.</div></sc-if>
             <div style="display:flex;flex-direction:column;gap:6px">
               <sc-for list="{{ ciItems }}" as="ci" hint-placeholder-count="3">
-                <div style="display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);border:1px solid {{ ci.border }};flex-wrap:wrap;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)">
+                <div onClick="{{ ci.go }}" style="cursor:pointer;display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);border:1px solid {{ ci.border }};flex-wrap:wrap;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)">
                   <div style="width:32px;height:32px;border-radius:9px;flex-shrink:0;background:{{ ci.bg }};display:flex;align-items:center;justify-content:center"><span style="width:15px;height:15px;flex-shrink:0;background:{{ ci.color }};mask:{{ ci.icon }} center / contain no-repeat;-webkit-mask:{{ ci.icon }} center / contain no-repeat"></span></div>
                   <div style="flex:1 1 200px;min-width:0;display:flex;flex-direction:column;gap:2px"><div style="font-size:13.5px;font-weight:600;line-height:1.35">{{ ci.title }}</div><div style="font-size:12px;color:#8b8b99;line-height:1.4">{{ ci.sub }}</div></div>
-                  <button onClick="{{ ci.go }}" style="min-height:38px;padding:7px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.2);background:transparent;color:#e9d5ff;font-size:12.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap">{{ ci.action }}<span style="width:13px;height:13px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/arrow-right.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/arrow-right.svg) center / contain no-repeat"></span></button>
+                  <button style="min-height:38px;padding:7px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.2);background:transparent;color:#e9d5ff;font-size:12.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap">{{ ci.action }}<span style="width:13px;height:13px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/arrow-right.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/arrow-right.svg) center / contain no-repeat"></span></button>
                 </div>
               </sc-for>
             </div>
@@ -378,20 +385,33 @@ option{background:#111117;color:#ededf2}
               <span style="font-size:13px;color:#c084fc;font-weight:600">Ver resumo</span>
             </button>
           </sc-if>
+          <sc-if value="{{ stBanner }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ stGoNext }}" style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;padding:14px 16px;border-radius:14px;cursor:pointer;text-align:left;color:#ededf2;border:1px solid rgba(168,85,247,0.55);background:rgba(168,85,247,0.1)">
+              <span style="width:18px;height:18px;flex-shrink:0;background:#c084fc;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/calendar-check.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/calendar-check.svg) center / contain no-repeat"></span>
+              <span style="flex:1 1 220px;display:flex;flex-direction:column;gap:4px">
+                <span style="font-size:14.5px;font-weight:700">Prepare os roteiros da próxima semana.</span>
+                <span style="font-size:12.5px;color:#c4b5fd;line-height:1.45">Responsável: {{ stTaskOwnerName }} · Faltam: {{ stPendingNames }}</span>
+              </span>
+              <span style="font-size:13px;color:#e9d5ff;font-weight:700">{{ stProgressText }}</span>
+            </button>
+          </sc-if>
+          <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:center;gap:10px"><span style="font-family:'JetBrains Mono';font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;color:#6f6f7d;flex:1">{{ kpiTitle }}</span><button onClick="{{ goMetrics }}" style="background:none;border:0;color:#a78bfa;font-size:12.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;min-height:32px" style-hover="color:#e9d5ff">Ver métricas<span style="width:13px;height:13px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/arrow-right.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/arrow-right.svg) center / contain no-repeat"></span></button></div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax({{ kpiMin }}px,1fr));gap:{{ gridGap }}px">
             <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
-              <div onClick="{{ k.go }}" style="background:linear-gradient(180deg, rgba(38,28,60,0.58) 0%, rgba(17,14,27,0.62) 100%);border:1px solid rgba(190,160,255,0.12);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:14px;cursor:pointer;transition:border-color .15s, transform .15s;box-shadow:inset 0 1px 0 rgba(255,255,255,0.07), 0 1px 0 rgba(0,0,0,0.5), 0 22px 44px -24px rgba(0,0,0,0.9), 0 10px 30px -18px rgba(124,58,237,0.35);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%)" style-hover="border-color:#a855f7;transform:translateY(-2px)">
+              <div onClick="{{ k.go }}" style="background:linear-gradient(180deg, rgba(38,28,60,0.58) 0%, rgba(17,14,27,0.62) 100%);border:1px solid rgba(190,160,255,0.12);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;cursor:pointer;border-color:{{ k.border }};transition:border-color .15s, transform .15s;box-shadow:inset 0 1px 0 rgba(255,255,255,0.07), 0 1px 0 rgba(0,0,0,0.5), 0 22px 44px -24px rgba(0,0,0,0.9), 0 10px 30px -18px rgba(124,58,237,0.35);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%)" style-hover="border-color:#a855f7;transform:translateY(-2px)">
                 <div style="display:flex;align-items:center;justify-content:space-between">
                   <div style="font-size:13px;color:#a1a1b0">{{ k.label }}</div>
-                  <div style="width:48px;height:48px;border-radius:15px;flex-shrink:0;position:relative;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg, #d3adff 0%, #9d4dff 45%, #5b21b6 100%);box-shadow:inset 0 2px 0 rgba(255,255,255,0.5), inset 0 -5px 10px rgba(35,8,80,0.55), 0 3px 0 #3b1580, 0 14px 22px -8px rgba(124,58,237,0.8);transform:perspective(220px) rotateX(12deg) rotateY(-14deg)">
-                    <span style="position:absolute;top:4px;left:7px;right:16px;height:13px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0));pointer-events:none"></span>
-                    <span style="display:flex;filter:drop-shadow(0 2px 1.5px rgba(40,6,90,0.7))"><span style="width:21px;height:21px;background:#ffffff;mask:{{ k.icon }} center / contain no-repeat;-webkit-mask:{{ k.icon }} center / contain no-repeat"></span></span>
+                  <div style="width:36px;height:36px;border-radius:11px;opacity:{{ k.iconOp }};flex-shrink:0;position:relative;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg, #d3adff 0%, #9d4dff 45%, #5b21b6 100%);box-shadow:inset 0 2px 0 rgba(255,255,255,0.5), inset 0 -5px 10px rgba(35,8,80,0.55), 0 3px 0 #3b1580, 0 14px 22px -8px rgba(124,58,237,0.8);transform:perspective(220px) rotateX(12deg) rotateY(-14deg)">
+                    <span style="position:absolute;top:3px;left:5px;right:12px;height:10px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0));pointer-events:none"></span>
+                    <span style="display:flex;filter:drop-shadow(0 2px 1.5px rgba(40,6,90,0.7))"><span style="width:16px;height:16px;background:#ffffff;mask:{{ k.icon }} center / contain no-repeat;-webkit-mask:{{ k.icon }} center / contain no-repeat"></span></span>
                   </div>
                 </div>
-                <div style="font-family:Sora;font-weight:600;font-size:32px;letter-spacing:-0.02em;line-height:1;color:{{ k.color }}">{{ k.value }}</div>
+                <div style="font-family:Sora;font-weight:600;font-size:26px;letter-spacing:-0.02em;line-height:1;color:{{ k.color }}">{{ k.value }}</div>
                 <div style="display:flex;align-items:center;gap:6px"><div style="flex:1;font-size:12.5px;color:#6f6f7d">{{ k.sub }}</div><span style="width:14px;height:14px;flex-shrink:0;background:#5c5c6a;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/chevron-right.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/chevron-right.svg) center / contain no-repeat"></span></div>
               </div>
             </sc-for>
+          </div>
           </div>
 
           <div style="background:linear-gradient(180deg, rgba(38,28,60,0.58) 0%, rgba(17,14,27,0.62) 100%);border:1px solid rgba(190,160,255,0.12);border-radius:16px;padding:22px;display:flex;flex-wrap:wrap;gap:28px;align-items:stretch;box-shadow:inset 0 1px 0 rgba(255,255,255,0.07), 0 1px 0 rgba(0,0,0,0.5), 0 22px 44px -24px rgba(0,0,0,0.9), 0 10px 30px -18px rgba(124,58,237,0.35);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%)">
@@ -440,68 +460,8 @@ option{background:#111117;color:#ededf2}
             </div>
           </div>
 
-          <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}">
-            <div style="background:linear-gradient(180deg, rgba(38,28,60,0.58) 0%, rgba(17,14,27,0.62) 100%);border:1px solid rgba(190,160,255,0.12);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:14px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.07), 0 1px 0 rgba(0,0,0,0.5), 0 22px 44px -24px rgba(0,0,0,0.9), 0 10px 30px -18px rgba(124,58,237,0.35);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%)">
-              <div style="display:flex;align-items:center;gap:10px">
-                <span style="width:16px;height:16px;background:#c084fc;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/heart-pulse.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/heart-pulse.svg) center / contain no-repeat"></span>
-                <div style="font-family:Sora;font-weight:600;font-size:15px;flex:1">Saúde dos clientes · SLA</div>
-                <button onClick="{{ goClients }}" style="background:none;border:0;color:#c084fc;font-size:13px;cursor:pointer" style-hover="color:#e9d5ff">Ver clientes</button>
-              </div>
-              <sc-if value="{{ healthEmpty }}" hint-placeholder-val="{{ false }}">
-                <div style="padding:22px 12px;text-align:center;font-size:13px;color:#6f6f7d;border:1px dashed #22222c;border-radius:12px">Nenhum cliente mensal cadastrado ainda.</div>
-              </sc-if>
-              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:12px 28px">
-                <sc-for list="{{ healthRows }}" as="c" hint-placeholder-count="6">
-                  <div onClick="{{ goClients }}" style="display:flex;flex-direction:column;gap:8px;padding:8px;margin:-2px;border-radius:10px;cursor:pointer" style-hover="background:#141419">
-                    <div style="display:flex;align-items:center;gap:10px;font-size:13.5px">
-                      <span style="width:9px;height:9px;border-radius:50%;background:{{ c.color }}"></span>
-                      <span style="flex:1;font-weight:500">{{ c.name }}</span>
-                      <span style="font-family:'JetBrains Mono';font-size:12.5px;color:{{ c.hColor }}">{{ c.pct }}%</span>
-                    </div>
-                    <div style="height:6px;border-radius:6px;background:#1c1c26;overflow:hidden">
-                      <div style="height:100%;width:{{ c.pct }}%;background:{{ c.hColor }};border-radius:6px"></div>
-                    </div>
-                    <div style="font-size:12px;color:#8b8b99">{{ c.issue }}</div>
-                  </div>
-                </sc-for>
-              </div>
-            </div>
-          </sc-if>
-
-          <sc-if value="{{ stBanner }}" hint-placeholder-val="{{ false }}">
-            <button onClick="{{ stGoNext }}" style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;padding:14px 16px;border-radius:14px;cursor:pointer;text-align:left;color:#ededf2;border:1px solid rgba(168,85,247,0.55);background:rgba(168,85,247,0.1)">
-              <span style="width:18px;height:18px;flex-shrink:0;background:#c084fc;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/calendar-check.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/calendar-check.svg) center / contain no-repeat"></span>
-              <span style="flex:1 1 220px;display:flex;flex-direction:column;gap:4px">
-                <span style="font-size:14.5px;font-weight:700">Prepare os roteiros da próxima semana.</span>
-                <span style="font-size:12.5px;color:#c4b5fd;line-height:1.45">Responsável: {{ stTaskOwnerName }} · Faltam: {{ stPendingNames }}</span>
-              </span>
-              <span style="font-size:13px;color:#e9d5ff;font-weight:700">{{ stProgressText }}</span>
-            </button>
-          </sc-if>
-          <sc-if value="{{ stShowDash }}" hint-placeholder-val="{{ false }}">
-            <div style="background:linear-gradient(180deg, rgba(38,28,60,0.58) 0%, rgba(17,14,27,0.62) 100%);border:1px solid rgba(190,160,255,0.12);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:14px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.07), 0 1px 0 rgba(0,0,0,0.5), 0 22px 44px -24px rgba(0,0,0,0.9), 0 10px 30px -18px rgba(124,58,237,0.35);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%)">
-              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-                <span style="width:16px;height:16px;flex-shrink:0;background:#c084fc;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/calendar-check.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/calendar-check.svg) center / contain no-repeat"></span>
-                <div style="font-family:Sora;font-weight:600;font-size:15px;flex:1">Planejamento da próxima semana</div>
-                <span style="font-size:12.5px;color:#a1a1b0">{{ stNextLabel }}</span>
-              </div>
-              <div style="display:flex;flex-direction:column;gap:6px">
-                <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600"><span>{{ stDashText }}</span><span style="font-family:'JetBrains Mono';color:#c084fc">{{ stDashPct }}%</span></div>
-                <div style="height:7px;border-radius:7px;background:#1c1c26;overflow:hidden"><div style="height:100%;width:{{ stDashPct }}%;background:#a855f7;border-radius:7px"></div></div>
-              </div>
-              <sc-if value="{{ stDashEmpty }}" hint-placeholder-val="{{ false }}"><div style="font-size:13px;color:#6f6f7d">Cadastre clientes mensais para planejar os Stories.</div></sc-if>
-              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(260px,100%),1fr));gap:6px">
-                <sc-for list="{{ stDashRows }}" as="r" hint-placeholder-count="4">
-                  <button onClick="{{ r.open }}" style="display:flex;align-items:center;gap:10px;min-height:44px;padding:9px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.12);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;cursor:pointer;text-align:left;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)">
-                    <span style="width:8px;height:8px;border-radius:50%;flex-shrink:0;background:{{ r.color }}"></span>
-                    <span style="flex:1;font-size:13px;font-weight:600;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</span>
-                    <span style="font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap;color:{{ r.stColor }};background:{{ r.stTint }}">{{ r.stLabel }}</span>
-                  </button>
-                </sc-for>
-              </div>
-            </div>
-          </sc-if>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:14px">
+          
+                              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:14px">
             <sc-for list="{{ panels }}" as="panel" hint-placeholder-count="3">
               <div style="background:linear-gradient(180deg, rgba(38,28,60,0.58) 0%, rgba(17,14,27,0.62) 100%);border:1px solid rgba(190,160,255,0.12);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.07), 0 1px 0 rgba(0,0,0,0.5), 0 22px 44px -24px rgba(0,0,0,0.9), 0 10px 30px -18px rgba(124,58,237,0.35);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%)">
                 <div style="display:flex;align-items:center;gap:10px">
@@ -534,6 +494,58 @@ option{background:#111117;color:#ededf2}
               </div>
             </sc-for>
           </div>
+        <sc-if value="{{ stShowDash }}" hint-placeholder-val="{{ false }}">
+            <div style="background:linear-gradient(180deg, rgba(38,28,60,0.58) 0%, rgba(17,14,27,0.62) 100%);border:1px solid rgba(190,160,255,0.12);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:14px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.07), 0 1px 0 rgba(0,0,0,0.5), 0 22px 44px -24px rgba(0,0,0,0.9), 0 10px 30px -18px rgba(124,58,237,0.35);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%)">
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                <span style="width:16px;height:16px;flex-shrink:0;background:#c084fc;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/calendar-check.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/calendar-check.svg) center / contain no-repeat"></span>
+                <div style="font-family:Sora;font-weight:600;font-size:15px;flex:1">Planejamento da próxima semana</div>
+                <span style="font-size:12.5px;color:#a1a1b0">{{ stNextLabel }}</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600"><span>{{ stDashText }}</span><span style="font-family:'JetBrains Mono';color:#c084fc">{{ stDashPct }}%</span></div>
+                <div style="height:7px;border-radius:7px;background:#1c1c26;overflow:hidden"><div style="height:100%;width:{{ stDashPct }}%;background:#a855f7;border-radius:7px"></div></div>
+              </div>
+              <sc-if value="{{ stDashEmpty }}" hint-placeholder-val="{{ false }}"><div style="font-size:13px;color:#6f6f7d">Cadastre clientes mensais para planejar os Stories.</div></sc-if>
+              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(260px,100%),1fr));gap:6px">
+                <sc-for list="{{ stDashRows }}" as="r" hint-placeholder-count="4">
+                  <button onClick="{{ r.open }}" style="display:flex;align-items:center;gap:10px;min-height:44px;padding:9px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.12);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;cursor:pointer;text-align:left;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)">
+                    <span style="width:8px;height:8px;border-radius:50%;flex-shrink:0;background:{{ r.color }}"></span>
+                    <span style="flex:1;font-size:13px;font-weight:600;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</span>
+                    <span style="font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap;color:{{ r.stColor }};background:{{ r.stTint }}">{{ r.stLabel }}</span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ showSla }}" hint-placeholder-val="{{ false }}">
+            <div style="background:linear-gradient(180deg, rgba(38,28,60,0.58) 0%, rgba(17,14,27,0.62) 100%);border:1px solid rgba(190,160,255,0.12);border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:14px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.07), 0 1px 0 rgba(0,0,0,0.5), 0 22px 44px -24px rgba(0,0,0,0.9), 0 10px 30px -18px rgba(124,58,237,0.35);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%)">
+              <div style="display:flex;align-items:center;gap:10px">
+                <span style="width:16px;height:16px;background:#c084fc;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/heart-pulse.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/heart-pulse.svg) center / contain no-repeat"></span>
+                <div style="font-family:Sora;font-weight:600;font-size:15px;flex:1">Saúde dos clientes · SLA</div>
+                <button onClick="{{ slaToggle }}" style="min-height:36px;padding:6px 12px;border-radius:9px;border:1px solid rgba(190,160,255,0.16);background:transparent;color:#c4b5fd;font-size:12.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px">{{ slaLabel }}<span style="width:13px;height:13px;flex-shrink:0;background:currentColor;mask:{{ slaIcon }} center / contain no-repeat;-webkit-mask:{{ slaIcon }} center / contain no-repeat"></span></button>
+              </div>
+              <sc-if value="{{ slaOpen }}" hint-placeholder-val="{{ false }}">
+              <sc-if value="{{ healthEmpty }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:22px 12px;text-align:center;font-size:13px;color:#6f6f7d;border:1px dashed #22222c;border-radius:12px">Nenhum cliente mensal cadastrado ainda.</div>
+              </sc-if>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:12px 28px">
+                <sc-for list="{{ healthRows }}" as="c" hint-placeholder-count="6">
+                  <div onClick="{{ goClients }}" style="display:flex;flex-direction:column;gap:8px;padding:8px;margin:-2px;border-radius:10px;cursor:pointer" style-hover="background:#141419">
+                    <div style="display:flex;align-items:center;gap:10px;font-size:13.5px">
+                      <span style="width:9px;height:9px;border-radius:50%;background:{{ c.color }}"></span>
+                      <span style="flex:1;font-weight:500">{{ c.name }}</span>
+                      <span style="font-family:'JetBrains Mono';font-size:12.5px;color:{{ c.hColor }}">{{ c.pct }}%</span>
+                    </div>
+                    <div style="height:6px;border-radius:6px;background:#1c1c26;overflow:hidden">
+                      <div style="height:100%;width:{{ c.pct }}%;background:{{ c.hColor }};border-radius:6px"></div>
+                    </div>
+                    <div style="font-size:12px;color:#8b8b99">{{ c.issue }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+            </div>
+          </sc-if>
         </div>
       </sc-if>
 
@@ -1218,6 +1230,8 @@ option{background:#111117;color:#ededf2}
                     <span>Prazo de edição: <span style="color:#ededf2">{{ c.editLabel }}</span></span>
                   </div>
                   <button onClick="{{ c.openStories }}" style="min-height:36px;padding:6px 10px;border-radius:8px;border:1px solid rgba(190,160,255,0.2);background:transparent;color:#d4d4dc;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;border-color:#3a2a55;color:#e9d5ff"><span style="width:12px;height:12px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/calendar-check.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/calendar-check.svg) center / contain no-repeat"></span>Stories</button>
+                  <button onClick="{{ c.openDossie }}" style="min-height:36px;padding:6px 10px;border-radius:8px;border:0;background:linear-gradient(180deg, #c596ff 0%, #a855f7 48%, #8a3cf0 100%);color:#0a0a0f;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.4), 0 8px 18px -10px rgba(168,85,247,0.9)"><span style="width:12px;height:12px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/book-user.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/book-user.svg) center / contain no-repeat"></span>Dossiê</button>
+                  <sc-if value="{{ c.canCharge }}" hint-placeholder-val="{{ false }}"><button onClick="{{ c.charge }}" style="min-height:36px;padding:6px 10px;border-radius:8px;border:1px solid oklch(0.72 0.17 150 / 0.5);background:transparent;color:oklch(0.86 0.12 150);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px"><span style="width:12px;height:12px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/message-circle.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/message-circle.svg) center / contain no-repeat"></span>Cobrar</button></sc-if>
                   <button onClick="{{ c.openIdeas }}" style="min-height:36px;padding:6px 10px;border-radius:8px;border:1px solid #3a2a55;background:transparent;color:#e9d5ff;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px"><span style="width:12px;height:12px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/lightbulb.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/lightbulb.svg) center / contain no-repeat"></span>Ideias</button>
                   <sc-if value="{{ c.showValue }}" hint-placeholder-val="{{ false }}">
                     <div style="font-family:'JetBrains Mono';font-size:13px;color:#e9d5ff">{{ c.monthlyLabel }}/mês</div>
@@ -1264,6 +1278,7 @@ option{background:#111117;color:#ededf2}
                           <div style="font-family:'JetBrains Mono';font-size:14px;color:#e9d5ff">{{ c.valueLabel }} <span style="font-size:11.5px;color:#8b8b99">contratado</span></div>
                           <div style="font-family:'JetBrains Mono';font-size:12.5px;color:{{ c.paidColor }}">{{ c.paidLabel }} <span style="font-size:11.5px;color:#8b8b99">pago</span></div>
                         </div>
+                        <button onClick="{{ c.openDossie }}" style="padding:7px 12px;border-radius:8px;border:1px solid #3a2a55;background:transparent;color:#e9d5ff;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px"><span style="width:12px;height:12px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/book-user.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/book-user.svg) center / contain no-repeat"></span>Dossiê</button>
                         <button onClick="{{ c.edit }}" style="padding:7px 12px;border-radius:8px;border:1px solid rgba(190,160,255,0.15);background:transparent;color:#a1a1b0;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px" style-hover="border-color:#a855f7;color:#e9d5ff"><span style="width:13px;height:13px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg) center / contain no-repeat"></span>Editar</button>
                       </div>
                     </sc-if>
@@ -1437,6 +1452,7 @@ option{background:#111117;color:#ededf2}
                   <div style="flex:0 0 100px"><span style="font-size:11.5px;font-weight:600;padding:4px 9px;border-radius:20px;color:{{ r.stColor }};background:{{ r.stTint }}">{{ r.stLabel }}</span></div>
                   <div style="flex:1 0 220px;display:flex;justify-content:flex-end;gap:6px;flex-wrap:wrap">
                     <button onClick="{{ r.pay }}" style="min-height:32px;padding:6px 10px;border-radius:8px;border:1px solid rgba(190,160,255,0.2);background:transparent;color:#a1a1b0;font-size:12px;cursor:pointer" style-hover="border-color:#a855f7;color:#e9d5ff">Valor pago</button>
+                    <sc-if value="{{ r.canCharge }}" hint-placeholder-val="{{ false }}"><button onClick="{{ r.charge }}" style="padding:6px 10px;border-radius:8px;border:1px solid oklch(0.72 0.17 150 / 0.5);background:transparent;color:oklch(0.86 0.12 150);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px"><span style="width:12px;height:12px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/message-circle.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/message-circle.svg) center / contain no-repeat"></span>Cobrar</button></sc-if>
                     <button onClick="{{ r.toggle }}" style="padding:6px 10px;border-radius:8px;border:1px solid rgba(190,160,255,0.2);background:transparent;color:#d8b4fe;font-size:12px;font-weight:600;cursor:pointer" style-hover="border-color:#a855f7">{{ r.toggleLabel }}</button>
                     <button onClick="{{ r.remove }}" title="Excluir" style="width:30px;height:30px;border-radius:8px;border:1px solid rgba(190,160,255,0.2);background:transparent;color:#8b8b99;display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="border-color:oklch(0.68 0.2 25);color:oklch(0.75 0.17 25)">
                       <span style="width:14px;height:14px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/trash-2.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/trash-2.svg) center / contain no-repeat"></span>
@@ -2022,7 +2038,7 @@ option{background:#111117;color:#ededf2}
           <div style="display:flex;flex-direction:column;gap:6px">
             <div style="font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:oklch(0.72 0.19 25)">Em atraso</div>
             <sc-for list="{{ briefLate }}" as="b" hint-placeholder-count="2">
-              <div style="display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:11px;background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);border:1px solid {{ b.border }};box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)">
+              <div onClick="{{ b.open }}" style="cursor:pointer;display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:11px;background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);border:1px solid {{ b.border }};box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)">
                 <span style="width:8px;height:8px;border-radius:50%;flex-shrink:0;background:{{ b.clientColor }}"></span>
                 <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
                   <div style="font-size:13.5px;font-weight:600;line-height:1.35">{{ b.title }}</div>
@@ -2037,7 +2053,7 @@ option{background:#111117;color:#ededf2}
           <div style="display:flex;flex-direction:column;gap:6px">
             <div style="font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:oklch(0.82 0.13 80)">Vencem hoje</div>
             <sc-for list="{{ briefToday }}" as="b" hint-placeholder-count="2">
-              <div style="display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:11px;background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);border:1px solid {{ b.border }};box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)">
+              <div onClick="{{ b.open }}" style="cursor:pointer;display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:11px;background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);border:1px solid {{ b.border }};box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)">
                 <span style="width:8px;height:8px;border-radius:50%;flex-shrink:0;background:{{ b.clientColor }}"></span>
                 <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
                   <div style="font-size:13.5px;font-weight:600;line-height:1.35">{{ b.title }}</div>
@@ -2052,7 +2068,7 @@ option{background:#111117;color:#ededf2}
           <div style="display:flex;flex-direction:column;gap:6px">
             <div style="font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#c084fc">Próximas a vencer</div>
             <sc-for list="{{ briefSoon }}" as="b" hint-placeholder-count="2">
-              <div style="display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:11px;background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);border:1px solid {{ b.border }};box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)">
+              <div onClick="{{ b.open }}" style="cursor:pointer;display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:11px;background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);border:1px solid {{ b.border }};box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)">
                 <span style="width:8px;height:8px;border-radius:50%;flex-shrink:0;background:{{ b.clientColor }}"></span>
                 <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
                   <div style="font-size:13.5px;font-weight:600;line-height:1.35">{{ b.title }}</div>
@@ -3172,17 +3188,17 @@ option{background:#111117;color:#ededf2}
       <div onClick="{{ stop }}" style="width:min(640px,100%);max-height:calc(100dvh - 40px);display:flex;flex-direction:column;background:linear-gradient(180deg, rgba(38,28,60,0.58) 0%, rgba(17,14,27,0.62) 100%);border:1px solid #2a2140;border-radius:18px;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,0.08), 0 30px 80px -20px rgba(168,85,247,0.35);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%)">
         <div style="display:flex;align-items:center;gap:10px;padding:12px;border-bottom:1px solid rgba(190,160,255,0.12)">
           <span style="width:18px;height:18px;flex-shrink:0;background:#8b8b99;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/search.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/search.svg) center / contain no-repeat"></span>
-          <input value="{{ sq }}" onChange="{{ onSq }}" autoFocus="{{ true }}" placeholder="Buscar demandas, clientes, ideias, gravações, contratos…" style="width:100%;box-sizing:border-box;min-height:48px;padding:12px 14px;border-radius:12px;border:1px solid rgba(190,160,255,0.2);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;font-size:15px;font-family:inherit;outline:none;border:0;background:transparent;padding:8px 4px;min-height:40px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)">
+          <input data-sq-input="1" value="{{ sq }}" onChange="{{ onSq }}" autoFocus="{{ true }}" placeholder="Buscar demandas, clientes, ideias, gravações, contratos…" style="width:100%;box-sizing:border-box;min-height:48px;padding:12px 14px;border-radius:12px;border:1px solid rgba(190,160,255,0.2);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;font-size:15px;font-family:inherit;outline:none;border:0;background:transparent;padding:8px 4px;min-height:40px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)">
           <button onClick="{{ closeSearch }}" aria-label="Fechar" style="width:40px;height:40px;border-radius:10px;border:1px solid rgba(190,160,255,0.12);background:transparent;color:#a1a1b0;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0"><span style="width:17px;height:17px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/x.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/x.svg) center / contain no-repeat"></span></button>
         </div>
-        <div style="overflow-y:auto;overscroll-behavior:contain;padding:10px;display:flex;flex-direction:column;gap:14px">
+        <div data-sqbox="1" style="position:relative;overflow-y:auto;overscroll-behavior:contain;padding:10px;display:flex;flex-direction:column;gap:14px">
           <sc-if value="{{ sqHint }}" hint-placeholder-val="{{ true }}"><div style="padding:22px 10px;text-align:center;font-size:13px;color:#6f6f7d">Digite pelo menos 2 letras.</div></sc-if>
           <sc-if value="{{ sqNone }}" hint-placeholder-val="{{ false }}"><div style="padding:22px 10px;text-align:center;font-size:13px;color:#6f6f7d">Nenhum resultado para "{{ sq }}".</div></sc-if>
           <sc-for list="{{ sqGroups }}" as="g" hint-placeholder-count="0">
             <div style="display:flex;flex-direction:column;gap:4px">
               <div style="display:flex;align-items:center;gap:8px;padding:0 6px 4px"><span style="width:13px;height:13px;flex-shrink:0;background:#a78bfa;mask:{{ g.icon }} center / contain no-repeat;-webkit-mask:{{ g.icon }} center / contain no-repeat"></span><span style="font-family:'JetBrains Mono';font-size:10.5px;letter-spacing:0.12em;text-transform:uppercase;color:#a78bfa;flex:1">{{ g.title }}</span><span style="font-family:'JetBrains Mono';font-size:11px;color:#6f6f7d">{{ g.count }}</span></div>
               <sc-for list="{{ g.items }}" as="r" hint-placeholder-count="0">
-                <button onClick="{{ r.go }}" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:0;background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;cursor:pointer;text-align:left;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)" style-hover="background:#18181f">
+                <button id="{{ r.domId }}" onClick="{{ r.go }}" onMouseEnter="{{ r.hover }}" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:1px solid {{ r.ring }};background:{{ r.bg }};color:#ededf2;cursor:pointer;text-align:left;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)">
                   <span style="width:8px;height:8px;border-radius:50%;flex-shrink:0;background:{{ r.dot }}"></span>
                   <span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.title }}</span><span style="font-size:12px;color:#8b8b99;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.sub }}</span></span>
                   <span style="width:14px;height:14px;flex-shrink:0;background:#5c5c6a;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/chevron-right.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/chevron-right.svg) center / contain no-repeat"></span>
@@ -3191,6 +3207,7 @@ option{background:#111117;color:#ededf2}
             </div>
           </sc-for>
         </div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;padding:9px 12px;border-top:1px solid rgba(190,160,255,0.1);font-size:11.5px;color:#6f6f7d"><span><b style="font-family:'JetBrains Mono';color:#a1a1b0">↑ ↓</b> navegar</span><span><b style="font-family:'JetBrains Mono';color:#a1a1b0">Enter</b> abrir</span><span><b style="font-family:'JetBrains Mono';color:#a1a1b0">Esc</b> fechar</span><span><b style="font-family:'JetBrains Mono';color:#a1a1b0">Ctrl + P</b> buscar</span></div>
       </div>
     </div>
   </sc-if>
@@ -3227,6 +3244,139 @@ option{background:#111117;color:#ededf2}
     </div>
   </sc-if>
 
+  <sc-if value="{{ dsOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ dsClose }}" style="position:fixed;inset:0;z-index:85;background:rgba(3,2,8,0.74);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;justify-content:center;align-items:flex-start;padding:clamp(0px,3vh,32px) clamp(0px,2vw,24px)">
+      <div onClick="{{ stop }}" style="width:min(900px,100%);max-height:calc(100dvh - clamp(0px,6vh,64px));overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;background:linear-gradient(180deg, rgba(34,24,56,0.95) 0%, rgba(13,11,21,0.98) 100%);border:1px solid rgba(190,160,255,0.16);border-radius:clamp(0px,2vw,20px);box-shadow:inset 0 1px 0 rgba(255,255,255,0.08), 0 40px 90px -30px rgba(0,0,0,0.95), 0 20px 60px -30px rgba(124,58,237,0.5)">
+        <div style="position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:8px;padding:12px 16px;background:rgba(18,13,30,0.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(190,160,255,0.1)">
+          <span style="font-family:'JetBrains Mono';font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#a78bfa;flex:1;display:flex;align-items:center;gap:8px"><span style="width:14px;height:14px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/book-user.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/book-user.svg) center / contain no-repeat"></span>Dossiê do cliente</span>
+          <sc-if value="{{ dsView }}" hint-placeholder-val="{{ true }}"><button onClick="{{ dsStartEdit }}" style="min-height:40px;padding:8px 13px;border-radius:10px;border:1px solid rgba(190,160,255,0.2);background:transparent;color:#e9d5ff;font-size:12.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none"><span style="width:14px;height:14px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg) center / contain no-repeat"></span>Editar Dossiê</button></sc-if>
+          <sc-if value="{{ dsEditing }}" hint-placeholder-val="{{ false }}"><button onClick="{{ dsSave }}" style="min-height:42px;padding:9px 16px;border-radius:10px;border:0;background:linear-gradient(180deg, #c596ff 0%, #a855f7 48%, #8a3cf0 100%);color:#0a0a0f;font-size:13.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.4), inset 0 -2px 0 rgba(40,8,90,0.25), 0 1px 0 rgba(0,0,0,0.4), 0 12px 26px -12px rgba(168,85,247,0.95)"><span style="width:15px;height:15px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/check.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/check.svg) center / contain no-repeat"></span>Salvar</button></sc-if>
+          <button onClick="{{ dsClose }}" aria-label="Fechar" style="width:40px;height:40px;border-radius:10px;border:1px solid rgba(190,160,255,0.12);background:transparent;color:#a1a1b0;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0"><span style="width:17px;height:17px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/x.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/x.svg) center / contain no-repeat"></span></button>
+        </div>
+        <div style="padding:clamp(16px,3vw,26px);display:flex;flex-direction:column;gap:18px">
+          <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+            <sc-if value="{{ dsHasLogo }}" hint-placeholder-val="{{ false }}"><div style="width:76px;height:76px;border-radius:18px;flex-shrink:0;background:#ffffff;padding:8px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 26px -14px rgba(0,0,0,0.9)"><img src="{{ dsLogo }}" alt="Logo" style="max-width:100%;max-height:100%;object-fit:contain;display:block"></div></sc-if>
+            <sc-if value="{{ dsNoLogo }}" hint-placeholder-val="{{ true }}"><div style="width:76px;height:76px;border-radius:18px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:Sora;font-weight:700;font-size:24px;background:{{ dsTint }};color:{{ dsColor }};box-shadow:inset 0 1px 0 rgba(255,255,255,0.1)">{{ dsInitials }}</div></sc-if>
+            <div style="flex:1 1 240px;min-width:0;display:flex;flex-direction:column;gap:5px">
+              <div style="font-family:Sora;font-weight:600;font-size:clamp(20px,3vw,26px);letter-spacing:-0.01em;line-height:1.2">{{ dsName }}</div>
+              <sc-if value="{{ dsHasSub }}" hint-placeholder-val="{{ false }}"><div style="font-size:13.5px;color:#a1a1b0">{{ dsSub }}</div></sc-if>
+              <sc-if value="{{ dsHasContact }}" hint-placeholder-val="{{ false }}"><div style="font-size:12.5px;color:#8b8b99;display:flex;align-items:center;gap:6px"><span style="width:13px;height:13px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/user-round.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/user-round.svg) center / contain no-repeat"></span>{{ dsContact }}</div></sc-if>
+            </div>
+          </div>
+          <sc-if value="{{ dsView }}" hint-placeholder-val="{{ true }}">
+            <sc-if value="{{ dsHasQuick }}" hint-placeholder-val="{{ false }}">
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(170px,100%),1fr));gap:8px"><sc-for list="{{ dsQuick }}" as="q" hint-placeholder-count="3"><a href="{{ q.url }}" target="_blank" rel="noopener" style="background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);border:1px solid rgba(190,160,255,0.12);border-radius:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35);display:flex;align-items:center;gap:10px;padding:11px 12px;text-decoration:none;color:#ededf2;min-width:0" style-hover="border-color:rgba(168,85,247,0.55)"><span style="width:32px;height:32px;border-radius:9px;flex-shrink:0;background:rgba(168,85,247,0.14);display:flex;align-items:center;justify-content:center"><span style="width:15px;height:15px;flex-shrink:0;background:#c084fc;mask:{{ q.icon }} center / contain no-repeat;-webkit-mask:{{ q.icon }} center / contain no-repeat"></span></span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px"><span style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ q.label }}</span><span style="font-size:11.5px;color:#8b8b99;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ q.sub }}</span></span><span style="width:14px;height:14px;flex-shrink:0;background:#6f6f7d;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/arrow-up-right.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/arrow-up-right.svg) center / contain no-repeat"></span></a></sc-for></div>
+            </sc-if>
+            <sc-if value="{{ dsHasRules }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-radius:12px;border:1px solid oklch(0.82 0.13 80 / 0.45);background:oklch(0.82 0.13 80 / 0.07)">
+                <div style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:oklch(0.82 0.13 80)"><span style="width:14px;height:14px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/triangle-alert.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/triangle-alert.svg) center / contain no-repeat"></span>Regras da marca</div>
+                <div style="display:flex;flex-wrap:wrap;gap:6px"><sc-for list="{{ dsRules }}" as="ru" hint-placeholder-count="2"><span style="font-size:12.5px;line-height:1.4;padding:5px 10px;border-radius:8px;background:rgba(10,8,4,0.35);color:#f1e6c8">{{ ru }}</span></sc-for></div>
+              </div>
+            </sc-if>
+            <div style="display:flex;gap:4px;padding:4px;border-radius:12px;background:rgba(8,7,14,0.6);border:1px solid rgba(190,160,255,0.1);overflow-x:auto">
+              <sc-for list="{{ dsTabs }}" as="t" hint-placeholder-count="5"><button onClick="{{ t.pick }}" style="flex:1 0 auto;min-height:38px;padding:7px 12px;border-radius:9px;border:0;cursor:pointer;font-size:12.5px;font-weight:600;white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:6px;background:{{ t.bg }};color:{{ t.color }}">{{ t.label }}<span style="font-family:'JetBrains Mono';font-size:10.5px;color:#8b8b99">{{ t.count }}</span></button></sc-for>
+            </div>
+            <sc-if value="{{ dsTabEmpty }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:28px 12px;text-align:center;font-size:13px;color:#8b8b99;border:1px dashed rgba(190,160,255,0.15);border-radius:12px">Nada cadastrado nesta seção. Clique em "Editar Dossiê" para preencher.</div>
+            </sc-if>
+            <sc-if value="{{ dsTIdent }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-direction:column;gap:16px">
+                <sc-if value="{{ dsHasLogos }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-direction:column;gap:8px"><span style="font-family:'JetBrains Mono';font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#a78bfa">Logos</span>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap"><sc-for list="{{ dsLogos }}" as="lg" hint-placeholder-count="2"><a href="{{ lg.url }}" target="_blank" rel="noopener" title="{{ lg.label }}" style="width:92px;height:92px;border-radius:12px;background:#ffffff;border:1px solid rgba(190,160,255,0.15);padding:10px;box-sizing:border-box;display:flex;align-items:center;justify-content:center"><img src="{{ lg.url }}" alt="{{ lg.label }}" style="max-width:100%;max-height:100%;object-fit:contain"></a></sc-for></div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ dsHasColors }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-direction:column;gap:8px"><span style="font-family:'JetBrains Mono';font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#a78bfa">Paleta de cores · toque para copiar</span>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap"><sc-for list="{{ dsColors }}" as="co" hint-placeholder-count="3"><button onClick="{{ co.copy }}" title="Copiar {{ co.hex }}" style="background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);border:1px solid rgba(190,160,255,0.12);border-radius:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35);display:flex;align-items:center;gap:9px;padding:6px 12px 6px 6px;cursor:pointer;color:#ededf2"><span style="width:30px;height:30px;border-radius:8px;background:{{ co.hex }};border:1px solid rgba(255,255,255,0.18);box-shadow:inset 0 1px 0 rgba(255,255,255,0.25)"></span><span style="font-family:'JetBrains Mono';font-size:12.5px;text-transform:uppercase">{{ co.hex }}</span><span style="width:12px;height:12px;flex-shrink:0;background:#6f6f7d;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/copy.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/copy.svg) center / contain no-repeat"></span></button></sc-for></div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ dsHasIdFacts }}" hint-placeholder-val="{{ false }}"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));gap:10px"><sc-for list="{{ dsIdFacts }}" as="fa" hint-placeholder-count="2"><div style="background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);border:1px solid rgba(190,160,255,0.12);border-radius:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35);padding:12px 14px;display:flex;flex-direction:column;gap:4px"><span style="display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:#8b8b99;text-transform:uppercase;letter-spacing:0.05em"><span style="width:12px;height:12px;flex-shrink:0;background:#a78bfa;mask:{{ fa.icon }} center / contain no-repeat;-webkit-mask:{{ fa.icon }} center / contain no-repeat"></span>{{ fa.k }}</span><span style="font-size:13.5px;color:#ededf2;line-height:1.5;white-space:pre-wrap">{{ fa.v }}</span></div></sc-for></div></sc-if>
+              </div>
+            </sc-if>
+            <sc-if value="{{ dsTAbout }}" hint-placeholder-val="{{ false }}"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));gap:10px"><sc-for list="{{ dsAbout }}" as="fa" hint-placeholder-count="2"><div style="background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);border:1px solid rgba(190,160,255,0.12);border-radius:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35);padding:12px 14px;display:flex;flex-direction:column;gap:4px"><span style="display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:#8b8b99;text-transform:uppercase;letter-spacing:0.05em"><span style="width:12px;height:12px;flex-shrink:0;background:#a78bfa;mask:{{ fa.icon }} center / contain no-repeat;-webkit-mask:{{ fa.icon }} center / contain no-repeat"></span>{{ fa.k }}</span><span style="font-size:13.5px;color:#ededf2;line-height:1.5;white-space:pre-wrap">{{ fa.v }}</span></div></sc-for></div></sc-if>
+            <sc-if value="{{ dsTSocial }}" hint-placeholder-val="{{ false }}">
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:8px"><sc-for list="{{ dsSocial }}" as="q" hint-placeholder-count="2"><a href="{{ q.url }}" target="_blank" rel="noopener" style="background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);border:1px solid rgba(190,160,255,0.12);border-radius:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35);display:flex;align-items:center;gap:10px;padding:11px 12px;text-decoration:none;color:#ededf2;min-width:0" style-hover="border-color:rgba(168,85,247,0.55)"><span style="width:32px;height:32px;border-radius:9px;flex-shrink:0;background:rgba(168,85,247,0.14);display:flex;align-items:center;justify-content:center"><span style="width:15px;height:15px;flex-shrink:0;background:#c084fc;mask:{{ q.icon }} center / contain no-repeat;-webkit-mask:{{ q.icon }} center / contain no-repeat"></span></span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px"><span style="font-size:11.5px;color:#8b8b99;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ q.label }}</span><span style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ q.sub }}</span></span></a></sc-for></div>
+            </sc-if>
+            <sc-if value="{{ dsTLib }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:14px"><sc-for list="{{ dsLib }}" as="lg" hint-placeholder-count="1">
+                <div style="display:flex;flex-direction:column;gap:8px"><span style="font-family:'JetBrains Mono';font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#a78bfa">{{ lg.title }}</span>
+                  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px"><sc-for list="{{ lg.items }}" as="it" hint-placeholder-count="2">
+                    <a href="{{ it.url }}" target="_blank" rel="noopener" style="background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);border:1px solid rgba(190,160,255,0.12);border-radius:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35);display:flex;flex-direction:column;overflow:hidden;text-decoration:none;color:#ededf2" style-hover="border-color:rgba(168,85,247,0.55)">
+                      <sc-if value="{{ it.isImg }}" hint-placeholder-val="{{ false }}"><img src="{{ it.thumb }}" alt="{{ it.name }}" loading="lazy" style="width:100%;aspect-ratio:1;object-fit:cover;display:block;background:#0b0a12"></sc-if>
+                      <sc-if value="{{ it.noImg }}" hint-placeholder-val="{{ true }}"><span style="width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:rgba(168,85,247,0.08)"><span style="width:28px;height:28px;flex-shrink:0;background:#a78bfa;mask:{{ it.icon }} center / contain no-repeat;-webkit-mask:{{ it.icon }} center / contain no-repeat"></span></span></sc-if>
+                      <span style="padding:7px 9px;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ it.name }}</span>
+                    </a>
+                  </sc-for></div>
+                </div>
+              </sc-for></div>
+            </sc-if>
+            <sc-if value="{{ dsTLinks }}" hint-placeholder-val="{{ false }}">
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:8px"><sc-for list="{{ dsLinks }}" as="q" hint-placeholder-count="2"><a href="{{ q.url }}" target="_blank" rel="noopener" style="background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);border:1px solid rgba(190,160,255,0.12);border-radius:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35);display:flex;align-items:center;gap:10px;padding:11px 12px;text-decoration:none;color:#ededf2;min-width:0" style-hover="border-color:rgba(168,85,247,0.55)"><span style="width:32px;height:32px;border-radius:9px;flex-shrink:0;background:rgba(168,85,247,0.14);display:flex;align-items:center;justify-content:center"><span style="width:15px;height:15px;flex-shrink:0;background:#c084fc;mask:{{ q.icon }} center / contain no-repeat;-webkit-mask:{{ q.icon }} center / contain no-repeat"></span></span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px"><span style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ q.label }}</span><span style="font-size:11.5px;color:#8b8b99;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ q.sub }}</span></span><span style="width:14px;height:14px;flex-shrink:0;background:#6f6f7d;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/arrow-up-right.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/arrow-up-right.svg) center / contain no-repeat"></span></a></sc-for></div>
+            </sc-if>
+          </sc-if>
+          <sc-if value="{{ dsEditing }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:22px">
+              <div style="display:flex;flex-direction:column;gap:10px"><span style="font-family:'JetBrains Mono';font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#a78bfa">Visão geral</span>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));gap:10px"><label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#a1a1b0;min-width:0">Link da logo principal<input value="{{ dsE.logo }}" onChange="{{ dsOn.logo }}" placeholder="https://i.imgur.com/....png" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.15);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;font-size:14px;font-family:inherit;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)"></label><label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#a1a1b0;min-width:0">Segmento<input value="{{ dsE.segmento }}" onChange="{{ dsOn.segmento }}" placeholder="Ex.: Farmácia" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.15);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;font-size:14px;font-family:inherit;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)"></label><label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#a1a1b0;min-width:0">Cidade<input value="{{ dsE.city }}" onChange="{{ dsOn.city }}" placeholder="Ex.: Olho d'Água das Flores" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.15);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;font-size:14px;font-family:inherit;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)"></label><label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#a1a1b0;min-width:0">Responsável / contato<input value="{{ dsE.contactName }}" onChange="{{ dsOn.contactName }}" placeholder="Nome de quem aprova" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.15);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;font-size:14px;font-family:inherit;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)"></label><label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#a1a1b0;min-width:0">Telefone / WhatsApp<input value="{{ dsE.phone }}" onChange="{{ dsOn.phone }}" placeholder="(82) 90000-0000" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.15);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;font-size:14px;font-family:inherit;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)"></label><label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#a1a1b0;min-width:0">Instagram<input value="{{ dsE.instagram }}" onChange="{{ dsOn.instagram }}" placeholder="@perfil" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.15);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;font-size:14px;font-family:inherit;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)"></label><label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#a1a1b0;min-width:0">Pasta do Google Drive<input value="{{ dsE.drive }}" onChange="{{ dsOn.drive }}" placeholder="https://drive.google.com/..." style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.15);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;font-size:14px;font-family:inherit;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)"></label></div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px"><span style="font-family:'JetBrains Mono';font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#a78bfa">Identidade da marca</span>
+                <label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#a1a1b0;min-width:0">Logos alternativas (um link por linha)<textarea value="{{ dsE.logosAlt }}" onChange="{{ dsOn.logosAlt }}" rows="2" maxLength="400" placeholder="https://..." style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.15);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;font-size:14px;font-family:inherit;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35);resize:vertical;line-height:1.5"></textarea></label>
+                <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:600;color:#a1a1b0">Paleta de cores</span>
+                  <div style="display:flex;gap:8px;flex-wrap:wrap"><sc-for list="{{ dsColorRows }}" as="r" hint-placeholder-count="0">
+                    <div style="display:flex;align-items:center;gap:6px;padding:5px;border-radius:11px;border:1px solid rgba(190,160,255,0.15);background:rgba(8,7,14,0.6)">
+                      <input type="color" value="{{ r.pick }}" onChange="{{ r.onPick }}" aria-label="Escolher cor" style="width:36px;height:36px;border:0;padding:0;background:transparent;cursor:pointer">
+                      <input value="{{ r.hex }}" onChange="{{ r.onHex }}" maxLength="7" style="width:92px;min-height:36px;padding:6px 8px;border-radius:8px;border:1px solid rgba(190,160,255,0.15);background:transparent;color:#ededf2;font-family:'JetBrains Mono';font-size:13px;outline:none;text-transform:uppercase">
+                      <button onClick="{{ r.remove }}" aria-label="Remover cor" style="width:32px;height:32px;border-radius:8px;border:0;background:transparent;color:#8b8b99;display:flex;align-items:center;justify-content:center;cursor:pointer"><span style="width:14px;height:14px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/x.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/x.svg) center / contain no-repeat"></span></button>
+                    </div>
+                  </sc-for>
+                  <button onClick="{{ dsAddColor }}" style="min-height:40px;padding:8px 13px;border-radius:10px;border:1px solid rgba(190,160,255,0.2);background:transparent;color:#e9d5ff;font-size:12.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none"><span style="width:14px;height:14px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/plus.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/plus.svg) center / contain no-repeat"></span>Adicionar cor</button></div>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));gap:10px"><label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#a1a1b0;min-width:0">Fontes utilizadas<input value="{{ dsE.fonts }}" onChange="{{ dsOn.fonts }}" placeholder="Ex.: Montserrat, Poppins" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.15);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;font-size:14px;font-family:inherit;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)"></label><label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#a1a1b0;min-width:0">Slogan<input value="{{ dsE.slogan }}" onChange="{{ dsOn.slogan }}" placeholder="" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.15);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;font-size:14px;font-family:inherit;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)"></label><label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#a1a1b0;min-width:0">Tom de comunicação<input value="{{ dsE.tom }}" onChange="{{ dsOn.tom }}" placeholder="Ex.: próximo e acolhedor" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.15);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;font-size:14px;font-family:inherit;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)"></label></div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px"><span style="font-family:'JetBrains Mono';font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#a78bfa">Redes sociais</span>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));gap:10px"><label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#a1a1b0;min-width:0">Facebook<input value="{{ dsE.facebook }}" onChange="{{ dsOn.facebook }}" placeholder="Link ou nome da página" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.15);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;font-size:14px;font-family:inherit;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)"></label><label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#a1a1b0;min-width:0">TikTok<input value="{{ dsE.tiktok }}" onChange="{{ dsOn.tiktok }}" placeholder="@perfil" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.15);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;font-size:14px;font-family:inherit;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)"></label><label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#a1a1b0;min-width:0">Site<input value="{{ dsE.site }}" onChange="{{ dsOn.site }}" placeholder="https://..." style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.15);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;font-size:14px;font-family:inherit;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)"></label></div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px"><span style="font-family:'JetBrains Mono';font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#a78bfa">Sobre o cliente · textos curtos</span>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));gap:10px"><label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#a1a1b0;min-width:0">Descrição resumida<textarea value="{{ dsE.descricao }}" onChange="{{ dsOn.descricao }}" rows="2" maxLength="400" placeholder="" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.15);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;font-size:14px;font-family:inherit;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35);resize:vertical;line-height:1.5"></textarea></label><label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#a1a1b0;min-width:0">Público-alvo<textarea value="{{ dsE.publico }}" onChange="{{ dsOn.publico }}" rows="2" maxLength="400" placeholder="" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.15);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;font-size:14px;font-family:inherit;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35);resize:vertical;line-height:1.5"></textarea></label><label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#a1a1b0;min-width:0">Principais produtos<textarea value="{{ dsE.produtos }}" onChange="{{ dsOn.produtos }}" rows="2" maxLength="400" placeholder="" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.15);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;font-size:14px;font-family:inherit;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35);resize:vertical;line-height:1.5"></textarea></label><label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#a1a1b0;min-width:0">Principais serviços<textarea value="{{ dsE.servicos }}" onChange="{{ dsOn.servicos }}" rows="2" maxLength="400" placeholder="" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.15);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;font-size:14px;font-family:inherit;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35);resize:vertical;line-height:1.5"></textarea></label><label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#a1a1b0;min-width:0">Diferenciais<textarea value="{{ dsE.diferenciais }}" onChange="{{ dsOn.diferenciais }}" rows="2" maxLength="400" placeholder="" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.15);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;font-size:14px;font-family:inherit;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35);resize:vertical;line-height:1.5"></textarea></label></div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px"><span style="font-family:'JetBrains Mono';font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#a78bfa">Biblioteca visual</span>
+                <div style="display:flex;flex-direction:column;gap:8px">
+              <sc-for list="{{ dsLibRows }}" as="r" hint-placeholder-count="0">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(150px,100%),1fr)) 44px;gap:6px;align-items:center;padding:8px;border-radius:12px;background:rgba(8,7,14,0.5);border:1px solid rgba(190,160,255,0.1)">
+                  <select value="{{ r.type }}" onChange="{{ r.onType }}" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.15);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;font-size:14px;font-family:inherit;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)"><sc-for list="{{ dsLibTypes }}" as="o" hint-placeholder-count="0"><option value="{{ o }}">{{ o }}</option></sc-for></select>
+                  <input value="{{ r.name }}" onChange="{{ r.onName }}" placeholder="Nome" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.15);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;font-size:14px;font-family:inherit;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)">
+                  <input value="{{ r.url }}" onChange="{{ r.onUrl }}" placeholder="Link do arquivo ou pasta" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.15);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;font-size:14px;font-family:inherit;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)">
+                  <button onClick="{{ r.remove }}" aria-label="Remover" style="width:44px;height:44px;border-radius:10px;border:1px solid rgba(190,160,255,0.15);background:transparent;color:oklch(0.75 0.17 25);display:flex;align-items:center;justify-content:center;cursor:pointer"><span style="width:15px;height:15px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/trash-2.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/trash-2.svg) center / contain no-repeat"></span></button>
+                </div>
+              </sc-for>
+              <button onClick="{{ dsAddLib }}" style="min-height:40px;padding:8px 13px;border-radius:10px;border:1px solid rgba(190,160,255,0.2);background:transparent;color:#e9d5ff;font-size:12.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;align-self:flex-start"><span style="width:14px;height:14px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/plus.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/plus.svg) center / contain no-repeat"></span>Adicionar material</button>
+            </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px"><span style="font-family:'JetBrains Mono';font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#a78bfa">Links importantes</span>
+                <div style="display:flex;flex-direction:column;gap:8px">
+              <sc-for list="{{ dsLinkRows }}" as="r" hint-placeholder-count="0">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(150px,100%),1fr)) 44px;gap:6px;align-items:center;padding:8px;border-radius:12px;background:rgba(8,7,14,0.5);border:1px solid rgba(190,160,255,0.1)">
+                  <select value="{{ r.type }}" onChange="{{ r.onType }}" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.15);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;font-size:14px;font-family:inherit;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)"><sc-for list="{{ dsLinkTypes }}" as="o" hint-placeholder-count="0"><option value="{{ o }}">{{ o }}</option></sc-for></select>
+                  <input value="{{ r.name }}" onChange="{{ r.onName }}" placeholder="Nome" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.15);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;font-size:14px;font-family:inherit;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)">
+                  <input value="{{ r.url }}" onChange="{{ r.onUrl }}" placeholder="https://..." style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.15);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;font-size:14px;font-family:inherit;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35)">
+                  <button onClick="{{ r.remove }}" aria-label="Remover" style="width:44px;height:44px;border-radius:10px;border:1px solid rgba(190,160,255,0.15);background:transparent;color:oklch(0.75 0.17 25);display:flex;align-items:center;justify-content:center;cursor:pointer"><span style="width:15px;height:15px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/trash-2.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/trash-2.svg) center / contain no-repeat"></span></button>
+                </div>
+              </sc-for>
+              <button onClick="{{ dsAddLink }}" style="min-height:40px;padding:8px 13px;border-radius:10px;border:1px solid rgba(190,160,255,0.2);background:transparent;color:#e9d5ff;font-size:12.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;align-self:flex-start"><span style="width:14px;height:14px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/plus.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/plus.svg) center / contain no-repeat"></span>Adicionar link</button>
+            </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px"><span style="font-family:'JetBrains Mono';font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:#a78bfa;color:oklch(0.82 0.13 80)">Regras da marca</span>
+                <label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#a1a1b0;min-width:0">Uma regra por linha<textarea value="{{ dsE.rules }}" onChange="{{ dsOn.rules }}" rows="4" placeholder="Ex.: Não publicar preços sem autorização" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid rgba(190,160,255,0.15);background:linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72);color:#ededf2;font-size:14px;font-family:inherit;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.045), 0 1px 2px rgba(0,0,0,0.35);resize:vertical;line-height:1.5"></textarea></label>
+              </div>
+              <div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;padding-top:6px;border-top:1px solid rgba(190,160,255,0.1)"><button onClick="{{ dsCancel }}" style="min-height:40px;padding:8px 13px;border-radius:10px;border:1px solid rgba(190,160,255,0.2);background:transparent;color:#e9d5ff;font-size:12.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;color:#a1a1b0">Cancelar</button><button onClick="{{ dsSave }}" style="min-height:42px;padding:9px 16px;border-radius:10px;border:0;background:linear-gradient(180deg, #c596ff 0%, #a855f7 48%, #8a3cf0 100%);color:#0a0a0f;font-size:13.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.4), inset 0 -2px 0 rgba(40,8,90,0.25), 0 1px 0 rgba(0,0,0,0.4), 0 12px 26px -12px rgba(168,85,247,0.95)"><span style="width:15px;height:15px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/check.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/check.svg) center / contain no-repeat"></span>Salvar dossiê</button></div>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
   <sc-if value="{{ qrZoomOpen }}" hint-placeholder-val="{{ false }}">
     <div onClick="{{ qrZoomClose }}" style="position:fixed;inset:0;z-index:95;background:rgba(0,0,0,0.88);display:flex;align-items:center;justify-content:center;padding:16px">
       <div onClick="{{ stop }}" style="width:min(460px,100%);max-height:calc(100dvh - 32px);overflow-y:auto;background:linear-gradient(180deg, rgba(38,28,60,0.58) 0%, rgba(17,14,27,0.62) 100%);border:1px solid #2a2140;border-radius:20px;padding:18px;display:flex;flex-direction:column;align-items:center;gap:14px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.07), 0 1px 0 rgba(0,0,0,0.5), 0 22px 44px -24px rgba(0,0,0,0.9), 0 10px 30px -18px rgba(124,58,237,0.35);backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%)">
@@ -3257,7 +3407,7 @@ option{background:#111117;color:#ededf2}
           <div style="padding:28px 12px;text-align:center;font-size:13px;color:#6f6f7d">Nenhuma notificação.</div>
         </sc-if>
         <sc-for list="{{ myNotifs }}" as="n" hint-placeholder-count="3">
-          <div onClick="{{ n.read }}" style="display:flex;gap:12px;padding:12px;border-radius:11px;cursor:pointer;background:{{ n.bg }}" style-hover="background:#15151d">
+          <div onClick="{{ n.open }}" style="display:flex;gap:12px;padding:12px;border-radius:11px;cursor:pointer;background:{{ n.bg }}" style-hover="background:#15151d">
             <div style="width:32px;height:32px;border-radius:9px;flex-shrink:0;background:{{ n.lvBg }};display:flex;align-items:center;justify-content:center">
               <span style="width:15px;height:15px;background:{{ n.lvColor }};mask:{{ n.icon }} center / contain no-repeat;-webkit-mask:{{ n.icon }} center / contain no-repeat"></span>
             </div>
@@ -4031,6 +4181,7 @@ class Component extends DCLogic {
   componentDidMount() {
     this._r = () => this.setState({ w: window.innerWidth });
     window.addEventListener('resize', this._r);
+    this._kd = e => this.onKey(e); window.addEventListener('keydown', this._kd, true);
     try {
       const vp = document.querySelector('meta[name="viewport"]') || document.head.appendChild(Object.assign(document.createElement('meta'), { name:'viewport' }));
       vp.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover');
@@ -4071,7 +4222,7 @@ class Component extends DCLogic {
     setTimeout(() => this.runAuto(), 0);
     this._tk = setInterval(() => { const s = this.state; if (s.user && (s.viewId || s.tab === 'metrics') && s.posts.some(p => p.timer && p.timer.running)) this.forceUpdate(); }, 20000);
   }
-  componentWillUnmount() { window.removeEventListener('resize', this._r); window.removeEventListener('storage', this._st); if (this._sb && this._ch) this._sb.removeChannel(this._ch); }
+  componentWillUnmount() { window.removeEventListener('keydown', this._kd, true); window.removeEventListener('resize', this._r); window.removeEventListener('storage', this._st); if (this._sb && this._ch) this._sb.removeChannel(this._ch); }
   persist() {
     const s = this.state, l = this._last;
     const ch = l ? COLS.filter(k => l[k] !== s[k]) : COLS;
@@ -4215,6 +4366,53 @@ class Component extends DCLogic {
     const id = Math.random().toString(36).slice(2);
     this.setState(s => ({ toasts:[...s.toasts, { id, title, body, icon:ICON(icon || 'bell-ring') }].slice(-4) }));
     setTimeout(() => this.setState(s => ({ toasts:s.toasts.filter(t => t.id !== id) })), 5500);
+  }
+  onKey(e) {
+    const s = this.state; if (!s.user || s.apToken) return;
+    const k = String(e.key || '').toLowerCase();
+    if ((e.ctrlKey || e.metaKey) && !e.altKey && (k === 'p' || e.code === 'KeyP')) {
+      e.preventDefault(); e.stopPropagation(); if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+      this.setState({ searchOpen:true, sq: s.searchOpen ? s.sq : '', sqSel:0, bellOpen:false, navOpen:false });
+      setTimeout(() => { const i = document.querySelector('[data-sq-input]'); if (i) { i.focus(); if (i.select) i.select(); } }, 40);
+      return;
+    }
+    if (!s.searchOpen) return;
+    const list = this._sqFlat || [];
+    if (k === 'escape') { e.preventDefault(); this.setState({ searchOpen:false, sq:'', sqSel:0 }); return; }
+    if (k === 'arrowdown' || k === 'arrowup') {
+      e.preventDefault(); if (!list.length) return;
+      const n = ((s.sqSel || 0) + (k === 'arrowdown' ? 1 : -1) + list.length) % list.length;
+      this.setState({ sqSel:n });
+      setTimeout(() => { const el = document.getElementById('sq-r-' + n), box = document.querySelector('[data-sqbox]'); if (!el || !box) return;
+        const top = el.offsetTop, bot = top + el.offsetHeight; if (top < box.scrollTop + 8) box.scrollTop = top - 36; else if (bot > box.scrollTop + box.clientHeight - 8) box.scrollTop = bot - box.clientHeight + 12; }, 20);
+      return;
+    }
+    if (k === 'enter') { const it = list[Math.min(s.sqSel || 0, list.length - 1)]; if (it) { e.preventDefault(); it.go(); } }
+  }
+  charge(cid) {
+    if (this.userOf(this.state.user).kind !== 'admin') return;
+    if (this._waCharge) this._waCharge(cid); else this.goTo('whatsapp');
+  }
+  goNotif(n) {
+    const s = this.state, L = n.link || {}, body = String(n.body || ''), t = (String(n.title || '') + ' ' + body).toLowerCase();
+    const isAdm = this.userOf(s.user).kind === 'admin';
+    this.setState(st => ({ bellOpen:false, notifs:st.notifs.map(x => x.id === n.id ? { ...x, read:true } : x) }));
+    const cliIn = () => s.clients.filter(c => c.name && body.includes(c.name)).sort((a, b) => b.name.length - a.name.length)[0];
+    if (L.post && s.posts.some(p => p.id === L.post)) return this.setState({ viewId:L.post });
+    if (L.shoot) return this.setState({ shootId:L.shoot, shootTab:'resumo' });
+    if (L.tab) return this.goTo(L.tab, L.extra || {});
+    if (/pagamento recebido|pagamento registrado/.test(t)) return this.goTo('payments');
+    if (/contrato/.test(t)) return this.goTo(isAdm ? 'contracts' : 'clients');
+    if (/recebimento|cobran|mensalidade|inadimpl|pagamento .*atras/.test(t)) { const c = cliIn(); if (c && isAdm) return this.charge(c.id); return this.goTo(isAdm ? 'finance' : 'dashboard', isAdm ? { finFilter:'atrasado' } : {}, 'fin-table'); }
+    if (/ideia/.test(t)) return this.goTo('ideas');
+    if (/stories|roteiros da/.test(t)) return this.goTo('stories');
+    if (/grava|capta/.test(t)) { const c = cliIn(); const sh = c && arr(s.shoots).filter(x => x.client === c.id).sort((a, b) => Math.abs(diffDays(a.date)) - Math.abs(diffDays(b.date)))[0];
+      if (sh) return this.setState({ shootId:sh.id, shootTab:'resumo', scIdx:null, scd:null, shMsgDraft:null, shDriveDraft:null }); return this.goTo('calendar'); }
+    const c0 = cliIn();
+    const p = s.posts.filter(p => p.title && body.includes(p.title)).sort((a, b) => (c0 && b.client === c0.id ? 1 : 0) - (c0 && a.client === c0.id ? 1 : 0) || b.title.length - a.title.length)[0];
+    if (p) return this.setState({ viewId:p.id });
+    if (/cliente/.test(t) && c0) return this.goTo('clients', { clientView:c0.kind === 'avulso' ? 'avulso' : 'mensal', dsId:c0.id, dsEdit:null, dsTab:'id' });
+    this.toast('Notificação lida', 'Esta notificação não tem um item vinculado.', 'bell');
   }
   notify(arr) {
     const now = Date.now();
@@ -4875,24 +5073,28 @@ class Component extends DCLogic {
     const lateFin = s.fin.filter(f => finStatus(f) === 'atrasado');
 
     const go = tab => () => { this.setState({ tab, navOpen:false, boardFocus:null, dayOpen:false, ownerFilter:null, viewId:null }); window.scrollTo(0, 0); };
-    const navDec = n => { const a = s.tab === n.id; return { ...n, go:go(n.id), hasBadge:!!n.badge, bg: a ? 'rgba(168,85,247,0.14)' : 'transparent', color: a ? '#f3e8ff' : '#9a9aa8', iconColor: a ? '#c084fc' : '#6f6f7d' }; };
+    const navDec = n => { const a = s.tab === n.id; return { ...n, go:go(n.id), hasBadge:!!n.badge, showBadge:!!n.badge && !navMiniOn, bg: a ? 'rgba(168,85,247,0.14)' : 'transparent', color: a ? '#f3e8ff' : '#9a9aa8', iconColor: a ? '#c084fc' : '#6f6f7d' }; };
+    const navMiniOn = !isMobile && (s.navMini ?? (lsGet('rise_navmini') ? true : s.w < 1180));
+    const sideW = navMiniOn ? 76 : 248;
     const navOps = [
       { id:'dashboard', label: isAdmin ? 'Dashboard Geral' : 'Minha Área', icon:ICON('layout-dashboard') },
       { id:'board', label:'Produção por Cliente', icon:ICON('kanban'), badge: isAdmin ? pending.length : mine.filter(p => ACTIVE.includes(p.status)).length },
       { id:'calendar', label:'Calendário Geral', icon:ICON('calendar-days') },
+      { id:'clients', label:'Clientes', icon:ICON('building-2'), badge:critical },
+    ].map(navDec);
+    const navMgmt = [
+      ...(isAdmin ? [{ id:'finance', label:'Financeiro', icon:ICON('wallet'), badge:lateFin.length }, { id:'team', label:'Equipe', icon:ICON('users-round') }] : []),
+    ].map(navDec);
+    const navMore = [
       { id:'stories', label:'Planejamento Semanal', icon:ICON('calendar-check') },
       { id:'ideas', label:'Banco de Ideias', icon:ICON('lightbulb') },
       { id:'metrics', label:'Métricas de produção', icon:ICON('chart-no-axes-column') },
-    ].map(navDec);
-    const navMgmt = [
-      { id:'clients', label:'Clientes', icon:ICON('building-2'), badge:critical },
-      ...(isAdmin ? [{ id:'finance', label:'Financeiro', icon:ICON('wallet'), badge:lateFin.length }] : []),
       { id:'whatsapp', label:'Central de WhatsApp', icon:ICON('message-circle') },
       ...(isAdmin ? [{ id:'contracts', label:'Contratos', icon:ICON('file-pen-line'), badge:arr(s.contracts).filter(ct => ['avencer','vencido'].includes(ctStatus(ct, keyOf(TODAY))[0])).length }] : []),
       ...(isAdmin ? [{ id:'proposals', label:'Propostas', icon:ICON('file-text'), badge:arr(s.proposals).filter(p => ['enviada', 'negociacao'].includes(p.status)).length }, { id:'profit', label:'Rentabilidade', icon:ICON('trending-up') }, { id:'report', label:'Relatório mensal', icon:ICON('presentation') }] : []),
-      ...(isAdmin ? [{ id:'team', label:'Equipe', icon:ICON('users-round') }] : []),
       { id:'payments', label: isAdmin ? 'Pagamentos' : 'Meus pagamentos', icon:ICON('hand-coins'), badge: isAdmin ? arr(s.payments).filter(p => p.status === 'pendente').length : 0 },
     ].map(navDec);
+    const moreAuto = navMore.some(n => n.id === s.tab), moreOn = !navMiniOn && (s.moreOpen ?? moreAuto);
 
     const titles = { dashboard: isAdmin ? 'Dashboard Geral' : 'Minha Área de Trabalho', board:'Produção por Cliente', calendar:'Calendário Geral', clients:'Clientes', finance:'Financeiro', payments: isAdmin ? 'Pagamentos' : 'Meus pagamentos' };
     titles.team = 'Equipe'; titles.proposals = 'Propostas'; titles.profit = 'Rentabilidade por cliente'; titles.report = 'Relatório mensal'; titles.stories = 'Planejamento Semanal'; titles.ideas = 'Banco de Ideias'; titles.metrics = 'Métricas de produção'; titles.whatsapp = 'Central de WhatsApp'; titles.contracts = 'Contratos';
@@ -4945,9 +5147,7 @@ class Component extends DCLogic {
       const fatMes = s.fin.filter(f => f.due.startsWith(monthKey)).reduce((a, f) => a + (Number(f.amount) || 0), 0);
       roleLine = `${pending.length} conteúdo(s) aguardando aprovação, ${lateAll.length} demanda(s) atrasada(s) e ${todayAll.length} publicação(ões) hoje.`;
       kpis = [
-        { go: () => this.goTo('board', { boardFocus:null, clientFilter:'all' }), label:'Entregas do mês', value:`${pubMonth}/${all.length}`, sub:`${monthPct}% publicado`, icon:ICON('trending-up'), color:'#ededf2' },
         { go: () => this.goTo('clients', { clientView:'mensal' }), label:'Clientes ativos', value:clients.length, sub:`${critical} em estado crítico`, icon:ICON('building-2'), color:'#ededf2' },
-        { go: () => this.goTo('clients', { clientView:'mensal' }), label:'Saúde média (SLA)', value:`${avgHealth}%`, sub:'média de todos os clientes', icon:ICON('heart-pulse'), color:healthColor(avgHealth) },
         { go: () => this.goTo('board', { boardFocus:'approval', clientFilter:'all' }), label:'Aguardando aprovação', value:pending.length, sub:'prontos para revisão', icon:ICON('shield-check'), color:'#ededf2' },
         { go: () => this.goTo('board', { boardFocus:'late', clientFilter:'all' }), label:'Demandas atrasadas', value:lateAll.length, sub:'reduzem a saúde dos clientes', icon:ICON('alarm-clock'), color: lateAll.length ? RED : '#ededf2' },
         { go: () => this.goTo('finance', { finFilter:'all', finY:TODAY.getFullYear(), finM:TODAY.getMonth() }), label:'Faturamento do mês', value:BRL(fatMes), sub:'ver no financeiro', icon:ICON('wallet'), color:'#e9d5ff' },
@@ -5077,7 +5277,8 @@ class Component extends DCLogic {
       const pk = PACKAGES.find(x => x.id === c.pkg) || PACKAGES[0];
       const hc = healthColor(h.score), cp = clientPay(c);
       const curEntry = s.fin.find(f => f.auto === `${c.id}-${curMK}`);
-      return { openIdeas: () => this.goTo('ideas', { ideaFilter:{ cat:'all', st:'all', client:c.id, period:'all' } }), openStories: () => this.goTo('stories', { stClient:c.id }), payMethod:c.payMethod || 'PIX', payLabel:cp.label, payColor:cp.color, payTint:tint(cp.color, 15),
+      return { openDossie: () => this.setState({ dsId:c.id, dsEdit:null, dsTab:'id' }), canCharge: isAdmin && cp.color === RED, charge: () => this.charge(c.id),
+        openIdeas: () => this.goTo('ideas', { ideaFilter:{ cat:'all', st:'all', client:c.id, period:'all' } }), openStories: () => this.goTo('stories', { stClient:c.id }), payMethod:c.payMethod || 'PIX', payLabel:cp.label, payColor:cp.color, payTint:tint(cp.color, 15),
         payText: cp.curAmt ? `Mês atual: ${BRL(cp.curPaid)} pago de ${BRL(cp.curAmt)}` : `Mensalidade ${BRL(c.monthly)} · vence dia ${c.dueDay || 10}`,
         name:c.name, color:c.color, tint:tint(c.color, 16), initials:c.name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase(),
         pkgName:pk.name, pkgDesc:pk.desc, pct:h.score, hColor:hc, level:h.level,
@@ -5189,7 +5390,7 @@ class Component extends DCLogic {
       return { methodLabel:[f.method, (f.parcels || 1) > 1 ? 'Parcela ' + f.parcel + '/' + f.parcels : ''].filter(Boolean).join(' · '), hasMethod:!!(f.method || (f.parcels || 1) > 1), clientName:c.name, color:c.color, desc:f.desc, dueLabel:`${pad(dd.getDate())}/${pad(dd.getMonth() + 1)}/${dd.getFullYear()}`, amountLabel:BRL(f.amount),
         stLabel:st.label, stColor:st.color, stTint:tint(st.color, 15),
         paidLabel:BRL(finPaid(f)), paidColor: finPaid(f) >= finAmt(f) ? GREEN : finPaid(f) > 0 ? '#c084fc' : '#6f6f7d',
-        toggleLabel: finPaid(f) >= finAmt(f) ? 'Desfazer' : 'Marcar pago',
+        toggleLabel: finPaid(f) >= finAmt(f) ? 'Desfazer' : 'Marcar pago', canCharge: finPaid(f) < finAmt(f), charge: () => this.charge(f.client),
         toggle: () => this.setState(x => ({ fin:x.fin.map(y => y.id === f.id ? (finPaid(y) >= finAmt(y) ? { ...y, status:'pendente', paidAmount:0 } : { ...y, status:'recebido', paidAmount:finAmt(y) }) : y) })),
         pay: () => { const v = window.prompt('Valor efetivamente pago (R$):', String(finPaid(f))); if (v == null) return; const n = Math.min(finAmt(f), numIn(v));
           this.setState(x => ({ fin:x.fin.map(y => y.id === f.id ? { ...y, paidAmount:n, status: n >= finAmt(y) ? 'recebido' : 'pendente' } : y) })); },
@@ -5206,7 +5407,7 @@ class Component extends DCLogic {
     const myNotifs = myN.filter(n => nLvF === 'all' || nLevel(n) === nLvF).slice(0, 40).map(n => ({ title:n.title, body:n.body, timeLabel:timeAgo(n.ts), icon:ICON(n.icon || 'bell-ring'),
       lvLabel:NLV[nLevel(n)].label, lvColor:NLV[nLevel(n)].color, lvBg:tint(NLV[nLevel(n)].color, 16), hasRepeat:(n.repeat || 1) > 1, repeatLabel:`repetida ${n.repeat}x`,
       bg: n.read ? 'transparent' : 'rgba(168,85,247,0.07)', dot: n.read ? 'transparent' : '#a855f7',
-      read: () => this.setState(st => ({ notifs:st.notifs.map(x => x.id === n.id ? { ...x, read:true } : x) })) }));
+      read: () => this.setState(st => ({ notifs:st.notifs.map(x => x.id === n.id ? { ...x, read:true } : x) })), open: () => this.goNotif(n) }));
 
     // Demand modal
     const f = s.form || {};
@@ -5218,7 +5419,7 @@ class Component extends DCLogic {
       const badge = kind === 'late' ? `Atrasado ${d.late}d` : kind === 'today' ? `Hoje · ${p.time}` : dateLabel(p.date);
       const col = kind === 'late' ? RED : kind === 'today' ? AMBER : '#c084fc';
       return { title:p.title, meta:`${d.clientName} · ${p.type}${isAdmin ? ' · ' + d.ownerName : ''}`, clientColor:d.clientColor,
-        badge, badgeColor:col, badgeTint:tint(col, 16), border: kind === 'late' ? tint(RED, 45) : '#1c1c25' }; };
+        badge, badgeColor:col, badgeTint:tint(col, 16), border: kind === 'late' ? tint(RED, 45) : '#1c1c25', open: () => this.setState({ briefing:false, viewId:p.id }) }; };
     const bLate = open.filter(p => diffDays(p.due || p.date) < 0).sort((a, b) => a.date.localeCompare(b.date));
     const bToday = open.filter(p => diffDays(p.due || p.date) === 0);
     const bSoon = open.filter(p => { const d = diffDays(p.due || p.date); return d >= 1 && d <= 3; });
@@ -5236,7 +5437,7 @@ class Component extends DCLogic {
       alertText: `${bLate.length} ordem(ns) de serviço em atraso · ${bToday.length} vence(m) hoje · ${bSoon.length} nos próximos 3 dias`,
       alertColor: bLate.length ? RED : AMBER, alertBorder: tint(bLate.length ? RED : AMBER, 45), alertBg: tint(bLate.length ? RED : AMBER, 8),
       kpiMin: isMobile ? 145 : 180, gridGap: isMobile ? 10 : 14, tapSize: isMobile ? 38 : 28, contentPadB: isMobile ? 96 : 32, toastBottom: isMobile ? 84 : 16,
-      bottomNav: [...[...navOps, ...navMgmt].filter(n => ['dashboard','board','stories','calendar'].includes(n.id)).map(n => ({ ...n, short:SHORT[n.id] || n.label, tabColor: s.tab === n.id ? '#c084fc' : '#8b8b99' })),
+      bottomNav: [...[...navOps, ...navMgmt, ...navMore].filter(n => ['dashboard','board','stories','calendar'].includes(n.id)).map(n => ({ ...n, short:SHORT[n.id] || n.label, tabColor: s.tab === n.id ? '#c084fc' : '#8b8b99' })),
         { id:'menu', short:'Menu', icon:ICON('menu'), go: () => this.setState({ navOpen:true }), hasBadge:false, tabColor:'#8b8b99' }],
     };
     // Production panel
@@ -5818,9 +6019,11 @@ class Component extends DCLogic {
       arr(s.contracts).forEach(ct => { const st = ctStatus(ct, tk5)[0], dd = diffDays(ct.end);
         if (st === 'vencido') pushCi('urgente', 'file-x', 'Contrato vencido · ' + this.clientName(ct.client), 'Venceu em ' + fmtD(ct.end), 'Renovar', () => this.goTo('contracts', { ctFilter:'vencido' }));
         else if (st === 'avencer' && dd <= 15) pushCi(dd <= 7 ? 'urgente' : 'atencao', 'file-clock', 'Contrato vence em ' + dd + ' dia(s) · ' + this.clientName(ct.client), 'Fim em ' + fmtD(ct.end), 'Ver', () => this.goTo('contracts', { ctFilter:'avencer' })); });
-      if (lateFin.length) pushCi('urgente', 'receipt', lateFin.length + ' recebimento(s) em atraso', BRL2(lateFin.reduce((a, f) => a + finAmt(f) - finPaid(f), 0)) + ' a receber', 'Cobrar', () => this.goTo('finance', { finFilter:'atrasado' }, 'fin-table'));
-      const dueTodayFin = s.fin.filter(f => f.due === tk5 && finStatus(f) !== 'recebido');
-      if (dueTodayFin.length) pushCi('atencao', 'calendar-check', dueTodayFin.length + ' recebimento(s) vencendo hoje', dueTodayFin.map(f => this.clientName(f.client)).slice(0, 3).join(', '), 'Ver', () => this.goTo('finance', { finFilter:'pendente' }, 'fin-table'));
+      const byCli = l => { const m = {}; l.forEach(f => { (m[f.client] = m[f.client] || []).push(f); }); return Object.entries(m); };
+      byCli(lateFin).forEach(([cid, l]) => { const due = l.map(f => f.due).sort()[0];
+        pushCi('urgente', 'receipt', 'Pagamento em atraso · ' + this.clientName(cid), BRL2(l.reduce((a, f) => a + finAmt(f) - finPaid(f), 0)) + ' a receber · venceu em ' + fmtD(due) + ' (há ' + Math.max(1, -diffDays(due)) + ' dia(s))', 'Cobrar no WhatsApp', () => this.charge(cid)); });
+      const dueTodayFin = s.fin.filter(f => f.due === tk5 && finStatus(f) !== 'recebido' && finPaid(f) < finAmt(f));
+      byCli(dueTodayFin).forEach(([cid, l]) => pushCi('atencao', 'calendar-check', 'Pagamento vence hoje · ' + this.clientName(cid), BRL2(l.reduce((a, f) => a + finAmt(f) - finPaid(f), 0)) + ' a receber', 'Lembrar no WhatsApp', () => this.charge(cid)));
       const payDue = arr(s.payments).filter(p => p.status === 'pendente' && (p.date || '') <= tk5);
       if (payDue.length) pushCi('atencao', 'hand-coins', payDue.length + ' pagamento(s) pendente(s) vencido(s)', BRL2(payDue.reduce((a, p) => a + (Number(p.amount) || 0), 0)), 'Pagar', () => this.goTo('payments', { paySt:'pendente', payPeriod:'tudo' }));
       arr(s.proposals).filter(p => ['enviada', 'negociacao'].includes(p.status) && p.validUntil && diffDays(p.validUntil) >= 0 && diffDays(p.validUntil) <= 3).forEach(p => pushCi('info', 'file-text', 'Proposta vence em ' + diffDays(p.validUntil) + ' dia(s) · ' + p.prospect, 'Faça o follow-up', 'Ver', () => this.goTo('proposals', { prFilter:p.status })));
@@ -5840,8 +6043,9 @@ class Component extends DCLogic {
     const grp5 = [];
     if (qok) {
       const g = (title, icon, items) => { if (items.length) grp5.push({ title, icon:ICON(icon), count:String(items.length), items:items.slice(0, 6) }); };
+      g('Páginas', 'layout-grid', [...navOps, ...navMgmt, ...navMore].filter(n => hit(n.label, SHORT[n.id], titles[n.id], subs[n.id])).map(n => ({ title:n.label, sub:subs[n.id] || 'Abrir página', dot:'#a855f7', go: () => { closeS(); this.goTo(n.id); } })));
       g('Demandas', 'list-todo', scope5.filter(p => hit(p.title, p.brief, this.clientName(p.client), p.service, p.type)).map(p => ({ title:p.title, sub:this.clientName(p.client) + ' · ' + (STATUS.find(x => x.id === p.status) || STATUS[0]).short + ' · ' + this.userOf(p.owner).name, dot:clientOf(p.client).color, go: () => closeS({ viewId:p.id }) })));
-      g('Clientes', 'building-2', clients.filter(c => hit(c.name, c.service, (c.ai || {}).segmento)).map(c => ({ title:c.name, sub: c.kind === 'avulso' ? 'Cliente avulso' : 'Cliente mensal', dot:c.color, go: () => { closeS(); this.goTo('clients', { clientView:c.kind === 'avulso' ? 'avulso' : 'mensal' }); } })));
+      g('Clientes', 'building-2', clients.filter(c => hit(c.name, c.service, (c.ai || {}).segmento)).map(c => ({ title:c.name, sub: c.kind === 'avulso' ? 'Cliente avulso' : 'Cliente mensal', dot:c.color, go: () => { closeS(); this.goTo('clients', { clientView:c.kind === 'avulso' ? 'avulso' : 'mensal', dsId:c.id, dsEdit:null, dsTab:'id' }); } })));
       g('Ideias', 'lightbulb', arr(s.ideas).filter(i => hit(i.title, i.desc, i.cat)).map(i => ({ title:i.title, sub:i.cat + (i.client ? ' · ' + this.clientName(i.client) : ''), dot:'#c084fc', go: () => { closeS(); this.goTo('ideas', { ideaForm:{ ...i } }); } })));
       g('Gravações', 'video', arr(s.shoots).filter(x => (isAdmin || x.owner === s.user) && hit(this.clientName(x.client), x.location, x.notes, x.date && fmtD(x.date))).map(x => ({ title:'Gravação · ' + this.clientName(x.client), sub:fmtD(x.date) + (x.location ? ' · ' + x.location : ''), dot:'#f0abfc', go: () => closeS({ shootId:x.id, shootTab:'resumo' }) })));
       if (isAdmin) {
@@ -5851,6 +6055,9 @@ class Component extends DCLogic {
       }
       g('Pagamentos', 'hand-coins', (isAdmin ? arr(s.payments) : arr(s.payments).filter(p => p.payeeType === 'colab' && p.payeeId === s.user)).filter(p => hit(p.desc, p.payeeName)).map(p => ({ title:p.desc, sub:p.payeeName + ' · ' + BRL2(Number(p.amount) || 0) + ' · ' + fmtD(p.date), dot:'#a1a1b0', go: () => { closeS(); this.goTo('payments', { payPeriod:'tudo', paySt:'all' }); } })));
     }
+    { const tot = grp5.reduce((a, g) => a + g.items.length, 0), sel = Math.min(s.sqSel || 0, Math.max(0, tot - 1)); let ix = 0; const flat = [];
+      grp5.forEach(g => { g.items = g.items.map(it => { const i = ix++, on = i === sel; const r = { ...it, domId:'sq-r-' + i, bg: on ? 'rgba(168,85,247,0.16)' : 'linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.012)), rgba(16,13,26,0.72)', ring: on ? 'rgba(168,85,247,0.6)' : 'transparent', hover: () => { if ((this.state.sqSel || 0) !== i) this.setState({ sqSel:i }); } }; flat.push(r); return r; }); });
+      this._sqFlat = flat; }
     // segunda-feira
     const mon = shiftKey(tk5, -((TODAY.getDay() + 6) % 7)), lmon = shiftKey(mon, -7), sun = shiftKey(mon, 6);
     const inR = (k, a, b) => k && k >= a && k <= b, tsK = t => keyOf(new Date(t));
@@ -5865,14 +6072,14 @@ class Component extends DCLogic {
     const people5 = (isAdmin ? allUsers : allUsers.filter(u => u.id === s.user));
     const isMon = TODAY.getDay() === 1;
     const p5Vals = {
-      ciItems: ciShown.map(x => ({ ...x, icon:ICON(x.icon), color:NLV[x.lv].color, bg:tint(NLV[x.lv].color, 16), border: x.lv === 'urgente' ? tint(U, 35) : '#1c1c25' })),
+      ciItems: ciShown.map(x => ({ ...x, icon:ICON(x.icon), color:NLV[x.lv].color, bg:tint(NLV[x.lv].color, 16), border: x.lv === 'urgente' ? tint(U, 35) : 'transparent' })),
       ciEmpty: !ci.length, ciHasMore: ci.length > 6, ciMoreLabel: ciAll ? 'Mostrar menos' : 'Ver todos (' + ci.length + ')', ciToggle: () => this.setState({ ciAll:!ciAll }),
       ciSub: ci.length ? ci.length + ' item(ns) calculados a partir dos dados do sistema' : 'Nenhuma pendência encontrada',
       ciCounts: [['urgente', 'Urgente'], ['atencao', 'Atenção'], ['info', 'Informação']].filter(([k]) => cnt5(k)).map(([k, l]) => ({ label:cnt5(k) + ' ' + l, color:NLV[k].color, bg:tint(NLV[k].color, 14) })),
       nLevelTabs: [['all', 'Todas', '#ededf2'], ['urgente', 'Urgente', U], ['atencao', 'Atenção', A5], ['info', 'Informação', Iv]].map(([k, l, c]) => ({ label:l, color:c, count: k === 'all' ? myN.length : myN.filter(n => nLevel(n) === k).length,
         bg: nLvF === k ? 'rgba(168,85,247,0.14)' : 'transparent', border: nLvF === k ? '#a855f7' : '#23232d', pick: () => this.setState({ nLvF:k }) })),
-      searchOpen:!!s.searchOpen, openSearch: () => this.setState({ searchOpen:true, sq:'', bellOpen:false, navOpen:false }), closeSearch: () => closeS(),
-      sq: s.sq || '', onSq: e => this.setState({ sq:e.target.value }), sqHint: !qok, sqNone: qok && !grp5.length, sqGroups:grp5,
+      searchOpen:!!s.searchOpen, openSearch: () => this.setState({ searchOpen:true, sq:'', sqSel:0, bellOpen:false, navOpen:false }), closeSearch: () => closeS(),
+      sq: s.sq || '', onSq: e => this.setState({ sq:e.target.value, sqSel:0 }), sqHint: !qok, sqNone: qok && !grp5.length, sqGroups:grp5,
       mdOpen:!!s.mdOpen, openMonday: () => this.setState({ mdOpen:true }), closeMonday: () => this.setState({ mdOpen:false }),
       mdBtnBorder: isMon ? '#a855f7' : '#2a2a36', mdBtnBg: isMon ? 'rgba(168,85,247,0.16)' : 'transparent',
       mdRange: 'Semana de ' + ddm5(mon) + ' a ' + ddm5(sun) + ' · comparada com ' + ddm5(lmon) + ' a ' + ddm5(shiftKey(mon, -1)),
@@ -6118,7 +6325,7 @@ class Component extends DCLogic {
       const cp = clientPay(c);
       const pay = [cp.label === 'Em dia' ? 'Pago · em dia' : cp.label, cp.color];
       const dem = posts.filter(p => p.client === c.id), dd = c.due ? parseKey(c.due) : null;
-      return { name:c.name, color:c.color, tint:tint(c.color, 16), initials:c.name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase(),
+      return { openDossie: () => this.setState({ dsId:c.id, dsEdit:null, dsTab:'id' }), name:c.name, color:c.color, tint:tint(c.color, 16), initials:c.name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase(),
         payInfo:(c.payMethod || 'PIX') + ((Number(c.parcels) || 1) > 1 ? ' · ' + c.parcels + 'x de ' + BRL2((Number(c.value) || 0) / c.parcels) : ' · à vista'), service:c.service || 'Serviço avulso', serviceType:c.serviceType || 'Serviço avulso', coverage:c.coverage || '', hasCoverage:!!c.coverage,
         valueLabel:BRL(c.value), paidLabel:BRL(cp.paid), paidColor: cp.paid >= (Number(c.value) || 0) && cp.paid > 0 ? GREEN : cp.paid > 0 ? '#c084fc' : '#8b8b99', showValue:isAdmin,
         dueLabel: dd ? `${pad(dd.getDate())}/${pad(dd.getMonth() + 1)}/${dd.getFullYear()}` : '—',
@@ -6147,6 +6354,8 @@ class Component extends DCLogic {
       return { out, miss:[...new Set(miss)] }; };
     const waPhoneOf = cid => { const c = clients.find(x => x.id === cid); return c ? String(c.phone || (c.ai || {}).whatsapp || '').replace(/\D/g, '') : ''; };
     const waRe = patch => { const n = { ...waS, ...patch }, t = waAll.find(x => x.id === n.tpl); if (t) n.text = waFill(t.text, n.client, n.demand).out; this.setState({ wa:n }); };
+    this._waCharge = cid => { const t = waAll.find(x => x.id === 'd-cob') || waAll.find(x => x.cat === 'Cobrança'); const n = { ...waS, tpl:t ? t.id : waS.tpl, client:cid, demand:'', phone:waPhoneOf(cid) || '' };
+      if (t) n.text = waFill(t.text, cid, '').out; this.goTo('whatsapp', { wa:n, dsId:null, briefing:false }); this.toast('Cobrança pronta', 'Revise a mensagem e toque em abrir no WhatsApp.', 'message-circle'); };
     const waMiss = (waS.text.match(/\[(\w+)\]/g) || []).map(x => x.slice(1, -1)).filter(k => WA_VARS.includes(k));
     const waDig = String(waS.phone || '').replace(/\D/g, ''), waFull = waDig ? (waDig.length <= 11 ? '55' + waDig : waDig) : '';
     const wtf = s.wtForm;
@@ -6191,7 +6400,84 @@ class Component extends DCLogic {
           this.setState({ apSend:null }); this.toast('Link de aprovação gerado', 'Use "Enviar para cliente" para mandar pelo WhatsApp.', 'link'); },
       };
     })();
+    const dsC = s.dsId ? s.clients.find(c => c.id === s.dsId) : null;
+    const dsVals = (() => {
+      if (!dsC) return { dsOpen:false, dsView:false, dsEditing:false };
+      const c = dsC, ai = c.ai || {}, d = c.dossie || {}, E = s.dsEdit;
+      const LIB_T = ['Logo', 'Foto oficial', 'Foto de produto', 'Mascote/personagem', 'Template', 'Referência visual'];
+      const LIB_I = { Logo:'badge', 'Foto oficial':'image', 'Foto de produto':'package', 'Mascote/personagem':'smile', Template:'layout-template', 'Referência visual':'sparkles' };
+      const LNK_T = ['Google Drive', 'Instagram', 'Site', 'Canva', 'Catálogo', 'Outro'];
+      const LNK_I = { 'Google Drive':'folder-open', Instagram:'instagram', Site:'globe', Canva:'palette', 'Catálogo':'book-open', Outro:'link' };
+      const U = u => { u = String(u || '').trim(); return !u ? '' : /^https?:\/\//i.test(u) ? u : 'https://' + u; };
+      const hd = u => String(u || '').trim().replace(/^https?:\/\/(www\.)?(instagram|tiktok|facebook)\.com\/@?/i, '').replace(/[/?#].*$/, '').replace(/^@/, '');
+      const host = u => { try { return new URL(U(u)).hostname.replace(/^www\./, ''); } catch (e) { return u; } };
+      const ig = hd(c.instagram), phone = String(c.phone || ai.whatsapp || '').trim(), dig = phone.replace(/\D/g, '');
+      const waU = dig ? 'https://wa.me/' + (dig.length <= 11 ? '55' + dig : dig) : '', drive = c.drive || '';
+      const q = (label, sub, url, icon) => ({ label, sub, url, icon:ICON(icon) });
+      const quick = [ig && q('Instagram', '@' + ig, 'https://instagram.com/' + ig, 'instagram'), waU && q('WhatsApp', phone, waU, 'message-circle'), drive && q('Google Drive', 'Pasta de arquivos', U(drive), 'folder-open')].filter(Boolean);
+      const social = [ig && q('Instagram', '@' + ig, 'https://instagram.com/' + ig, 'instagram'), d.facebook && q('Facebook', /^https?:/i.test(d.facebook) ? hd(d.facebook) || host(d.facebook) : d.facebook, /^https?:/i.test(d.facebook) ? d.facebook : 'https://facebook.com/' + hd(d.facebook), 'facebook'),
+        d.tiktok && q('TikTok', '@' + hd(d.tiktok), 'https://www.tiktok.com/@' + hd(d.tiktok), 'music-2'), d.site && q('Site', host(d.site), U(d.site), 'globe'), waU && q('WhatsApp', phone, waU, 'message-circle')].filter(Boolean);
+      const logos = [c.logo && { url:U(c.logo), label:'Logo principal' }, ...arr(d.logosAlt).map((u, i) => ({ url:U(u), label:'Logo alternativa ' + (i + 1) }))].filter(Boolean);
+      const colors = arr(d.colors).filter(x => /^#[0-9a-f]{3,8}$/i.test(x)).map(hex => ({ hex, copy: () => { (navigator.clipboard ? navigator.clipboard.writeText(hex) : Promise.reject()).then(() => this.toast('Cor copiada', hex.toUpperCase(), 'palette')).catch(() => window.prompt('Copie o código:', hex)); } }));
+      const fct = (k, v, icon) => v && String(v).trim() ? { k, v:String(v).trim(), icon:ICON(icon) } : null;
+      const idF = [fct('Fontes', d.fonts, 'type'), fct('Slogan', d.slogan, 'quote'), fct('Tom de comunicação', ai.tom, 'message-square-quote')].filter(Boolean);
+      const about = [fct('Descrição', ai.descricao, 'file-text'), fct('Público-alvo', ai.publico, 'users'), fct('Produtos', ai.produtos, 'package'), fct('Serviços', ai.servicos, 'briefcase'), fct('Diferenciais', d.diferenciais, 'sparkles')].filter(Boolean);
+      const dId = u => (String(u).match(/\/d\/([\w-]{10,})/) || String(u).match(/[?&]id=([\w-]{10,})/) || [])[1];
+      const lib = LIB_T.map(t => ({ title:t, items:arr(d.library).filter(x => (x.type || 'Referência visual') === t && x.url).map(x => { const id = dId(x.url), img = isImgU(x.url);
+        const thumb = img ? U(x.url) : id && !/folders/.test(x.url) ? 'https://drive.google.com/thumbnail?id=' + id + '&sz=w400' : '';
+        return { name:x.name || t, url:U(x.url), thumb, isImg:!!thumb, noImg:!thumb, icon:ICON(LIB_I[t] || 'file') }; }) })).filter(g => g.items.length);
+      const links = arr(d.links).filter(x => x.url).map(x => q(x.name || x.type || 'Link', x.type || host(x.url), U(x.url), LNK_I[x.type] || 'link'));
+      const rules = arr(d.rules).filter(Boolean);
+      const tab = s.dsTab || 'id';
+      const cnt = { id:logos.length + colors.length + idF.length, about:about.length, social:social.length, lib:lib.reduce((a, g) => a + g.items.length, 0), links:links.length };
+      const TABS = [['id', 'Identidade'], ['about', 'Sobre'], ['social', 'Redes'], ['lib', 'Biblioteca'], ['links', 'Links']];
+      const setE = fn => this.setState(st => ({ dsEdit:fn({ ...st.dsEdit }) }));
+      const KEYS = ['logo','segmento','city','contactName','phone','instagram','drive','logosAlt','fonts','slogan','tom','facebook','tiktok','site','descricao','publico','produtos','servicos','diferenciais','rules'];
+      const dsOn = {}; KEYS.forEach(k => { dsOn[k] = e => { const v = e.target.value; setE(x => ({ ...x, [k]:v })); }; });
+      const rowsOf = (key, types) => arr(E && E[key]).map((r, i) => { const upd = f => e => { const v = e.target.value; setE(x => ({ ...x, [key]:x[key].map((y, j) => j === i ? { ...y, [f]:v } : y) })); };
+        return { type:r.type || types[0], name:r.name || '', url:r.url || '', onType:upd('type'), onName:upd('name'), onUrl:upd('url'), remove: () => setE(x => ({ ...x, [key]:x[key].filter((y, j) => j !== i) })) }; });
+      const lines = t => String(t || '').split('\n').map(x => x.trim()).filter(Boolean);
+      return {
+        dsOpen:true, dsView:!E, dsEditing:!!E, dsName:c.name, dsColor:c.color || '#c084fc', dsTint:tint(c.color || '#c084fc', 18),
+        dsInitials:c.name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase(),
+        dsHasLogo:!!c.logo, dsNoLogo:!c.logo, dsLogo:U(c.logo),
+        dsSub:[ai.segmento, d.city].filter(Boolean).join(' • '), dsHasSub:!!(ai.segmento || d.city),
+        dsContact:[d.contactName, phone].filter(Boolean).join(' · '), dsHasContact:!!(d.contactName || phone),
+        dsQuick:quick, dsHasQuick:quick.length > 0, dsRules:rules, dsHasRules:rules.length > 0,
+        dsTabs: TABS.map(([k, l]) => ({ label:l, count: cnt[k] ? String(cnt[k]) : '', bg: tab === k ? 'linear-gradient(180deg, rgba(168,85,247,0.28), rgba(124,58,237,0.18))' : 'transparent', color: tab === k ? '#f3e8ff' : '#a1a1b0', pick: () => this.setState({ dsTab:k }) })),
+        dsTabEmpty: !cnt[tab], dsTIdent: tab === 'id' && cnt.id > 0, dsTAbout: tab === 'about' && cnt.about > 0, dsTSocial: tab === 'social' && cnt.social > 0, dsTLib: tab === 'lib' && cnt.lib > 0, dsTLinks: tab === 'links' && cnt.links > 0,
+        dsLogos:logos, dsHasLogos:logos.length > 0, dsColors:colors, dsHasColors:colors.length > 0, dsIdFacts:idF, dsHasIdFacts:idF.length > 0,
+        dsAbout:about, dsSocial:social, dsLib:lib, dsLinks:links,
+        dsClose: () => { if (s.dsEdit && !window.confirm('Sair sem salvar as alterações do dossiê?')) return; this.setState({ dsId:null, dsEdit:null }); },
+        dsStartEdit: () => this.setState({ dsEdit:{ logo:c.logo || '', segmento:ai.segmento || '', city:d.city || '', contactName:d.contactName || '', phone, instagram: ig ? '@' + ig : '', drive,
+          logosAlt:arr(d.logosAlt).join('\n'), colors:arr(d.colors).slice(), fonts:d.fonts || '', slogan:d.slogan || '', tom:ai.tom || '', facebook:d.facebook || '', tiktok:d.tiktok || '', site:d.site || '',
+          descricao:ai.descricao || '', publico:ai.publico || '', produtos:ai.produtos || '', servicos:ai.servicos || '', diferenciais:d.diferenciais || '',
+          library:arr(d.library).map(x => ({ ...x })), links:arr(d.links).map(x => ({ ...x })), rules:rules.join('\n') } }),
+        dsCancel: () => this.setState({ dsEdit:null }),
+        dsE: E || {}, dsOn, dsLibTypes:LIB_T, dsLinkTypes:LNK_T,
+        dsColorRows: arr(E && E.colors).map((hex, i) => { const set = v => setE(x => ({ ...x, colors:x.colors.map((y, j) => j === i ? v : y) }));
+          return { hex, pick: /^#[0-9a-f]{6}$/i.test(hex) ? hex : '#000000', onPick: e => set(e.target.value), onHex: e => { let v = e.target.value.trim(); if (v && v[0] !== '#') v = '#' + v; set(v.slice(0, 7)); }, remove: () => setE(x => ({ ...x, colors:x.colors.filter((y, j) => j !== i) })) }; }),
+        dsAddColor: () => setE(x => ({ ...x, colors:[...arr(x.colors), '#a855f7'] })),
+        dsLibRows: rowsOf('library', LIB_T), dsAddLib: () => setE(x => ({ ...x, library:[...arr(x.library), { type:'Foto oficial', name:'', url:'' }] })),
+        dsLinkRows: rowsOf('links', LNK_T), dsAddLink: () => setE(x => ({ ...x, links:[...arr(x.links), { type:'Google Drive', name:'', url:'' }] })),
+        dsSave: () => {
+          const x = s.dsEdit; if (!x) return;
+          const tr = v => String(v || '').trim().slice(0, 400);
+          const bad = [...arr(x.library), ...arr(x.links)].some(r => r.url && !/^(https?:\/\/)?[\w-]+(\.[\w-]+)+/i.test(r.url.trim()));
+          if (bad) return this.toast('Confira os links', 'Algum link da biblioteca ou dos atalhos está inválido.', 'circle-alert');
+          const dossie = { ...d, city:tr(x.city), contactName:tr(x.contactName), logosAlt:lines(x.logosAlt).slice(0, 12), colors:arr(x.colors).map(v => String(v).trim()).filter(v => /^#[0-9a-f]{3,8}$/i.test(v)).slice(0, 16),
+            fonts:tr(x.fonts), slogan:tr(x.slogan), facebook:tr(x.facebook), tiktok:tr(x.tiktok), site:tr(x.site), diferenciais:tr(x.diferenciais),
+            library:arr(x.library).filter(r => r.url && r.url.trim()).map(r => ({ type:r.type || 'Foto oficial', name:tr(r.name), url:r.url.trim() })).slice(0, 80),
+            links:arr(x.links).filter(r => r.url && r.url.trim()).map(r => ({ type:r.type || 'Outro', name:tr(r.name), url:r.url.trim() })).slice(0, 40),
+            rules:lines(x.rules).map(r => r.slice(0, 160)).slice(0, 20), updatedAt:Date.now(), updatedBy:s.user };
+          this.setState(st => ({ dsEdit:null, clients:st.clients.map(y => y.id !== c.id ? y : { ...y, logo:tr(x.logo), phone:tr(x.phone), instagram:hd(x.instagram), drive:tr(x.drive),
+            ai:{ ...(y.ai || {}), segmento:tr(x.segmento), tom:tr(x.tom), descricao:tr(x.descricao), publico:tr(x.publico), produtos:tr(x.produtos), servicos:tr(x.servicos) }, dossie }) }));
+          this.toast('Dossiê salvo', c.name, 'book-user');
+        },
+      };
+    })();
     const p3Vals = {
+      ...dsVals,
       ...apMgr,
       vVerCount: vVersL.length, vNoVers: !vVersL.length, vClientOk: !!vp && vp.clientStatus === 'aprovado',
       vVers: vVersL.slice().reverse().map((v, i) => { const cur = i === 0, r = v.result ? VR[v.result] : cur && vp.clientStatus === 'aguardando' ? ['Aguardando cliente', 'oklch(0.82 0.13 80)'] : ['Enviada', '#8b8b99'];
@@ -6434,14 +6720,22 @@ class Component extends DCLogic {
 
     return {
       ...base, ...briefVals, ...viewVals, ...payVals, ...shootVals, ...storyVals, ...vidVals, ...ideaVals, ...drawerVals, ...boardVals, ...metricVals, ...calVals, ...p4Vals, ...p5Vals, ...p3Vals, me, isAdmin, isMobile, isDesktop:!isMobile,
-      showSidebar: !isMobile || s.navOpen, showBackdrop: isMobile && s.navOpen, mainPad: isMobile ? 0 : 248,
+      showSidebar: !isMobile || s.navOpen, showBackdrop: isMobile && s.navOpen, mainPad: isMobile ? 0 : sideW, sideW, navFull:!navMiniOn, navMini:navMiniOn,
+      navMore, navHasMgmt: navMgmt.length > 0, moreOpen: moreOn, moreRot: moreOn ? 180 : 0, moreDot: !moreOn && navMore.some(n => n.hasBadge),
+      moreToggle: () => this.setState(st => ({ moreOpen:!(st.moreOpen ?? moreAuto), navMini:false })),
+      profOpen: !!s.profOpen, profToggle: () => this.setState(st => ({ profOpen:!st.profOpen })), meRoleShort: me.kind === 'admin' ? 'Administrador' : me.role,
+      canMini: !isMobile, miniToggle: () => { const v = !navMiniOn; lsSet('rise_navmini', v ? 1 : null); this.setState({ navMini:v, profOpen:false }); },
+      miniLabel: navMiniOn ? 'Expandir menu' : 'Recolher menu', miniIcon: ICON(navMiniOn ? 'panel-left-open' : 'panel-left-close'),
+      goMetrics: () => this.goTo(isAdmin ? 'report' : 'metrics'), kpiTitle: isAdmin ? 'Resumo da agência' : 'Seu resumo',
+      showSla: isAdmin, slaOpen: !!s.slaOpen, slaToggle: () => this.setState(st => ({ slaOpen:!st.slaOpen })), slaLabel: s.slaOpen ? 'Recolher' : 'Ver detalhes', slaIcon: ICON(s.slaOpen ? 'chevron-up' : 'chevron-down'),
       openNav: () => this.setState({ navOpen:true }), closeNav: () => this.setState({ navOpen:false }),
       logout: () => { if (!window.confirm('Sair deste perfil? Na próxima vez será preciso escolher o perfil novamente.')) return; lsSet(SESS_KEY, null); if (this._secure && this._tok) { this._sb.rpc('rise_logout', { tok:this._tok }); this._tok = null; lsSet(TOK_KEY, null); } this.setState({ user:null, navOpen:false, bellOpen:false }); },
       resetData: () => { if (!window.confirm('Zerar clientes, demandas, financeiro e notificações? Os perfis da equipe serão mantidos.')) return; this.setState({ posts:[], clients:[], fin:[], notifs:[] }); this.toast('Dados zerados', 'A base está vazia e pronta para novos cadastros.', 'undo-2'); },
       navOps, navMgmt, pageTitle:titles[s.tab], pageSub:subs[s.tab],
       todayLabel:`${WEEK[TODAY.getDay()]}, ${pad(TODAY.getDate())} ${MONTHS[TODAY.getMonth()].slice(0, 3).toLowerCase()} ${TODAY.getFullYear()}`,
       isDashboard:s.tab === 'dashboard', isBoard:s.tab === 'board', isCalendar:s.tab === 'calendar', isClients:s.tab === 'clients', isFinance:s.tab === 'finance' && isAdmin,
-      greeting:`${hello}, ${me.first}`, roleLine, kpis, panels, healthRows, goClients:go('clients'),
+      greeting:`${hello}, ${me.first}`, roleLine, kpis: kpis.slice(0, 4).map(k => { const z = k.value === 0 || k.value === '0' || /^R\$\s?0(,00)?$/.test(String(k.value)); const hot = !z && /atras/i.test(k.label);
+        return { ...k, color: z ? '#8b8b99' : k.color, iconOp: z ? 0.45 : 1, border: hot ? tint(RED, 50) : 'rgba(190,160,255,0.12)' }; }), panels, healthRows, goClients:go('clients'),
       progressTitle: isAdmin ? 'Progresso de entregas do mês' : 'Suas entregas do mês',
       monthPct, breakdown, bars, monthName:`${MONTHS[TODAY.getMonth()]} ${TODAY.getFullYear()}`,
       clientChips, columns: isMobile ? columns.filter(c => c.id === (s.mobileCol || 'aberto')) : columns, showMineToggle:!isAdmin, toggleMine: () => this.setState({ onlyMine:!s.onlyMine }),
