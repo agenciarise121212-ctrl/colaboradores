@@ -927,6 +927,20 @@ option{background:#111117;color:#ededf2}
                     </div>
                   </sc-if>
                 </div>
+                <div style="position:sticky;top:{{ stStickyTop }}px;z-index:5;display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 0;background:#0a0a0f">
+                  <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;padding:4px;border-radius:12px;background:#0e0e13;border:1px solid #1a1a23;flex:1 1 320px;max-width:520px">
+                    <sc-for list="{{ stTabs }}" as="tb" hint-placeholder-count="2">
+                      <button onClick="{{ tb.pick }}" style="min-height:42px;padding:8px 12px;border-radius:9px;border:0;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-size:13.5px;font-weight:700;background:{{ tb.bg }};color:{{ tb.color }}"><span style="width:15px;height:15px;flex-shrink:0;background:currentColor;mask:{{ tb.icon }} center / contain no-repeat;-webkit-mask:{{ tb.icon }} center / contain no-repeat"></span>{{ tb.label }}<span style="font-family:'JetBrains Mono';font-size:11.5px;font-weight:500;opacity:0.75">{{ tb.count }}</span></button>
+                    </sc-for>
+                  </div>
+                  <sc-if value="{{ stShowFold }}" hint-placeholder-val="{{ false }}">
+                    <button onClick="{{ stFoldAll }}" style="min-height:36px;padding:6px 11px;border-radius:8px;border:1px solid #2a2a36;background:transparent;color:#d4d4dc;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px"><span style="width:14px;height:14px;flex-shrink:0;background:currentColor;mask:{{ stFoldIcon }} center / contain no-repeat;-webkit-mask:{{ stFoldIcon }} center / contain no-repeat"></span>{{ stFoldLabel }}</button>
+                  </sc-if>
+                  <sc-if value="{{ stShowDet }}" hint-placeholder-val="{{ false }}">
+                    <button onClick="{{ stDetAll }}" style="min-height:36px;padding:6px 11px;border-radius:8px;border:1px solid #2a2a36;background:transparent;color:#d4d4dc;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px"><span style="width:14px;height:14px;flex-shrink:0;background:currentColor;mask:{{ stDetIcon }} center / contain no-repeat;-webkit-mask:{{ stDetIcon }} center / contain no-repeat"></span>{{ stDetLabel }}</button>
+                  </sc-if>
+                </div>
+                <sc-if value="{{ stTabStories }}" hint-placeholder-val="{{ true }}">
                 <sc-if value="{{ stNoPlan }}" hint-placeholder-val="{{ false }}">
                   <div style="padding:34px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;border:1px dashed #2a2a36;border-radius:16px">
                     <span style="width:26px;height:26px;flex-shrink:0;background:#a855f7;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/sparkles.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/sparkles.svg) center / contain no-repeat"></span>
@@ -937,22 +951,31 @@ option{background:#111117;color:#ededf2}
                 <sc-for list="{{ stDays }}" as="d" hint-placeholder-count="0">
                   <div style="display:flex;flex-direction:column;gap:10px">
                     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:0 2px">
-                      <span style="font-family:Sora;font-weight:700;font-size:14px;letter-spacing:0.06em;text-transform:uppercase">{{ d.label }}</span>
+                      <button onClick="{{ d.toggle }}" aria-label="Recolher ou expandir o dia" style="width:32px;height:32px;border-radius:8px;border:1px solid #2a2a36;background:#0e0e13;color:#c9c9d4;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0"><span style="width:15px;height:15px;flex-shrink:0;background:currentColor;mask:{{ d.chev }} center / contain no-repeat;-webkit-mask:{{ d.chev }} center / contain no-repeat"></span></button>
+                      <span onClick="{{ d.toggle }}" style="font-family:Sora;font-weight:700;font-size:14px;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer">{{ d.label }}</span>
                       <span style="font-family:'JetBrains Mono';font-size:12px;color:#8b8b99">{{ d.date }}</span>
                       <span style="flex:1;height:1px;background:#1c1c25"></span>
                       <span style="font-size:11.5px;color:{{ d.countColor }}">{{ d.countText }}</span>
                       <sc-if value="{{ d.hasStories }}" hint-placeholder-val="{{ false }}"><button onClick="{{ d.pdf }}" title="Baixar o PDF deste dia" style="min-height:36px;padding:6px 10px;border-radius:8px;border:1px solid #2a2a36;background:transparent;color:#d4d4dc;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px"><span style="width:12px;height:12px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/file-down.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/file-down.svg) center / contain no-repeat"></span>PDF do dia</button></sc-if>
                       <button onClick="{{ d.add }}" style="min-height:36px;padding:6px 10px;border-radius:8px;border:1px solid #2a2a36;background:transparent;color:#d4d4dc;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px"><span style="width:12px;height:12px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/plus.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/plus.svg) center / contain no-repeat"></span>Story</button>
                     </div>
+                    <sc-if value="{{ d.closed }}" hint-placeholder-val="{{ false }}"><button onClick="{{ d.toggle }}" style="text-align:left;padding:9px 12px;border-radius:10px;border:1px solid #1c1c25;background:#0e0e13;color:#a1a1b0;font-size:12.5px;line-height:1.5;cursor:pointer">{{ d.summary }}</button></sc-if>
+                    <sc-if value="{{ d.open }}" hint-placeholder-val="{{ true }}">
                     <sc-if value="{{ d.empty }}" hint-placeholder-val="{{ false }}"><div style="padding:14px;border-radius:12px;border:1px dashed #22222c;font-size:12.5px;color:#5c5c6a">{{ d.emptyText }}</div></sc-if>
-                    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(290px,100%),1fr));gap:10px">
+                    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr));gap:8px;align-items:start">
                       <sc-for list="{{ d.stories }}" as="st" hint-placeholder-count="0">
-                        <div style="background:#111117;border:1px solid {{ st.border }};border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px;opacity:{{ st.opacity }}">
-                          <div style="display:flex;align-items:center;gap:8px">
-                            <span style="font-family:'JetBrains Mono';font-size:13px;color:#c084fc">{{ st.horario }}</span>
-                            <span style="flex:1;min-width:0;font-size:13px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase">{{ st.tema }}</span>
-                            <span style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap;color:{{ st.stColor }};background:{{ st.stTint }}">{{ st.stLabel }}</span>
+                        <div style="background:#111117;border:1px solid {{ st.border }};border-radius:12px;padding:11px 12px;display:flex;flex-direction:column;gap:9px;opacity:{{ st.opacity }}">
+                          <div onClick="{{ st.toggle }}" style="display:flex;align-items:center;gap:8px;cursor:pointer">
+                            <span style="font-family:'JetBrains Mono';font-size:12.5px;color:#c084fc;flex-shrink:0">{{ st.horario }}</span>
+                            <span style="flex:1;min-width:0;font-size:12.5px;font-weight:800;letter-spacing:0.03em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ st.tema }}</span>
+                            <span style="width:8px;height:8px;border-radius:50%;flex-shrink:0;background:{{ st.stColor }}" title="{{ st.stLabel }}"></span>
+                            <span style="width:15px;height:15px;flex-shrink:0;background:#6f6f7d;mask:{{ st.chev }} center / contain no-repeat;-webkit-mask:{{ st.chev }} center / contain no-repeat"></span>
                           </div>
+                          <sc-if value="{{ st.collapsed }}" hint-placeholder-val="{{ true }}">
+                            <div onClick="{{ st.toggle }}" style="font-size:12.5px;line-height:1.45;color:#a1a1b0;cursor:pointer;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{ st.preview }}</div>
+                          </sc-if>
+                          <sc-if value="{{ st.expanded }}" hint-placeholder-val="{{ false }}">
+                          <div style="display:flex;flex-direction:column;gap:10px">
                           <sc-for list="{{ st.rows }}" as="r" hint-placeholder-count="3">
                             <div style="display:flex;flex-direction:column;gap:2px">
                               <span style="font-size:10.5px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#6f6f7d">{{ r.label }}</span>
@@ -986,15 +1009,20 @@ option{background:#111117;color:#ededf2}
                               </sc-for>
                             </div>
                           </sc-if>
+                          </div>
+                          </sc-if>
                           <sc-if value="{{ st.busy }}" hint-placeholder-val="{{ false }}">
                             <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:#c084fc;font-weight:600"><span style="width:14px;height:14px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/sparkles.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/sparkles.svg) center / contain no-repeat"></span>Refazendo com IA...</div>
                           </sc-if>
                         </div>
                       </sc-for>
                     </div>
+                    </sc-if>
                   </div>
                 </sc-for>
-                <div style="display:flex;flex-direction:column;gap:12px;margin-top:10px;padding-top:18px;border-top:1px solid #1c1c25">
+                </sc-if>
+                <sc-if value="{{ stTabVideos }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:12px">
                   <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
                     <div style="width:36px;height:36px;border-radius:10px;background:rgba(168,85,247,0.16);display:flex;align-items:center;justify-content:center;flex-shrink:0"><span style="width:18px;height:18px;flex-shrink:0;background:#c084fc;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/clapperboard.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/clapperboard.svg) center / contain no-repeat"></span></div>
                     <div style="flex:1 1 220px;min-width:0;display:flex;flex-direction:column;gap:2px"><div style="font-family:Sora;font-weight:600;font-size:16px">Roteiros de vídeo para o feed</div><div style="font-size:12.5px;color:#8b8b99">Reels, institucional e outros vídeos para gravar na semana de {{ stVWeek }}</div></div>
@@ -1013,15 +1041,20 @@ option{background:#111117;color:#ededf2}
                   <sc-if value="{{ stVEmpty }}" hint-placeholder-val="{{ false }}">
                     <div style="padding:22px 16px;border-radius:14px;border:1px dashed #2a2a36;font-size:13px;color:#8b8b99;line-height:1.5;text-align:center">Nenhum roteiro de vídeo para esta semana. A IA usa o segmento do cliente e as datas comemorativas próximas para sugerir o que gravar.</div>
                   </sc-if>
-                  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(340px,100%),1fr));gap:10px">
+                  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr));gap:8px;align-items:start">
                     <sc-for list="{{ stVCards }}" as="v" hint-placeholder-count="0">
-                      <div style="background:#111117;border:1px solid #1f1f29;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0">
-                        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+                      <div style="background:#111117;border:1px solid #1f1f29;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:9px;min-width:0">
+                        <div onClick="{{ v.toggle }}" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;cursor:pointer">
                           <span style="font-size:11px;font-weight:700;letter-spacing:0.04em;padding:3px 9px;border-radius:6px;background:rgba(168,85,247,0.16);color:#d8b4fe">{{ v.formato }}</span>
                           <sc-if value="{{ v.hasDate }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px;background:rgba(251,146,60,0.12);color:oklch(0.83 0.12 60)">{{ v.dataRel }}</span></sc-if>
-                          <span style="flex:1"></span><span style="font-family:'JetBrains Mono';font-size:11.5px;color:#6f6f7d">#{{ v.n }}</span>
+                          <span style="flex:1"></span><span style="width:8px;height:8px;border-radius:50%;background:{{ v.stColor }}" title="{{ v.stLabel }}"></span><span style="font-family:'JetBrains Mono';font-size:11.5px;color:#6f6f7d">#{{ v.n }}</span><span style="width:15px;height:15px;flex-shrink:0;background:#6f6f7d;mask:{{ v.chev }} center / contain no-repeat;-webkit-mask:{{ v.chev }} center / contain no-repeat"></span>
                         </div>
-                        <div style="font-family:Sora;font-weight:600;font-size:15.5px;line-height:1.35;text-wrap:pretty">{{ v.titulo }}</div>
+                        <div onClick="{{ v.toggle }}" style="font-family:Sora;font-weight:600;font-size:14.5px;line-height:1.35;text-wrap:pretty;cursor:pointer">{{ v.titulo }}</div>
+                        <sc-if value="{{ v.collapsed }}" hint-placeholder-val="{{ true }}">
+                          <div onClick="{{ v.toggle }}" style="font-size:12.5px;line-height:1.45;color:#a1a1b0;cursor:pointer;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{ v.preview }}</div>
+                        </sc-if>
+                        <sc-if value="{{ v.expanded }}" hint-placeholder-val="{{ false }}">
+                        <div style="display:flex;flex-direction:column;gap:10px">
                         <sc-if value="{{ v.hasObj }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:10.5px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#6f6f7d">Objetivo</span><span style="font-size:13px;line-height:1.45;color:#d4d4dc">{{ v.objetivo }}</span></div></sc-if>
                         <sc-if value="{{ v.hasGancho }}" hint-placeholder-val="{{ false }}">
                           <div style="display:flex;flex-direction:column;gap:4px;padding:10px 12px;border-radius:10px;background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.25)"><span style="font-size:10.5px;font-weight:700;letter-spacing:0.08em;color:#a78bfa">GANCHO · PRIMEIROS 3 SEGUNDOS</span><span style="font-size:13.5px;line-height:1.5;color:#f3e8ff">{{ v.gancho }}</span></div>
@@ -1044,11 +1077,14 @@ option{background:#111117;color:#ededf2}
                             <sc-for list="{{ v.aiActs }}" as="a" hint-placeholder-count="4"><button onClick="{{ a.go }}" style="min-height:36px;padding:6px 10px;border-radius:8px;border:1px solid #2a2a36;background:transparent;color:#d4d4dc;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;justify-content:center;border-color:#3a2a55;color:#e9d5ff">{{ a.label }}</button></sc-for>
                           </div>
                         </sc-if>
+                        </div>
+                        </sc-if>
                         <sc-if value="{{ v.busy }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:#c084fc;font-weight:600"><span style="width:14px;height:14px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/sparkles.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/sparkles.svg) center / contain no-repeat"></span>Refazendo com IA...</div></sc-if>
                       </div>
                     </sc-for>
                   </div>
                 </div>
+                </sc-if>
               </sc-if>
             </div>
           </div>
@@ -5130,13 +5166,23 @@ class Component extends DCLogic {
         ? { kind:'avulso', name:cc.name, serviceType:cc.serviceType || SERVICES[0], coverage:cc.coverage || '', service:cc.service || '', value:cc.value || 0, paid:0, due:cc.due || keyOf(TODAY), payMethod:cc.payMethod || 'PIX', parcels:cc.parcels || 1, ai:{ ...(cc.ai || {}) }, planOwner:cc.planOwner || 'victoria', execOwner:cc.execOwner || '', storyDays:cc.storyDays || [0,1,2,3,4,5,6] }
         : { name:cc.name, monthly:cc.monthly, pkg:cc.pkg, recDays:[...(cc.recDays || [])], editDays:cc.editDays || 2, recTime:cc.recTime || '09:00', dueDay:cc.dueDay || 10, payMethod:cc.payMethod || 'PIX', paidMonth:'', ai:{ ...(cc.ai || {}) }, planOwner:cc.planOwner || 'victoria', execOwner:cc.execOwner || '', storyDays:cc.storyDays || [0,1,2,3,4,5,6] } }); };
     const sw_sDays = sw_stC && Array.isArray(sw_stC.storyDays) ? sw_stC.storyDays : [0,1,2,3,4,5,6];
+    const sw_det = s.stDet || {};
+    const sw_isOpen = (kind, id) => { const m = sw_det[kind] || {}; return m[id] != null ? m[id] : !!sw_det[kind + 'All']; };
+    const sw_tgl = (kind, id, cur) => this.setState(st => { const d = { ...(st.stDet || {}) }; d[kind] = { ...(d[kind] || {}), [id]:!cur }; return { stDet:d }; });
     const sw_stDays = !sw_plan ? [] : sw_plan.days.map((d, di) => {
       const wd = parseKey(d.date).getDay(), on = sw_sDays.includes(wd), per = sw_plan.perDay || 4;
-      return { pdf: () => sw_pdf(di, false), hasStories: d.stories.length > 0, label:WDAY_FULL[wd], date:ddmm(parseKey(d.date)), empty:!d.stories.length, emptyText: on ? 'Nenhum story neste dia.' : 'Dia sem Stories para este cliente.',
+      const fd = s.stFold || {}, isOpen = fd[di] != null ? !fd[di] : !fd.all;
+      return { open:isOpen, closed:!isOpen, chev:ICON(isOpen ? 'chevron-down' : 'chevron-right'),
+        toggle: () => this.setState(st => { const f = { ...(st.stFold || {}) }; f[di] = isOpen; return { stFold:f }; }),
+        summary: d.stories.length ? [...d.stories].sort((a, b) => (a.horario || '').localeCompare(b.horario || '')).map(x => (x.horario || '--:--') + ' ' + (x.tema || '')).join('  ·  ') : (on ? 'Nenhum story neste dia.' : 'Dia sem Stories para este cliente.'),
+        pdf: () => sw_pdf(di, false), hasStories: d.stories.length > 0, label:WDAY_FULL[wd], date:ddmm(parseKey(d.date)), empty:!d.stories.length, emptyText: on ? 'Nenhum story neste dia.' : 'Dia sem Stories para este cliente.',
         countText: on ? `${d.stories.length}/${per} stories` : 'sem Stories', countColor: !on ? '#5c5c6a' : d.stories.length >= per ? GREEN : '#8b8b99',
         add: () => this.setState({ se:{ planId:sw_plan.id, dayIdx:di, storyId:null, horario:'09:00', tema:'', objetivo:'', gravacao:'', pessoa:sw_stC.execOwner || '', orientacao:'', fala:'', cta:'', observacao:'' } }),
         stories: d.stories.map(st => { const [sl, sc] = ST_STATUS[st.status || 'pendente'] || ST_STATUS.pendente, busy = s.aiBusy === st.id;
-          return { horario:st.horario || '--:--', tema:st.tema || 'Sem tema', stLabel:sl, stColor:sc, stTint:tint(sc, 15), fala:st.fala || '', hasFala:!!st.fala, cta:st.cta || '', hasCta:!!st.cta,
+          const ex = sw_isOpen('s', st.id);
+          return { expanded:ex, collapsed:!ex, chev:ICON(ex ? 'chevron-up' : 'chevron-down'), toggle: () => sw_tgl('s', st.id, ex),
+            preview: st.fala ? '“' + st.fala + '”' : (st.objetivo || st.gravacao || 'Toque para ver os detalhes'),
+            horario:st.horario || '--:--', tema:st.tema || 'Sem tema', stLabel:sl, stColor:sc, stTint:tint(sc, 15), fala:st.fala || '', hasFala:!!st.fala, cta:st.cta || '', hasCta:!!st.cta,
             border: st.status === 'publicado' ? tint(GREEN, 35) : '#1f1f29', opacity: busy ? 0.6 : 1, busy, aiOpen: s.aiMenu === st.id && !busy,
             rows:[['Objetivo', st.objetivo], ['Gravar', st.gravacao], ['Quem aparece', st.pessoa], ['Orientação', st.orientacao], ['Observação', st.observacao]].filter(([, v]) => v).map(([label, value]) => ({ label, value })),
             stChips: Object.entries(ST_STATUS).map(([id, [label, col]]) => { const a = (st.status || 'pendente') === id;
@@ -5279,7 +5325,19 @@ class Component extends DCLogic {
     const sw_ve = s.ve || {};
     const sw_setVe = k => e => { const v = e.target.value; this.setState(st => ({ ve:{ ...st.ve, [k]:v } })); };
     const chip = (on, label, pick) => ({ label, pick, bg: on ? '#a855f7' : '#111117', color: on ? '#0a0a0f' : '#a1a1b0', border: on ? '#a855f7' : '#23232d' });
+    const sw_tab = s.stTab || 'stories', sw_allClosed = !!sw_plan && sw_plan.days.every((d, di) => { const fd = s.stFold || {}; return fd[di] != null ? fd[di] : !!fd.all; });
     const vidVals = {
+      stTabStories: sw_tab === 'stories', stTabVideos: sw_tab === 'videos', stStickyTop: isMobile ? 56 : 64,
+      stTabs: [['stories', 'Stories', 'smartphone', sw_plan ? sw_plan.days.reduce((a, d) => a + d.stories.length, 0) : 0], ['videos', 'Vídeos do feed', 'clapperboard', sw_vids.length]].map(([id, label, icn, n]) => {
+        const a = sw_tab === id; return { label, count:String(n), icon:ICON(icn), pick: () => this.setState({ stTab:id }), bg: a ? '#a855f7' : 'transparent', color: a ? '#0a0a0f' : '#a1a1b0' }; }),
+      stShowFold: sw_tab === 'stories' && !!sw_plan,
+      stShowDet: (sw_tab === 'stories' && !!sw_plan) || (sw_tab === 'videos' && sw_vids.length > 0),
+      ...(() => { const k = sw_tab === 'videos' ? 'v' : 's', ids = sw_tab === 'videos' ? sw_vids.map(v => v.id) : (sw_plan ? sw_plan.days.flatMap(d => d.stories.map(x => x.id)) : []);
+        const allOpen = ids.length > 0 && ids.every(id => sw_isOpen(k, id));
+        return { stDetLabel: allOpen ? 'Minimizar todos os roteiros' : 'Expandir todos os roteiros', stDetIcon:ICON(allOpen ? 'minimize-2' : 'maximize-2'),
+          stDetAll: () => this.setState(st => ({ stDet:{ ...(st.stDet || {}), [k]:{}, [k + 'All']:!allOpen }, ...(k === 's' && !allOpen ? { stFold:{ all:false } } : {}) })) }; })(),
+      stFoldLabel: sw_allClosed ? 'Expandir todos os dias' : 'Recolher todos os dias', stFoldIcon:ICON(sw_allClosed ? 'chevrons-up-down' : 'chevrons-down-up'),
+      stFoldAll: () => this.setState({ stFold:{ all:!sw_allClosed } }),
       pdfOpacity: s.pdfBusy ? 0.55 : 1, pdfWeekLabel: s.pdfBusy ? 'Gerando PDF...' : 'Baixar PDF da semana',
       stPdfWeek: () => sw_pdf(null, false), stPdfShare: () => sw_pdf(null, true), stVPdf: () => sw_pdf(null, false, true),
       stVWeek: sw_wkLabel(sw_ws), stVHas: sw_vids.length > 0, stVEmpty: !!sw_stC && !sw_vids.length,
@@ -5287,7 +5345,10 @@ class Component extends DCLogic {
       stVGen: () => { if (!sw_stC) return; this.setState({ vgen:{ count:'4', formats:['Reels', 'Institucional'], dates:sw_upDates.filter(x => x.k <= shiftKey(sw_ws, 20)).map(x => x.k + '|' + x.n), notes:'' }, vgenErr:'' }); },
       stVAdd: () => { if (!sw_stC) return; this.setState({ ve:{ videoId:null, formato:'Reels', ...V_FIELDS.reduce((o2, k) => ({ ...o2, [k]:'' }), {}), formato:'Reels' } }); },
       stVCards: sw_vids.map((v, i) => { const st = VST[v.status] || VST.ideia;
-        return { n:i + 1, titulo:v.titulo || 'Sem título', formato:v.formato || 'Vídeo', hasDate:!!v.dataRelacionada, dataRel:v.dataRelacionada || '',
+        const ex = sw_isOpen('v', v.id);
+        return { expanded:ex, collapsed:!ex, chev:ICON(ex ? 'chevron-up' : 'chevron-down'), toggle: () => sw_tgl('v', v.id, ex), stColor:st[1], stLabel:st[0],
+          preview: v.gancho || v.objetivo || 'Toque para ver o roteiro',
+          n:i + 1, titulo:v.titulo || 'Sem título', formato:v.formato || 'Vídeo', hasDate:!!v.dataRelacionada, dataRel:v.dataRelacionada || '',
           objetivo:v.objetivo || '', hasObj:!!v.objetivo, gancho:v.gancho || '', hasGancho:!!v.gancho, roteiro:v.desenvolvimento || '', hasRoteiro:!!v.desenvolvimento, cta:v.cta || '', hasCta:!!v.cta,
           rows:[['Quem aparece', v.pessoa], ['Duração', v.duracao], ['Cenas de apoio', v.cenas], ['Legenda sugerida', v.legenda], ['Observação', v.observacao]].filter(r => r[1]).map(([label, value]) => ({ label, value })),
           chips: Object.keys(VST).map(k => { const a = (v.status || 'ideia') === k; return { label:VST[k][0], pick: () => sw_updV(v.id, { status:k }), bg: a ? tint(VST[k][1], 18) : 'transparent', color: a ? VST[k][1] : '#8b8b99', border: a ? VST[k][1] : '#2a2a36' }; }),
@@ -5314,8 +5375,13 @@ class Component extends DCLogic {
         try {
           const r = await this.callAI({ mode:'videos', clientId:sw_stClientId, weekStart:sw_ws, count:Number(g.count) || 4, formats:g.formats,
             dates:g.dates.map(x => { const p = x.split('|'); return { data:p[0], nome:p.slice(1).join('|') }; }), notes:(g.notes || '').slice(0, 1500) });
-          const vids = arr(r.videos).map(v => ({ ...v, id:uid('vd'), status:'ideia' }));
-          if (!vids.length) throw new Error('A IA não retornou roteiros. Tente novamente.');
+          const raw = [r.videos, r.roteiros, r.reels, r.data && (r.data.videos || r.data.roteiros || r.data.reels)].find(x => Array.isArray(x) && x.length) || [];
+          const pickF = (v, ...ks) => { for (const k of ks) { const x = v[k]; if (x != null && String(x).trim()) return Array.isArray(x) ? x.map(y => typeof y === 'string' ? y : (y.fala || y.texto || JSON.stringify(y))).join('\n') : String(x); } return ''; };
+          const vids = raw.filter(v => v && typeof v === 'object').map(v => ({ titulo:pickF(v, 'titulo', 'title', 'tema'), formato:pickF(v, 'formato', 'format') || 'Reels', dataRelacionada:pickF(v, 'dataRelacionada', 'data_relacionada', 'data'),
+            objetivo:pickF(v, 'objetivo', 'objective'), gancho:pickF(v, 'gancho', 'hook'), desenvolvimento:pickF(v, 'desenvolvimento', 'roteiro', 'cenas_roteiro', 'script'), cta:pickF(v, 'cta', 'chamada'),
+            cenas:pickF(v, 'cenas', 'broll', 'cenasApoio'), pessoa:pickF(v, 'pessoa', 'quemAparece', 'quem_aparece'), duracao:pickF(v, 'duracao', 'duration'), legenda:pickF(v, 'legenda', 'caption'), observacao:pickF(v, 'observacao', 'obs'),
+            id:uid('vd'), status:'ideia' })).filter(v => v.titulo || v.desenvolvimento);
+          if (!vids.length) { console.warn('generate-weekly-reels respondeu sem roteiros:', r); throw new Error('A função generate-weekly-reels respondeu sem roteiros. Publique nela o código completo (arquivo generate-weekly-reels/index.ts) e tente de novo.'); }
           const cur = arr(this.state.stories).find(x => x.kind === 'videos' && x.client === sw_stClientId && x.weekStart === sw_ws);
           this.upsertPlan({ ...(cur || { id:uid('vr'), kind:'videos', client:sw_stClientId, weekStart:sw_ws, createdAt:Date.now(), createdBy:this.actor() }), videos:[...(cur ? arr(cur.videos) : []), ...vids] });
           this.setState({ vgen:null, aiBusy:null });
