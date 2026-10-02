@@ -1813,6 +1813,11 @@ option{background:#3f36b5;color:#ffffff}
                   <span style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px;background:rgba(255,255,255,0.15);color:#ece8ff">{{ t.kindLabel }}</span>
                   <span style="font-size:11px;font-weight:600;padding:3px 9px;border-radius:6px;background:rgba(30,20,110,0.34);color:#dcd8ff;display:flex;align-items:center;gap:4px"><span style="width:11px;height:11px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/lock.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/lock.svg) center / contain no-repeat"></span>Senha protegida</span>
                 </div>
+                <div style="width:100%;display:flex;flex-direction:column;gap:5px;padding:10px 12px;border-radius:12px;background:rgba(24,16,92,0.42);text-align:left">
+                  <span style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:{{ t.ctPhoneC }};min-width:0"><span style="width:13px;height:13px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/message-circle.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/message-circle.svg) center / contain no-repeat"></span><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.ctPhone }}</span></span>
+                  <span style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:{{ t.ctEmailC }};min-width:0"><span style="width:13px;height:13px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/mail.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/mail.svg) center / contain no-repeat"></span><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.ctEmail }}</span></span>
+                </div>
+                <button onClick="{{ t.editContact }}" style="min-height:38px;padding:7px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.22);background:rgba(255,255,255,0.1);box-shadow:inset 0 1px 0 rgba(255,255,255,0.2), 0 2px 0 rgba(20,10,90,0.28), 0 8px 16px -10px rgba(20,10,90,0.6);color:#ffffff;font-size:12.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px"><span style="width:13px;height:13px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg) center / contain no-repeat"></span>Editar contato</button>
                 <sc-if value="{{ t.removable }}" hint-placeholder-val="{{ false }}">
                   <button onClick="{{ t.remove }}" style="margin-top:4px;min-height:38px;padding:7px 14px;border-radius:9px;border:1px solid rgba(255,255,255,0.22);background:rgba(255,255,255,0.1);box-shadow:inset 0 1px 0 rgba(255,255,255,0.2), 0 2px 0 rgba(20,10,90,0.28), 0 8px 16px -10px rgba(20,10,90,0.6);color:oklch(0.75 0.17 25);font-size:12.5px;cursor:pointer" style-hover="background:rgba(255,255,255,0.18);transform:translateY(-1px)">Remover usuário</button>
                 </sc-if>
@@ -3061,6 +3066,7 @@ option{background:#3f36b5;color:#ffffff}
         </sc-if>
       </div>
       <div style="display:flex;flex-direction:column;gap:6px">
+        <sc-if value="{{ vCanSend }}" hint-placeholder-val="{{ false }}"><button onClick="{{ vSendOwner }}" style="min-height:48px;padding:10px 16px;border-radius:11px;border:0;background:linear-gradient(180deg, #ffffff 0%, #f1edff 100%);color:#4535c9;box-shadow:inset 0 1px 0 #ffffff, inset 0 -3px 0 rgba(69,53,201,0.16), 0 2px 0 rgba(28,18,110,0.25), 0 10px 22px -10px rgba(20,10,90,0.7);font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer"><span style="width:16px;height:16px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/send.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/send.svg) center / contain no-repeat"></span>Enviar ao responsável (WhatsApp / e-mail)</button></sc-if>
         <a href="{{ vWa }}" target="_blank" rel="noopener" style="min-height:48px;padding:10px 16px;border-radius:11px;border:1px solid oklch(0.72 0.17 150);background:oklch(0.72 0.17 150 / 0.14);color:oklch(0.88 0.12 150);font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none"><span style="width:17px;height:17px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/message-circle.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/message-circle.svg) center / contain no-repeat"></span>Avisar no grupo do WhatsApp</a>
         <div style="font-size:11.5px;color:#bbb5f2;text-align:center">Abre o WhatsApp com a ordem de serviço formatada. Escolha o grupo da agência e envie.</div>
       </div>
@@ -3820,6 +3826,38 @@ option{background:#3f36b5;color:#ffffff}
           </sc-for>
         </div>
         <div style="padding:10px 18px 14px;border-top:1px solid rgba(255,255,255,0.12)"><button onClick="{{ colabFilter }}" style="width:100%;min-height:44px;border-radius:12px;border:1px solid rgba(255,255,255,0.22);background:rgba(255,255,255,0.1);box-shadow:inset 0 1px 0 rgba(255,255,255,0.2), 0 2px 0 rgba(20,10,90,0.28), 0 8px 16px -10px rgba(20,10,90,0.6);color:#ffffff;font-size:13.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><span style="width:15px;height:15px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/columns-3.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/columns-3.svg) center / contain no-repeat"></span>{{ colabFilterLabel }}</button></div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ sendOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ sendClose }}" style="position:fixed;inset:0;z-index:94;background:rgba(20,12,80,0.62);display:flex;justify-content:center;align-items:flex-end">
+      <div onClick="{{ stop }}" role="dialog" style="width:min(520px,100%);max-height:calc(100dvh - 40px);display:flex;flex-direction:column;gap:12px;padding:16px 18px calc(18px + env(safe-area-inset-bottom));background:linear-gradient(180deg, #514acf 0%, #3f36b5 100%);border-radius:22px 22px 0 0;box-shadow:0 -20px 60px -20px rgba(15,8,70,0.9)">
+        <div style="display:flex;align-items:center;gap:10px"><span style="flex:1;font-family:Sora;font-weight:600;font-size:17px">{{ sendTitle }}</span><button onClick="{{ sendClose }}" aria-label="Fechar" style="width:38px;height:38px;border-radius:11px;border:0;background:rgba(255,255,255,0.12);color:#ffffff;display:flex;align-items:center;justify-content:center;cursor:pointer"><span style="width:17px;height:17px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/x.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/x.svg) center / contain no-repeat"></span></button></div>
+        <div style="max-height:34vh;overflow-y:auto;overscroll-behavior:contain;padding:12px 14px;border-radius:14px;background:rgba(24,16,92,0.42);font-size:13px;line-height:1.55;color:#f1efff;white-space:pre-wrap">{{ sendPreview }}</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:8px">
+          <sc-if value="{{ sendHasWa }}" hint-placeholder-val="{{ false }}"><a href="{{ sendWa }}" target="_blank" rel="noopener" onClick="{{ sendDone }}" style="min-height:48px;border-radius:12px;background:oklch(0.72 0.17 150);color:#ffffff;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.3), 0 2px 0 rgba(0,60,20,0.35), 0 10px 22px -10px rgba(0,40,10,0.7)"><span style="width:17px;height:17px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/message-circle.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/message-circle.svg) center / contain no-repeat"></span>WhatsApp · {{ sendPhoneTxt }}</a></sc-if>
+          <sc-if value="{{ sendHasMail }}" hint-placeholder-val="{{ false }}"><a href="{{ sendMail }}" onClick="{{ sendDone }}" style="min-height:48px;border-radius:12px;background:linear-gradient(180deg, #ffffff 0%, #f1edff 100%);color:#4535c9;box-shadow:inset 0 1px 0 #ffffff, inset 0 -3px 0 rgba(69,53,201,0.16), 0 2px 0 rgba(28,18,110,0.25), 0 10px 22px -10px rgba(20,10,90,0.7);font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;padding:0 12px;min-width:0"><span style="display:flex"><span style="width:17px;height:17px;flex-shrink:0;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.460.0/icons/mail.svg) center / contain no-repeat;-webkit-mask:url(https://unpkg.com/lucide-static@0.460.0/icons/mail.svg) center / contain no-repeat"></span></span><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">E-mail · {{ sendEmailTxt }}</span></a></sc-if>
+        </div>
+        <sc-if value="{{ sendMissing }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;border-radius:12px;background:rgba(255,211,107,0.12);font-size:12.5px;color:#ffe9a8">
+            <span style="flex:1 1 200px">{{ sendMissingTxt }}</span>
+            <sc-if value="{{ sendCanEdit }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sendEditContact }}" style="min-height:36px;padding:6px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.22);background:rgba(255,255,255,0.1);box-shadow:inset 0 1px 0 rgba(255,255,255,0.2), 0 2px 0 rgba(20,10,90,0.28), 0 8px 16px -10px rgba(20,10,90,0.6);color:#ffffff;font-size:12.5px;font-weight:600;cursor:pointer">Cadastrar contato</button></sc-if>
+          </div>
+        </sc-if>
+        <button onClick="{{ sendClose }}" style="min-height:42px;border-radius:12px;border:0;background:transparent;color:#dcd8ff;font-size:13.5px;font-weight:600;cursor:pointer">Agora não</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ tcOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ tcClose }}" style="position:fixed;inset:0;z-index:95;background:rgba(20,12,80,0.62);display:flex;justify-content:center;align-items:center;padding:12px">
+      <div onClick="{{ stop }}" role="dialog" style="width:min(440px,100%);display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:20px;background:linear-gradient(180deg, #514acf 0%, #3f36b5 100%);box-shadow:0 30px 70px -25px rgba(15,8,70,0.85)">
+        <div style="display:flex;flex-direction:column;gap:3px"><span style="font-family:Sora;font-weight:600;font-size:18px">Contato de {{ tc.name }}</span><span style="font-size:12.5px;color:#dcd8ff">Usado para enviar ordens de serviço e avisos de pagamento.</span></div>
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#dcd8ff;min-width:0">WhatsApp<input value="{{ tc.phone }}" onChange="{{ tcPhone }}" inputMode="tel" placeholder="(82) 90000-0000" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.16);background:rgba(24,16,92,0.42);color:#ffffff;font-size:14px;font-family:inherit;outline:none"></label>
+        <label style="display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:#dcd8ff;min-width:0">E-mail<input value="{{ tc.email }}" onChange="{{ tcEmail }}" type="email" inputMode="email" placeholder="nome@email.com" style="width:100%;box-sizing:border-box;min-height:44px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.16);background:rgba(24,16,92,0.42);color:#ffffff;font-size:14px;font-family:inherit;outline:none"></label>
+        <sc-if value="{{ tcHasErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:12.5px;color:oklch(0.85 0.12 25)">{{ tc.err }}</span></sc-if>
+        <div style="display:flex;gap:8px;justify-content:flex-end"><button onClick="{{ tcClose }}" style="min-height:42px;padding:8px 14px;border-radius:12px;border:0;background:transparent;color:#dcd8ff;font-size:13.5px;font-weight:600;cursor:pointer">Cancelar</button><button onClick="{{ tcSave }}" style="min-height:42px;padding:8px 18px;border-radius:12px;border:0;background:linear-gradient(180deg, #ffffff 0%, #f1edff 100%);color:#4535c9;box-shadow:inset 0 1px 0 #ffffff, inset 0 -3px 0 rgba(69,53,201,0.16), 0 2px 0 rgba(28,18,110,0.25), 0 10px 22px -10px rgba(20,10,90,0.7);font-size:13.5px;font-weight:700;cursor:pointer">Salvar contato</button></div>
       </div>
     </div>
   </sc-if>
@@ -4584,12 +4622,12 @@ const waitSupabase = () => new Promise(res => {
   let n = 0;
   const t = setInterval(() => { if (window.supabase && window.supabase.createClient) { clearInterval(t); res(window.supabase); } else if (++n > 100) { clearInterval(t); res(null); } }, 100);
 });
-const COLS = ['posts','clients','fin','notifs','team','payees','payments','shoots','stories','ideas','ckTemplates','clientDates','contracts','waTemplates','proposals','reportMetrics','weeklyIdeas','media','pkgConfig','igAccounts'];
+const COLS = ['posts','clients','fin','notifs','team','payees','payments','shoots','stories','ideas','ckTemplates','clientDates','contracts','waTemplates','proposals','reportMetrics','weeklyIdeas','media','pkgConfig','igAccounts','contacts'];
 const arr = v => Array.isArray(v) ? v.filter(Boolean) : (v && typeof v === 'object') ? Object.values(v).filter(Boolean) : [];
 function emptyData() {
   let team = [];
   try { const old = JSON.parse(localStorage.getItem(LS_OLD)); team = (old && arr(old.team)) || []; } catch (e) {}
-  return { posts:[], clients:[], fin:[], notifs:[], team, payees:[], payments:[], shoots:[], stories:[], ideas:[], ckTemplates:[], clientDates:[], proposals:[], reportMetrics:[], contracts:[], waTemplates:[], weeklyIdeas:[], media:[], pkgConfig:[], igAccounts:[] };
+  return { posts:[], clients:[], fin:[], notifs:[], team, payees:[], payments:[], shoots:[], stories:[], ideas:[], ckTemplates:[], clientDates:[], proposals:[], reportMetrics:[], contracts:[], waTemplates:[], weeklyIdeas:[], media:[], pkgConfig:[], igAccounts:[], contacts:[] };
 }
 const SEED_IDS = ['bella','aurora','fitpro','nomade','casaverde','lumi','av1','av2'];
 const SEED_NOTIFS = ['s1','s2','s3','s4'];
@@ -4990,6 +5028,7 @@ class Component extends DCLogic {
       clients:st.clients.map(c => ({ ...c, ...(urls.has(c.logo) ? { logo:'', logoMedia:null } : {}), ...(urls.has(c.photo) ? { photo:'', photoMedia:null } : {}) })) }));
     this.toast(list.length === 1 ? 'Imagem excluída' : list.length + ' imagens excluídas', '', 'trash-2');
   }
+  contactOf(uid) { return arr(this.state.contacts).find(c => c.id === uid) || {}; }
   charge(cid) {
     if (this.userOf(this.state.user).kind !== 'admin') return;
     if (this._waCharge) this._waCharge(cid); else this.goTo('whatsapp');
@@ -5322,7 +5361,7 @@ class Component extends DCLogic {
     if (status === 'pago' && !window.confirm(`Confirmar pagamento de ${BRL2(p.amount)} para ${p.payeeName}?`)) return;
     const who = this.actor();
     this.setState(s => ({ payments:arr(s.payments).map(x => x.id === id ? { ...x, status, ...(status === 'pago' ? { paidAt:Date.now(), paidBy:this.state.user } : {}), log:[...(x.log || []), { ts:Date.now(), by:who, text: status === 'pago' ? 'Marcado como pago' : 'Cancelado' }] } : x) }));
-    if (status === 'pago' && p.payeeType === 'colab') this.notify([{ to:p.payeeId, title:'Pagamento recebido', body:`${p.desc} · ${BRL2(p.amount)} via ${p.method || 'PIX'}`, icon:'hand-coins' }]);
+    if (status === 'pago' && p.payeeType === 'colab') { this.notify([{ to:p.payeeId, title:'Pagamento recebido', body:`${p.desc} · ${BRL2(p.amount)} via ${p.method || 'PIX'}`, icon:'hand-coins' }]); this.setState({ sendTo:{ kind:'pay', id:p.id, to:p.payeeId } }); }
     this.toast(status === 'pago' ? 'Pagamento confirmado' : 'Pagamento cancelado', `${p.payeeName} · ${BRL2(p.amount)}`, status === 'pago' ? 'circle-check' : 'x');
   }
   setStatus(id, status) {
@@ -6179,6 +6218,24 @@ class Component extends DCLogic {
       vHasDrive: !!(vp && vp.driveUrl), vNoDrive: !!vp && !vp.driveUrl, vDrive: vp && vp.driveUrl ? vp.driveUrl : '#',
       vHistory: vp ? [...(vp.history || [])].reverse().map((x, i) => ({ when:fmtDT(x.ts), text:x.text, dot: KIND_C[x.kind] || (i === 0 ? '#ffffff' : '#3a3944') })) : [],
       vNoHistory: !vp || !(vp.history || []).length, vCanEdit: vCan, vWa: waMsg(vp),
+      vSendOwner: () => vp && this.setState({ sendTo:{ kind:'os', id:vp.id, to:vp.owner } }), vCanSend: !!vp && vp.owner !== s.user,
+      ...(() => { const T = s.sendTo; if (!T) return { sendOpen:false };
+        const u = this.userOf(T.to), ct = this.contactOf(T.to), first = (u.name || '').split(' ')[0];
+        let text = '', subject = '', title = '';
+        if (T.kind === 'os') { const p = s.posts.find(x => x.id === T.id); if (!p) return { sendOpen:false };
+          const url = waMsg(p); text = 'Olá, ' + first + '! Você tem uma nova ordem de serviço.\n\n' + decodeURIComponent((url.split('text=')[1] || ''));
+          subject = 'Nova ordem de serviço: ' + p.title + ' · ' + this.clientName(p.client); title = 'Enviar a OS para ' + u.name; }
+        else { const p = arr(s.payments).find(x => x.id === T.id); if (!p) return { sendOpen:false };
+          text = ['*🟣 AGÊNCIA RISE · PAGAMENTO*', '', 'Olá, ' + first + '! Seu pagamento foi registrado.', '', '*Descrição:* ' + (p.desc || '—'), '*Valor:* ' + BRL2(p.amount), '*Data:* ' + fmtD(p.date || keyOf(TODAY)), '*Forma:* ' + (p.method || 'PIX'), ...(p.notes ? ['*Obs.:* ' + p.notes] : []), '', 'Qualquer dúvida, é só chamar.'].join('\n');
+          subject = 'Pagamento registrado · ' + BRL2(p.amount); title = 'Avisar ' + u.name + ' do pagamento'; }
+        const dig = String(ct.phone || '').replace(/\D/g, ''), wa = dig ? 'https://wa.me/' + (dig.length <= 11 ? '55' + dig : dig) + '?text=' + encodeURIComponent(text) : '';
+        const plain = text.replace(/\*/g, ''), mail = ct.email ? 'mailto:' + encodeURIComponent(ct.email) + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(plain) : '';
+        const done = () => this.setState({ sendTo:null });
+        return { sendOpen:true, sendTitle:title, sendPreview:plain, sendHasWa:!!wa, sendWa:wa || '#', sendHasMail:!!mail, sendMail:mail || '#',
+          sendPhoneTxt: ct.phone || '', sendEmailTxt: ct.email || '', sendMissing: !wa || !mail,
+          sendMissingTxt: !wa && !mail ? u.name + ' ainda não tem WhatsApp nem e-mail cadastrados.' : !wa ? 'WhatsApp de ' + u.name + ' não cadastrado.' : 'E-mail de ' + u.name + ' não cadastrado.',
+          sendCanEdit: isAdmin, sendEditContact: () => this.setState({ sendTo:null, tcEd:{ id:T.to, name:u.name, email:ct.email || '', phone:ct.phone || '' } }),
+          sendClose:done, sendDone: () => setTimeout(done, 400) }; })(),
       fWa: f.id ? waMsg({ ...(s.posts.find(p => p.id === f.id) || {}), ...f }) : '#',
       vEdit: () => { this.setState({ viewId:null }); this.openEdit(vp); },
       ...colabVals, prodCards, hasOwnerFilter:!!s.ownerFilter, clearOwner: () => this.setState({ ownerFilter:null }), colTabs,
@@ -6676,6 +6733,8 @@ class Component extends DCLogic {
     };
     const KIND_L = { admin:'Administrador', social:'Social Media', editor:'Editor' };
     const teamCards = [...Object.values(USERS).map(u => ({ ...u, _fixed:true })), ...(s.team || [])].map(u => ({
+      ...(() => { const ct = this.contactOf(u.id); return { ctPhone:ct.phone || 'WhatsApp não cadastrado', ctEmail:ct.email || 'E-mail não cadastrado', ctPhoneC: ct.phone ? '#ffffff' : '#bbb5f2', ctEmailC: ct.email ? '#ffffff' : '#bbb5f2',
+        editContact: () => this.setState({ tcEd:{ id:u.id, name:u.name, email:ct.email || '', phone:ct.phone || '' } }) }; })(),
       name:u.name, role:u.role, photo:u.photo, kindLabel:KIND_L[u.kind] || 'Colaborador', fixed:!!u._fixed, removable:!u._fixed,
       remove: () => { if (!window.confirm(`Remover o usuário ${u.name}? Ele deixará de aparecer na tela inicial. As demandas atribuídas a ele continuam no sistema.`)) return;
         if (this._secure) this._sb.rpc('rise_user_remove', { tok:this._tok, p_id:u.id }).then(() => this.refreshProfiles());
@@ -7089,6 +7148,14 @@ class Component extends DCLogic {
     };
     const payVals = {
       isTeam: s.tab === 'team' && isAdmin, teamCards,
+      tcOpen: !!s.tcEd && isAdmin, tc: s.tcEd || {}, tcHasErr: !!(s.tcEd && s.tcEd.err), tcClose: () => this.setState({ tcEd:null }),
+      tcPhone: e => { const v = e.target.value; this.setState(st => ({ tcEd:{ ...st.tcEd, phone:v, err:'' } })); },
+      tcEmail: e => { const v = e.target.value; this.setState(st => ({ tcEd:{ ...st.tcEd, email:v, err:'' } })); },
+      tcSave: () => { const E = s.tcEd; if (!E) return; const phone = String(E.phone || '').trim(), email = String(E.email || '').trim().toLowerCase(), dig = phone.replace(/\D/g, '');
+        if (phone && (dig.length < 10 || dig.length > 13)) return this.setState({ tcEd:{ ...E, err:'WhatsApp inválido. Use DDD + número, ex.: (82) 99999-0000.' } });
+        if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return this.setState({ tcEd:{ ...E, err:'E-mail inválido.' } });
+        this.setState(st => ({ tcEd:null, contacts:[...arr(st.contacts).filter(c => c.id !== E.id), { id:E.id, phone:phone.slice(0, 30), email:email.slice(0, 120), updatedAt:Date.now() }] }));
+        this.toast('Contato salvo', E.name, 'circle-check'); },
       isPayments: s.tab === 'payments', isCollabPay: !isAdmin,
       payKpis: isAdmin ? [
         { label: pPer === 'mes' ? 'Pago este mês' : 'Pago no período', value:BRL2(sumP(perPays, 'pago')), sub:perTitle, icon:ICON('circle-check'), color:GREEN, go: () => this.setState({ paySt:'pago', payCat:'all', payWho:'all' }) },
@@ -7142,7 +7209,7 @@ class Component extends DCLogic {
           ref:pf2.ref || (pf2.date || '').slice(0, 7), ...((pf2.status || 'pago') === 'pago' ? { paidAt:now, paidBy:s.user } : {}),
           createdAt:now, createdBy:this.actor(), log:[{ ts:now, by:this.actor(), text:'Pagamento registrado' }] };
         this.setState(st => ({ payments:[...arr(st.payments), rec], payForm:{ ...pf2, desc:'', amount:'', notes:'' } }));
-        if (type === 'colab' && rec.status === 'pago') this.notify([{ to:pid, title:'Pagamento recebido', body:`${rec.desc} · ${BRL2(rec.amount)} via ${rec.method}`, icon:'hand-coins' }]);
+        if (type === 'colab' && rec.status === 'pago') { this.notify([{ to:pid, title:'Pagamento recebido', body:`${rec.desc} · ${BRL2(rec.amount)} via ${rec.method}`, icon:'hand-coins' }]); setTimeout(() => this.setState({ sendTo:{ kind:'pay', id:rec.id, to:pid } }), 60); }
         this.toast('Pagamento registrado', `${rec.payeeName} · ${BRL2(rec.amount)}${type === 'colab' && rec.status === 'pago' ? ' · comprovante disponível no histórico' : ''}`, 'circle-check');
       },
       benefCards: [
@@ -7801,7 +7868,7 @@ class Component extends DCLogic {
             data.history = hh;
             if (data.status === 'andamento' && !old.startedAt) { data.startedAt = Date.now(); data.startedBy = s.user; } }
           this.setState(st => ({ posts:st.posts.map(p => p.id === f.id ? { ...p, ...data, approved: data.status === 'concluido' ? true : p.approved } : p), modal:false }));
-          if (old.owner !== data.owner && data.owner !== s.user) this.notify([{ to:data.owner, title:'Demanda atribuída a você', body:what, icon:'bell-ring' }]);
+          if (old.owner !== data.owner && data.owner !== s.user) { this.notify([{ to:data.owner, title:'Demanda atribuída a você', body:what, icon:'bell-ring' }]); setTimeout(() => this.setState({ sendTo:{ kind:'os', id:f.id, to:data.owner } }), 50); }
           if (old.status !== data.status && data.status === 'revisao' && !isAdmin) this.notify([{ to:'admin', title:'Demanda em revisão', body:what, icon:'eye' }]);
           this.setState({ viewId:f.id });
           this.toast('Demanda atualizada', 'Use "Avisar no grupo do WhatsApp" para comunicar a equipe.', 'circle-check');
@@ -7823,7 +7890,8 @@ class Component extends DCLogic {
           fin: val > 0 ? [...st.fin, ...splitInstallments({ client:f.client, desc:`${data.service || data.type}: ${p.title}`, total:val, paid:Math.min(val, numIn(f.paid)), firstDue:p.due, n:f.parcels, method:f.method || 'PIX', grp:'d-' + p.id })] : st.fin }));
         if (data.owner !== s.user) {
           this.notify([{ to:data.owner, title:'Nova ordem de serviço', body:what, icon:'bell-ring' }]);
-          this.toast('Demanda criada', `${ownerName} foi notificado(a) em tempo real.`, 'send');
+          this.toast('Demanda criada', `${ownerName} foi notificado(a) no sistema.`, 'send');
+          this.setState({ sendTo:{ kind:'os', id:p.id, to:data.owner } });
         } else this.toast('Demanda criada', 'Adicionada à sua fila de produção.', 'circle-check');
       },
       modalTitle: f.id ? 'Editar demanda' : 'Nova ordem de serviço', isEditing:!!f.id, showValueField:!f.id,
