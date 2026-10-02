@@ -7,6 +7,23 @@
 - `.env.example`, `.gitignore`, `supabase/config.toml` (verify_jwt=false para as duas funções).
 - Edge Function Reels: `supabase/functions/generate-weekly-reels/index.ts` (modes "videos" e "video"; cópia em CODIGO-PARA-COLAR.txt). Front chama AI_FN_REELS para mode videos/video. Usuário criou a função no Supabase mas ela ainda devolve texto fixo — PENDENTE: ele colar o código completo e fazer deploy; depois testar geração.
 
+## Instagram / Meta (FASE 1 FEITA)
+- Edge `supabase/functions/meta-instagram/index.ts` (Instagram API with Instagram Login; GET = callback OAuth com state HMAC; POST modes auth_url/sync/disconnect). Tokens em tabela privada `rise_ig_tokens` (SQL `supabase/instagram.sql`). Dados públicos na linha `igAccounts` [{client, igUserId, username, picture, followers, mediaCount, status conectado|expirado|desconectado, lastSync, expiresAt, metrics{d7,d30:{values,missing,since,until}}, history[{date,followers}]}] — front só lê, nunca muta. UI: aba 'Instagram' no Dossiê (dsTab 'insta'). Guia COMO-ATIVAR-INSTAGRAM.md. PENDENTE: usuário criar app Meta, secrets, SQL, deploy. Próximas fases: mídias/histórico/comparação → IA+planejamento → relatório.
+
+## Visual atual (out/2026)
+- Paleta estilo Sweatcoin: fundo gradiente #5b56dc→#4b41c9→#3c31ae; cards rgba(255,255,255,0.11); blocos internos rgba(30,20,110,0.34); campos rgba(24,16,92,0.42); modais gradiente #514acf→#3f36b5; overlays rgba(20,12,80,0.62); texto #fff / #dcd8ff / #cbc6f7 / #bbb5f2; acento pontos #ffd36b. Botão principal 3D branco (texto #4535c9); secundários vidro 3D. Animações via regras globais de button + @keyframes riseIn ([role=menu],[role=dialog]). Backup escuro: 'Agencia Rise v2 (antes do redesign).dc.html'. Dashboard: Hoje (hojeVals) → Próximas ações (ciItems) → Clientes que precisam de atenção (attList). Card cliente: + Nova ação e ••• (cAct only:'more').
+- PENDENTE redesign por etapas: menu lateral reagrupado, Planejamento, modais IA, Produção, Calendário, Financeiro, Dossiê, cards avulsos.
+
+## Planejamento Semanal Inteligente (FEITO)
+- Linha nova `weeklyIdeas` [{id:'wp-'+weekStart, weekStart (próx. segunda), status planejamento|finalizado, items[{id, client, kind arte|reels, titulo,..., st nova|salva|demanda|descartada, demandId, ideaId}]}]. Overlay wpOpen (sem aba no menu); acesso: banner sex–dom no Dashboard (Lembrar depois = 4h, localStorage rise_wp_snooze), item na Central, botão 'Planejamento semanal' ao lado do Modo Segunda-feira. wpVals antes de p5Vals; wp_* antes de ci.sort.
+- IA: mode 'ideas' na Edge Function generate-weekly-reels (lê clients, stories, ideas, posts, weeklyIdeas p/ evitar repetição). PENDENTE: usuário colar o index.ts/CODIGO-PARA-COLAR.txt atualizado e fazer Deploy.
+
+## Pacotes conscientes (FEITO)
+- Linha `pkgConfig` [{id,name,posts,reels,stories}] (semeada com DEF_PKGS pelo admin; editor 'Pacotes' em Clientes). syncPkgs() muta PACKAGES/PKG_LIM no início do renderVals. Cliente: `custom{posts,reels,stories}` tem prioridade (limOf). pkgStat(c, posts, mk) usa usageOf (regra antiga: demandas do mês exceto Stories). pkgMonthOf(ws)=mês da quinta. Planejamento: faixa de pacote por cliente, sugestão semanal, completar mês, extra (item.extra → 'Fora do pacote'), Cronograma (wpSched). Edge reels: pkgContext/mediaContext/recDaysTxt; PENDENTE deploy.
+
+## Biblioteca de Mídias (FEITA)
+- Linha `media` [{id, client, src storage|external, path, thumbPath, url, thumb, name, cat (MEDIA_CATS), desc, tags[], fav, mime, size, w, h, createdAt}]. Bucket Storage `rise-media`, caminhos clientes/{cid}/imagens|miniaturas/{id}.ext; compressão no navegador (2400px webp 0.86; miniatura 480px). SQL `supabase/midias-storage.sql` (usuário PRECISA rodar). UI: aba 'Mídias' no Dossiê (dsTab 'media', vals `ml` dentro de dsVals), lightbox mlView, botão 'Mídias' no card. Cliente: photo/photoMedia, logo/logoMedia. Integração: wp item.media (suggestMedia por metadados), demanda p.media (form fMedia, view vMedia).
+
 ## Últimas entregas (após as 5 fases)
 - Planejamento Semanal: PDF (jsPDF via CDN, makePdf/outPdf/riseLogo com logo reduzida a 360px) da semana completa (cronograma + dias + roteiros de vídeo), PDF por dia, 'Enviar PDF pelo WhatsApp' (navigator.share com arquivo; fallback download + wa.me).
 - Roteiros de vídeo para o feed: registros kind:'videos' na linha stories {client, weekStart, videos[]}; sw_plans exclui kind 'videos'. Gerar com IA (qtd, formatos, datas comemorativas/cliente 45 dias), editar, copiar, criar demanda, refazer com IA, status Ideia/Aprovado/Gravado. Front normaliza campos alternativos da resposta.
